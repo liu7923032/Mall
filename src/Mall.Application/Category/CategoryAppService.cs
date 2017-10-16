@@ -22,7 +22,6 @@ namespace Mall.Category
         {
             throw new NotImplementedException();
         }
-
         
     }
 }

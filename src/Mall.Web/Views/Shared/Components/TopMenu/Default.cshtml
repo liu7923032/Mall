@@ -7,7 +7,7 @@
 }
 @foreach (var menuItem in Model.MainMenu.Items)
 {
-    <li class="@(Model.ActiveMenuItemName == menuItem.Name ? "active" : "")">
+    <li  class="@(Model.ActiveMenuItemName == menuItem.Name ? "active" : "") layui-nav-item">
         @if (menuItem.Items.IsNullOrEmpty())
         {
             <a href="@Model.CalculateMenuUrl(ApplicationPath, menuItem)">

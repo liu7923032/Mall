@@ -31,6 +31,8 @@ namespace Mall.Web.Tests
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
+           
+
             UseInMemoryDb(app.ApplicationServices);
 
             app.UseAbp(); //Initializes ABP framework.
