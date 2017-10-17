@@ -8,7 +8,7 @@
 .mall-main {
   position: relative;
 }
-.mall-main .header {
+.mall-main .mall-header {
   position: fixed;
   left: 0;
   top: 0;
@@ -20,6 +20,51 @@
   border-radius: 0;
   background-color: #393D49;
 }
-.mall-main .layui-main {
-  margin-top: 61px;
+.mall-main .mall-header .layui-logo {
+  line-height: 60px;
+  font-size: 16px;
+  width: 200px;
+  height: 100%;
+  text-align: center;
+  color: white;
+}
+.mall-main .mall-body {
+  position: relative;
+  top: 61px;
+  margin: 0 auto;
+  width: auto;
+  overflow: hidden;
+  overflow-y: auto;
+  box-sizing: border-box;
+}
+/*商品列表*/
+.product-item {
+  border: 1px solid #8f8989;
+  width: 200px;
+  height: 220px;
+  box-sizing: border-box;
+  box-shadow: 3px 4px 3px #8f8989;
+}
+.product-item .p-img {
+  height: 150px;
+  width: auto;
+}
+.product-item .p-title {
+  height: 40px;
+  width: auto;
+  border-bottom: 1px solid #ffd800;
+  border-top: 1px solid #ffd800;
+  font-size: 12px;
+  padding: 4px 10px;
+  box-sizing: border-box;
+  color: grey;
+}
+.product-item .p-price {
+  font-size: 16px;
+  color: orangered;
+  text-align: left;
+  vertical-align: middle;
+  font-weight: 900;
+  padding: 4px 10px;
+  box-sizing: border-box;
 }
