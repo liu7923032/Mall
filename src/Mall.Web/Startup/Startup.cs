@@ -16,7 +16,7 @@ namespace Mall.Web.Startup
 {
     public class Startup
     {
-        public static string CookieScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
+        public static string CookieScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -27,13 +27,16 @@ namespace Mall.Web.Startup
             });
 
 
-            services.AddAuthentication(CookieScheme).AddCookie(CookieScheme, options => {
+            services.AddAuthentication(CookieScheme)
+                .AddCookie(CookieScheme, options =>
+                {
 
-                //如果用户访问受限制的资源而没有授权的时候,直接跳转到
-                options.AccessDeniedPath = "/Account/Forbidden/";
-                //如果未登陆,那么返回到登陆界面
-                options.LoginPath = "/Account/Login/";
-            });
+                    //如果用户访问受限制的资源而没有授权的时候,直接跳转到
+                    options.AccessDeniedPath = "/Account/Forbidden/";
+                    //如果未登陆,那么返回到登陆界面
+                    options.LoginPath = "/Account/Login";
+                });
+
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());

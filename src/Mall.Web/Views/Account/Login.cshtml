@@ -1,0 +1,51 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+    <div>
+
+        <div>
+            <label>姓名:</label> <input name="Account" />
+        </div>
+        <div>
+            <label>姓名:</label> <input name="Password" />
+        </div>
+        <button type="button" id="btnLogin">登陆</button>
+    </div>
+    <script src="~/lib/layui/layui.js"></script>
+    <script type="text/javascript">
+        layui.use("jquery", function () {
+
+            var $ = layui.jquery;
+
+            $('#btnLogin').click(function () {
+                var obj = {
+
+                    "Account": $('input[name=Account]').val(),
+                    "Password": $('input[name=Password]').val(),
+                    "IsRemember": false,
+                }
+
+
+                $.ajax({
+                    method: "get",
+                    dataType: "json",
+                    url: "/Account/LoginAsync",
+                    data: JSON.stringify(obj),
+                    success: function (data) {
+                        console.log(data);
+                    }
+
+                })
+            });
+        })
+    </script>
+</body>
+</html>

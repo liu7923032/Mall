@@ -92,6 +92,9 @@
             @await Component.InvokeAsync(typeof(TopMenuViewComponent), new { activeMenu = ViewBag.ActiveMenu })
         </ul>
         <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="/Account/Login">登陆</a>
+            </li>
             @await Component.InvokeAsync(typeof(LanguageSelectionViewComponent))
         </ul>
     </div>
