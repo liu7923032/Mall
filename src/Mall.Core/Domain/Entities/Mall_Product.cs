@@ -26,10 +26,25 @@ namespace Mall.Domain.Entities
 
         [Required]
         public decimal Price { get; set; }
+        /// <summary>
+        /// 上传的主要图片
+        /// </summary>
+        [Required]
+        public string ImgPic { get; set; }
+
+
+        /// <summary>
+        /// 外键
+        /// </summary>
+        [Required]
+        public int CategoryId { get; set; }
 
         public Mall_Product()
         {
             Price = 0;
+            IsDeleted = false;
         }
     }
+
+    
 }

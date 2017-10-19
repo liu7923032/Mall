@@ -9,11 +9,15 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Mall.Web.Startup
 {
     public class Startup
     {
+        public static string CookieScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
+
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             //Configure DbContext
@@ -22,9 +26,26 @@ namespace Mall.Web.Startup
                 DbContextOptionsConfigurer.Configure(options.DbContextOptions, options.ConnectionString);
             });
 
+
+            services.AddAuthentication(CookieScheme).AddCookie(CookieScheme, options => {
+
+                //如果用户访问受限制的资源而没有授权的时候,直接跳转到
+                options.AccessDeniedPath = "/Account/Forbidden/";
+                //如果未登陆,那么返回到登陆界面
+                options.LoginPath = "/Account/Login/";
+            });
             services.AddMvc(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
+
+
+
+            //添加swagger
+            services.AddSwaggerGen(options =>
+            {
+                options.SwaggerDoc("v1", new Info { Title = "AbpZeroTemplate API", Version = "v1" });
+                options.DocInclusionPredicate((docName, description) => true);
             });
 
             //Configure Abp and Dependency Injection
@@ -40,6 +61,16 @@ namespace Mall.Web.Startup
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             app.UseAbp(); //Initializes ABP framework.
+
+            app.UseSwagger();
+            //Enable middleware to serve swagger - ui assets(HTML, JS, CSS etc.)
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/v1/swagger.json", "AbpZeroTemplate API V1");
+            });
+
+
+            app.UseAuthentication();
 
             if (env.IsDevelopment())
             {

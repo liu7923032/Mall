@@ -11,8 +11,8 @@ namespace Mall.Localization
     {
         public static void Configure(ILocalizationConfiguration localizationConfiguration)
         {
-            localizationConfiguration.Languages.Add(new LanguageInfo("en", "English", "famfamfam-flags england", isDefault: true));
-            localizationConfiguration.Languages.Add(new LanguageInfo("tr", "Türkçe", "famfamfam-flags tr"));
+            localizationConfiguration.Languages.Add(new LanguageInfo("zh-ch", "中文", "famfamfam-flags cn", isDefault: true));
+            localizationConfiguration.Languages.Add(new LanguageInfo("en", "English", "famfamfam-flags england"));
 
             localizationConfiguration.Sources.Add(
                 new DictionaryBasedLocalizationSource(MallConsts.LocalizationSourceName,

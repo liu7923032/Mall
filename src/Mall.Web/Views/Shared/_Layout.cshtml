@@ -27,17 +27,38 @@
     <environment names="Development">
         @*<link rel="stylesheet" href="~/lib/bootstrap-paper/bootstrap.css" />
         <link rel="stylesheet" href="~/lib/toastr/toastr.css" />
-        <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />
-        <link rel="stylesheet" href="~/lib/famfamfam-flags/dist/sprite/famfamfam-flags.css" />
+        <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />*@
+       
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
-
-        <link rel="stylesheet" href="~/css/main.css" />*@
+        <link rel="stylesheet" href="~/lib/famfamfam-flags/dist/sprite/famfamfam-flags.css" />
+        <link rel="stylesheet" href="~/css/main.css" />
         <link rel="stylesheet" href="~/lib/layui/css/layui.css" />
         <link rel="stylesheet" href="~/css/main.css" />
     </environment>
 
     <environment names="Staging,Production">
         <link rel="stylesheet" href="~/view-resources/Views/_Bundles/layout-libs.min.css" asp-append-version="true" />
+    </environment>
+
+    <environment names="Development">
+        @*<script src="~/lib/json2/json2.js"></script>*@
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        @*<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+            <script src="~/lib/moment/min/moment-with-locales.js"></script>
+            <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+            <script src="~/lib/blockUI/jquery.blockUI.js"></script>
+            <script src="~/lib/toastr/toastr.js"></script>
+            <script src="~/lib/sweetalert/dist/sweetalert-dev.js"></script>
+            <script src="~/lib/spin.js/spin.js"></script>
+            <script src="~/lib/spin.js/jquery.spin.js"></script>*@
+        <script src="~/lib/layui/layui.js"></script>
+
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/abp.js"></script>
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.jquery.js"></script>
+        @*<script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.toastr.js"></script>
+            <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.blockUI.js"></script>
+            <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.sweet-alert.js"></script>
+            <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.spin.js"></script>*@
     </environment>
 
     <!-- View specific styles -->

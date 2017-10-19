@@ -1,0 +1,11 @@
+﻿{
+  "culture": "zh-cn",
+  "texts": {
+    "HelloWorld": "Hello World!",
+    "ChangeLanguage": "变更语言",
+    "Mall": "商城",
+    "About": "关于",
+    "Mall_Description": "欢迎来的麦迪商城...",
+    "About_Description": "这个是用Asp.net core framework创建的一个简单的启动模板"
+  }
+}

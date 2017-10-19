@@ -10,6 +10,8 @@ namespace Mall
         {
             Configuration.Auditing.IsEnabledForAnonymousUsers = true;
 
+
+
             MallLocalizationConfigurer.Configure(Configuration.Localization);
         }
 

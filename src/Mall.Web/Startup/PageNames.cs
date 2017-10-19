@@ -2,7 +2,7 @@
 {
     public class PageNames
     {
-        public const string Home = "Home";
+        public const string Mall = "Mall";
         public const string About = "About";
     }
 }

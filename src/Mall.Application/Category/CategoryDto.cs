@@ -7,34 +7,10 @@ using Abp.Domain.Entities;
 
 namespace Mall.Category
 {
-    public class CategoryDto:EntityDto
-    {
-        [Required]
-        [StringLength(40)]
-        public string Name { get; set; }
-
-        public int? ParentId { get; set; }
-
-        [Required]
-        [StringLength(20)]
-        public string CategoryNo { get; set; }
-
-        [Required]
-        public string Creator { get; set; }
-
-        public DateTime CreationTime { get; set; }
-    }
-
-
-    public class CategoryOutput
-    {
-        public List<CategoryDto> Category { get; set; }
-    }
-
     /// <summary>
     /// 
     /// </summary>
-    public class CategoryInput
+    public class CreateCategoryInput
     {
         [Required]
         [StringLength(40)]
@@ -50,9 +26,28 @@ namespace Mall.Category
         public string Describe { get; set; }
     }
 
+    /// <summary>
+    /// 更新的
+    /// </summary>
+    public class UpdateCategoryInput : CreateCategoryInput, IEntityDto<int>
+    {
+        [Required]
+        public int Id { get; set; }
+    }
+
+    public class CategoryDto: UpdateCategoryInput
+    {
+
+    }
+
+    public class GetAllCategoryInput : PagedAndSortedResultRequestDto
+    {
+        public string Name { get; set; }
+    }
 
 
 
 
-    
+
+
 }

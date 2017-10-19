@@ -1,27 +1,36 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Abp.Runtime.Session;
+using Mall.Domain.Entities;
 
 namespace Mall.Category
 {
     public interface ICategoryAppService
     {
-        Task Add(CategoryInput input);
+
         //Task Update(CategoryOutput )
     }
 
-    public class CategoryAppService : MallAppServiceBase, ICategoryAppService
+    
+    public class CategoryAppService : AsyncCrudAppService<Mall_Category, CategoryDto, int, GetAllCategoryInput, CreateCategoryInput, UpdateCategoryInput>
     {
-        public Task Add(CategoryInput input)
+        
+        private IRepository<Mall_Category> _categoryRepository;
+        public CategoryAppService(IRepository<Mall_Category> categoryRepository) : base(categoryRepository)
         {
-            throw new NotImplementedException();
+            _categoryRepository = categoryRepository;
         }
 
-        public  Task AddCategory()
+        protected override IQueryable<Mall_Category> CreateFilteredQuery(GetAllCategoryInput input)
         {
-            throw new NotImplementedException();
+            return base.CreateFilteredQuery(input)
+                .WhereIf(!string.IsNullOrEmpty(input.Name), u => u.Name.Contains(input.Name));
         }
-        
     }
 }

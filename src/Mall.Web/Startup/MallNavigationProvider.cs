@@ -13,8 +13,8 @@ namespace Mall.Web.Startup
             context.Manager.MainMenu
                 .AddItem(
                     new MenuItemDefinition(
-                        PageNames.Home,
-                        L("HomePage"),
+                        PageNames.Mall,
+                        L("Mall"),
                         url: "",
                         icon: "fa fa-home"
                         )
