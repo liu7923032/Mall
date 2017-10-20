@@ -5,23 +5,21 @@ using System.Threading.Tasks;
 using Mall.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using Abp.Runtime.Session;
 using Abp.Web.Models;
-using Abp.Auditing;
+using Mall.LoginApp;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Mall.Web.Controllers
 {
     public class AccountController : MallControllerBase
     {
-        private IAuthenticationService _authenticationService;
+        private ILoginManager _loginManager;
 
-        private IAbpSession _abpSession;
-
-        public AccountController(IAuthenticationService authenticationService,IAbpSession abpSession)
+        public AccountController(ILoginManager loginManager)
         {
-            _authenticationService = authenticationService;
-            _abpSession = abpSession;
+            _loginManager = loginManager;
         }
 
         public IActionResult Index()
@@ -29,31 +27,45 @@ namespace Mall.Web.Controllers
             return View();
         }
 
-        //[HttpPost]
+        [AllowAnonymous]
+        [HttpPost]
         public async Task<JsonResult> LoginAsync(LoginModel login)
         {
+            if (!ModelState.IsValid)
+            {
+
+            }
+
+            var user = await _loginManager.GetAccount(login.Account);
+
+            string result = await _loginManager.ValidateError(user, login.Password);
+
+            if (!string.IsNullOrEmpty(result))
+            {
+
+            }
+
+
             //创建身份证
             var identity = new ClaimsIdentity();
-            identity.AddClaim(new Claim("UserId", "000"));
+            identity.AddClaim(new Claim(ClaimTypes.Sid, user.Id.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.Name, user.Account));
             //创建证件管理者
-            var claimsPrincipal = new ClaimsPrincipal();
-            claimsPrincipal.AddIdentity(new ClaimsIdentity());
+
             //系统登陆
-            await _authenticationService.SignInAsync(HttpContext, "", new ClaimsPrincipal(), new AuthenticationProperties() { IsPersistent = true });
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties() { IsPersistent = login.IsRemember });
 
             return Json(new AjaxResponse { TargetUrl = "/Home/Index" });
             //await HttpContext.Authentication.SignInAsync("MyCookieAuthenticationScheme", principal);
             //return null;
         }
 
-        [HttpPost]
-        [DisableAuditing]
-        public async Task<JsonResult> Test()
-        {
-            return Json(new AjaxResponse());
-        }
-
-
+        /// <summary>
+        /// 登陆页面
+        /// </summary>
+        /// <returns></returns>
+        [AllowAnonymous]
+        [HttpGet]
         public IActionResult Login()
         {
             return View();

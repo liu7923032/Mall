@@ -22,30 +22,26 @@
     <script src="~/lib/layui/layui.js"></script>
     <script type="text/javascript">
         layui.use("jquery", function () {
-
             var $ = layui.jquery;
-
             $('#btnLogin').click(function () {
-                var obj = {
+                var loginParam = {
 
                     "Account": $('input[name=Account]').val(),
                     "Password": $('input[name=Password]').val(),
                     "IsRemember": false,
                 }
-
-
                 $.ajax({
-                    method: "get",
+                    method: "post",
                     dataType: "json",
                     url: "/Account/LoginAsync",
-                    data: JSON.stringify(obj),
+                    data: loginParam,
                     success: function (data) {
                         console.log(data);
                     }
 
                 })
             });
-        })
+        });
     </script>
 </body>
 </html>

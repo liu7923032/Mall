@@ -27,6 +27,7 @@ namespace Mall.Web.Startup
             });
 
 
+            //添加授权认证
             services.AddAuthentication(CookieScheme)
                 .AddCookie(CookieScheme, options =>
                 {
@@ -73,8 +74,6 @@ namespace Mall.Web.Startup
             });
 
 
-            app.UseAuthentication();
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -84,6 +83,8 @@ namespace Mall.Web.Startup
             {
                 app.UseExceptionHandler("/Error");
             }
+
+            app.UseAuthentication();
 
             app.UseStaticFiles();
 
