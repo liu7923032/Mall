@@ -11,21 +11,23 @@ namespace Mall.EntityFrameworkCore
         /// <summary>
         /// 购物车
         /// </summary>
-        public virtual DbSet<Mall_Cart> Mall_Cart { get; set; }
+        public virtual DbSet<Mall_Cart> Mall_Carts { get; set; }
         /// <summary>
         /// 购物车明细
         /// </summary>
-        public virtual DbSet<Mall_CartItem> Mall_CartItem { get; set; }
+        public virtual DbSet<Mall_CartItem> Mall_CartItems { get; set; }
         /// <summary>
         /// 订单
         /// </summary>
-        public virtual DbSet<Mall_Order> Mall_Order { get; set; }
+        public virtual DbSet<Mall_Order> Mall_Orders { get; set; }
 
-        public virtual DbSet<Mall_Category> Mall_Category { get; set; }
+        public virtual DbSet<Mall_Category> Mall_Categories { get; set; }
         /// <summary>
         /// 商品信息
         /// </summary>
-        public virtual DbSet<Mall_Product> Mall_Product { get; set; }
+        public virtual DbSet<Mall_Product> Mall_Products { get; set; }
+
+        public virtual DbSet<Mall_Account> Mall_Accounts { get; set; }
         #endregion
 
         public MallDbContext(DbContextOptions<MallDbContext> options) 

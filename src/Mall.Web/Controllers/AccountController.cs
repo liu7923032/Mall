@@ -10,6 +10,8 @@ using System.Security.Claims;
 using Abp.Web.Models;
 using Mall.LoginApp;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Abp.Runtime.Session;
+using System.Threading;
 
 namespace Mall.Web.Controllers
 {
@@ -17,9 +19,15 @@ namespace Mall.Web.Controllers
     {
         private ILoginManager _loginManager;
 
-        public AccountController(ILoginManager loginManager)
+        private IAbpSession _abpSession;
+
+        
+
+        public AccountController(ILoginManager loginManager
+            , IAbpSession abpSession)
         {
             _loginManager = loginManager;
+            _abpSession = abpSession;
         }
 
         public IActionResult Index()
@@ -29,7 +37,7 @@ namespace Mall.Web.Controllers
 
         [AllowAnonymous]
         [HttpPost]
-        public async Task<JsonResult> LoginAsync(LoginModel login)
+        public async Task<JsonResult> LoginAsync([FromBody]LoginModel login)
         {
             if (!ModelState.IsValid)
             {
@@ -48,13 +56,20 @@ namespace Mall.Web.Controllers
 
             //创建身份证
             var identity = new ClaimsIdentity();
-            identity.AddClaim(new Claim(ClaimTypes.Sid, user.Id.ToString()));
+            identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Name, user.Account));
             //创建证件管理者
 
-            //系统登陆
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity), new AuthenticationProperties() { IsPersistent = login.IsRemember });
+            ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identity);
 
+            //Thread.CurrentPrincipal = claimsPrincipal;
+
+            //系统登陆
+            
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, claimsPrincipal, new AuthenticationProperties() { IsPersistent = login.IsRemember });
+
+            
+            
             return Json(new AjaxResponse { TargetUrl = "/Home/Index" });
             //await HttpContext.Authentication.SignInAsync("MyCookieAuthenticationScheme", principal);
             //return null;
@@ -69,6 +84,13 @@ namespace Mall.Web.Controllers
         public IActionResult Login()
         {
             return View();
+        }
+
+        [AllowAnonymous]
+        [HttpPost]
+        public ActionResult Test(string id)
+        {
+            return Json(new AjaxResponse() { TargetUrl = "/Home/Index" });
         }
     }
 }
