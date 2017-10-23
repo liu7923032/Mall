@@ -16,7 +16,7 @@ namespace Mall.Web.Startup
 {
     public class Startup
     {
-        public static string CookieScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        public static string CookieScheme = "AppAuthenticationScheme";
 
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
@@ -36,6 +36,11 @@ namespace Mall.Web.Startup
                     options.AccessDeniedPath = "/Account/Forbidden/";
                     //如果未登陆,那么返回到登陆界面
                     options.LoginPath = "/Account/Login";
+                    //设置Cookie的名称
+                    options.Cookie.Name = "Abp.Mall.Cooike";
+
+                    //options.Cookie.Domain = "e.mdsd.cn";
+                    //options.Cookie.Path = "/";
                 });
 
             services.AddMvc(options =>
@@ -84,9 +89,9 @@ namespace Mall.Web.Startup
                 app.UseExceptionHandler("/Error");
             }
 
-            app.UseAuthentication();
-
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseMvc(routes =>
             {
