@@ -27,21 +27,30 @@ namespace Mall.Web.Startup
             });
 
 
-            //添加授权认证
-            services.AddAuthentication(CookieScheme)
-                .AddCookie(CookieScheme, options =>
-                {
+            services.AddAuthentication(authOpts => {
+                //authOpts.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                //authOpts.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                authOpts.DefaultScheme =CookieAuthenticationDefaults.AuthenticationScheme;
+            }).AddCookie(cookieOpts =>
+            {
+                cookieOpts.LoginPath = "/Account/Login/";
+            });
 
-                    //如果用户访问受限制的资源而没有授权的时候,直接跳转到
-                    options.AccessDeniedPath = "/Account/Forbidden/";
-                    //如果未登陆,那么返回到登陆界面
-                    options.LoginPath = "/Account/Login";
-                    //设置Cookie的名称
-                    options.Cookie.Name = "Abp.Mall.Cooike";
+            ////添加授权认证
+            //services.AddAuthentication(CookieScheme)
+            //    .AddCookie(CookieScheme, options =>
+            //    {
 
-                    //options.Cookie.Domain = "e.mdsd.cn";
-                    //options.Cookie.Path = "/";
-                });
+            //        //如果用户访问受限制的资源而没有授权的时候,直接跳转到
+            //        options.AccessDeniedPath = "/Account/Forbidden/";
+            //        //如果未登陆,那么返回到登陆界面
+            //        options.LoginPath = "/Account/Login";
+            //        //设置Cookie的名称
+            //        //options.Cookie.Name = "Abp.Mall.Cooike";
+
+            //        //options.Cookie.Domain = "e.mdsd.cn";
+            //        //options.Cookie.Path = "/";
+            //    });
 
             services.AddMvc(options =>
             {

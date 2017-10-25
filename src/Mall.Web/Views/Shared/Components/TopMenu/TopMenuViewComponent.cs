@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Mall.Web.Views.Shared.Components.TopMenu
 {
-    public class TopMenuViewComponent : ViewComponent
+    public class TopMenuViewComponent : MallViewComponent
     {
         private readonly IUserNavigationManager _userNavigationManager;
         private readonly IAbpSession _abpSession;

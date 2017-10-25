@@ -2,7 +2,7 @@
 {
     public class MallConsts
     {
-        public const string LocalizationSourceName = "Mall";
+        public const string LocalizationSourceName = "Mall-cn";
 
         public const string ConnectionStringName = "Default";
     }

@@ -10,14 +10,13 @@
 </head>
 <body>
     <div>
-
-        <div>
-            <label>姓名:</label> <input name="Account" value="admin" />
-        </div>
-        <div>
-            <label>姓名:</label> <input name="Password" value="123"/>
-        </div>
-        <button type="button" id="btnLogin">登陆</button>
+            <div>
+                <label>姓名:</label> <input name="Account" value="admin" />
+            </div>
+            <div>
+                <label>姓名:</label> <input name="Password" value="123" />
+            </div>
+            <button type="submit"  id="btnLogin">登陆</button>
     </div>
     @*<script src="~/lib/layui/layui.js"></script>*@
     <script src="~/lib/jquery/dist/jquery.js"></script>
@@ -25,16 +24,16 @@
         $(function () {
             $('#btnLogin').click(function () {
                 var loginParam = {
-                    "Account": $('input[name=Account]').val(),
-                    "Password": $('input[name=Password]').val(),
-                    "IsRemember": false,
+                    "account": $('input[name=Account]').val(),
+                    "password": $('input[name=Password]').val(),
+                    "isRemember": false
                 }
                 $.ajax({
                     method: "post",
                     contentType: "application/json;charset=utf-8",
                     dataType: "json",
                     url: "/Account/LoginAsync",
-                    data: JSON.stringify(loginParam),
+                    data:JSON.stringify(loginParam),
                     success: function (data) {
                         console.log(data);
                     }

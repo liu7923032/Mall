@@ -21,7 +21,7 @@ namespace Mall.Web.Controllers
     {
         private ILoginManager _loginManager;
 
-        private static readonly string CookieScheme = "AppAuthenticationScheme";
+        private static readonly string CookieScheme = CookieAuthenticationDefaults.AuthenticationScheme;
 
         public AccountController(ILoginManager loginManager)
         {
@@ -29,10 +29,9 @@ namespace Mall.Web.Controllers
 
         }
 
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
+       
+
+       
 
         [AllowAnonymous]
         [HttpPost]
@@ -42,6 +41,7 @@ namespace Mall.Web.Controllers
             {
                 throw new AbpException("");
             }
+            //var login = new LoginModel() { Account = account, Password = password, IsRemember = isRemember };
             //身份认证
             var user = await _loginManager.SignAsync(login);
             //证件当事人
@@ -49,7 +49,22 @@ namespace Mall.Web.Controllers
             //系统登陆
             await HttpContext.SignInAsync(CookieScheme, claimPrincipal, new AuthenticationProperties() { IsPersistent = login.IsRemember });
             //跳转地址
+            //return RedirectToAction("Index", "Home");
             return Redirect("/Home/Index");
+            //if (string.IsNullOrEmpty(returnUrl))
+            //{
+            //    return Redirect("/Home/Index");
+            //}
+            //else
+            //{
+            //    return Redirect(returnUrl);
+            //}
+        }
+
+        public async Task<ActionResult> SignOut()
+        {
+            await HttpContext.SignOutAsync(CookieScheme);
+            return Redirect("/Account/Login");
         }
 
         /// <summary>

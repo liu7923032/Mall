@@ -10,58 +10,70 @@
     <environment names="Staging,Production">
         <script src="~/js/views/home/index.min.js"></script>
     </environment>
+
+
 }
 
 
-<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
-    
-    <ul class="layui-tab-title">
-        <li class="layui-this">网站设置</li>
-        <li>用户管理</li>
-        <li>权限分配</li>
-        <li>商品管理</li>
-        <li>订单管理</li>
-    </ul>
-    <div class="layui-tab-content">
-        <div class="layui-tab-item layui-show">
-            <div class="layui-container">
-                <div class="layui-row"> 
-                    <div class="layui-col-md3">
-                        <div class="product-item">
-                            <div class="p-img"></div>
-                            <div class="p-title">吹风机</div>
-                            <div class="p-price">1000￥</div>
-                        </div>
+
+
+
+<!----------放置商品分类------------->
+<div class="mall-category">
+    <div class="layui-container">
+        <ul class="layui-clear">
+            <li class="category-first"><a>首页</a></li>
+            <li><a>运动类</a></li>
+            <li><a>运动类</a></li>
+            <li><a>运动类</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="layui-container">
+    <div class="layui-row ">
+        <div class="layui-col-md9">
+            <div class="layui-row">
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
                     </div>
-                    <div class="layui-col-md3">
-                        <div class="product-item">
-                            <div class="p-img"></div>
-                            <div class="p-title">吹风机</div>
-                            <div class="p-price">1000￥</div>
-                        </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
                     </div>
-                    <div class="layui-col-md3">
-                        <div class="product-item">
-                            <div class="p-img"></div>
-                            <div class="p-title">吹风机</div>
-                            <div class="p-price">1000￥</div>
-                        </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
                     </div>
-                    <div class="layui-col-md3">
-                        <div class="product-item">
-                            <div class="p-img"></div>
-                            <div class="p-title">吹风机</div>
-                            <div class="p-price">1000￥</div>
-                        </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
                     </div>
                 </div>
             </div>
-
         </div>
-        <div class="layui-tab-item">33</div>
-        <div class="layui-tab-item">113331</div>
+        <div class="layui-col-md3">
+            <div class="layui-colla-item layui-bg-red">
+                <h2 class="layui-colla-title">杜甫</h2>
+                <div class="layui-colla-content layui-show">内容区域</div>
+            </div>
+        </div>
     </div>
 </div>
+
+
 
 
 <script type="text/javascript">
@@ -69,5 +81,7 @@
     layui.use('element', function () {
 
         var tab = layui.element;
+
+        var eletement = layui.element;
     });
 </script>

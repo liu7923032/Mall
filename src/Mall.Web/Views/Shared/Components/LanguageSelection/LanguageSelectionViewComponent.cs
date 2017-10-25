@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Mall.Web.Views.Shared.Components.LanguageSelection
 {
-    public class LanguageSelectionViewComponent: ViewComponent
+    public class LanguageSelectionViewComponent: MallViewComponent
     {
         private readonly ILanguageManager _languageManager;
 

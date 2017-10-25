@@ -4,6 +4,7 @@
 @using Abp.Timing
 @using Mall.Web.Views.Shared.Components.LanguageSelection
 @using Mall.Web.Views.Shared.Components.TopMenu
+@using Mall.Web.Views.Shared.Components.User
 @using Abp.Web.Security.AntiForgery
 @inject IAbpAntiForgeryManager AbpAntiForgeryManager
 @{
@@ -26,9 +27,9 @@
 
     <environment names="Development">
         @*<link rel="stylesheet" href="~/lib/bootstrap-paper/bootstrap.css" />
-        <link rel="stylesheet" href="~/lib/toastr/toastr.css" />
-        <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />*@
-       
+            <link rel="stylesheet" href="~/lib/toastr/toastr.css" />
+            <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />*@
+
         <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
         <link rel="stylesheet" href="~/lib/famfamfam-flags/dist/sprite/famfamfam-flags.css" />
         <link rel="stylesheet" href="~/css/main.css" />
@@ -52,7 +53,6 @@
             <script src="~/lib/spin.js/spin.js"></script>
             <script src="~/lib/spin.js/jquery.spin.js"></script>*@
         <script src="~/lib/layui/layui.js"></script>
-
         <script src="~/lib/abp-web-resources/Abp/Framework/scripts/abp.js"></script>
         <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.jquery.js"></script>
         @*<script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.toastr.js"></script>
@@ -79,54 +79,53 @@
 
 </head>
 <body class="mall-main">
-
-    
+    <!---------header--------->
     <div class="mall-header">
-        <div class="layui-logo ">
-            <i class="layui-icon " style="font-size:20px;">&#xe657;</i>
-            <div class="layui-inline" style="margin-left:10px;">
-                麦迪商城
-            </div>
-        </div>
-        <ul class="layui-nav layui-layout-left">
-            @await Component.InvokeAsync(typeof(TopMenuViewComponent), new { activeMenu = ViewBag.ActiveMenu })
-        </ul>
-        <ul class="layui-nav layui-layout-right">
-            <li class="layui-nav-item">
-                <a href="/Account/Login">登陆</a>
-            </li>
-            @await Component.InvokeAsync(typeof(LanguageSelectionViewComponent))
-        </ul>
-    </div>
-
-    <div class="mall-body">
         <div class="layui-container">
-            @RenderBody()
-        </div>
-    </div>
+            <div class="layui-logo ">
+                <i class="layui-icon " style="font-size:20px;">&#xe657;</i>
+                <div class="layui-inline" style="margin-left:10px;">
+                    麦迪商城
+                </div>
+            </div>
+            <ul class="layui-nav layui-layout-left">
+                @await Component.InvokeAsync(typeof(TopMenuViewComponent), new { activeMenu = ViewBag.ActiveMenu })
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                @await Component.InvokeAsync(typeof(UserViewComponent))
 
-     
+                @await Component.InvokeAsync(typeof(LanguageSelectionViewComponent))
+            </ul>
+        </div>
+
+
+    </div>
+    <div class="layui-clear"></div>
+    <!---------华丽的分割线--------->
+    <hr class="layui-bg-gray" style="margin-top:50px;"/>
+    <!---------加载子页面明细--------->
+    @RenderBody()
     <!-- Global scripts -->
 
     <environment names="Development">
         @*<script src="~/lib/json2/json2.js"></script>*@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         @*<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
-        <script src="~/lib/moment/min/moment-with-locales.js"></script>
-        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-        <script src="~/lib/blockUI/jquery.blockUI.js"></script>
-        <script src="~/lib/toastr/toastr.js"></script>
-        <script src="~/lib/sweetalert/dist/sweetalert-dev.js"></script>
-        <script src="~/lib/spin.js/spin.js"></script>
-        <script src="~/lib/spin.js/jquery.spin.js"></script>*@
+            <script src="~/lib/moment/min/moment-with-locales.js"></script>
+            <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+            <script src="~/lib/blockUI/jquery.blockUI.js"></script>
+            <script src="~/lib/toastr/toastr.js"></script>
+            <script src="~/lib/sweetalert/dist/sweetalert-dev.js"></script>
+            <script src="~/lib/spin.js/spin.js"></script>
+            <script src="~/lib/spin.js/jquery.spin.js"></script>*@
         <script src="~/lib/layui/layui.js"></script>
 
         <script src="~/lib/abp-web-resources/Abp/Framework/scripts/abp.js"></script>
         <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.jquery.js"></script>
         @*<script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.toastr.js"></script>
-        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.blockUI.js"></script>
-        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.sweet-alert.js"></script>
-        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.spin.js"></script>*@
+            <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.blockUI.js"></script>
+            <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.sweet-alert.js"></script>
+            <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.spin.js"></script>*@
     </environment>
 
     <environment names="Staging,Production">
@@ -145,7 +144,7 @@
             moment.locale('@CultureInfo.CurrentUICulture.Name');
         }*@
 
-       
+
     </script>
 
     <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->

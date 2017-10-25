@@ -1,0 +1,160 @@
+﻿@using System.Globalization
+@using System.Threading
+@using System.Threading.Tasks
+@using Abp.Timing
+@using Mall.Web.Views.Shared.Components.LanguageSelection
+@using Mall.Web.Views.Shared.Components.TopMenu
+@using Abp.Web.Security.AntiForgery
+@inject IAbpAntiForgeryManager AbpAntiForgeryManager
+@{
+    AbpAntiForgeryManager.SetCookie(Context);
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="dark.liu">
+
+    <link rel="shortcut icon" href="~/favicon.ico">
+
+    <title>麦迪商城</title>
+
+    <!-- Global styles -->
+
+    <environment names="Development">
+        @*<link rel="stylesheet" href="~/lib/bootstrap-paper/bootstrap.css" />
+        <link rel="stylesheet" href="~/lib/toastr/toastr.css" />
+        <link rel="stylesheet" href="~/lib/sweetalert/dist/sweetalert.css" />*@
+       
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="~/lib/famfamfam-flags/dist/sprite/famfamfam-flags.css" />
+        <link rel="stylesheet" href="~/css/main.css" />
+        <link rel="stylesheet" href="~/lib/layui/css/layui.css" />
+        <link rel="stylesheet" href="~/css/main.css" />
+    </environment>
+
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/view-resources/Views/_Bundles/layout-libs.min.css" asp-append-version="true" />
+    </environment>
+
+    <environment names="Development">
+        @*<script src="~/lib/json2/json2.js"></script>*@
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        @*<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+            <script src="~/lib/moment/min/moment-with-locales.js"></script>
+            <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+            <script src="~/lib/blockUI/jquery.blockUI.js"></script>
+            <script src="~/lib/toastr/toastr.js"></script>
+            <script src="~/lib/sweetalert/dist/sweetalert-dev.js"></script>
+            <script src="~/lib/spin.js/spin.js"></script>
+            <script src="~/lib/spin.js/jquery.spin.js"></script>*@
+        <script src="~/lib/layui/layui.js"></script>
+
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/abp.js"></script>
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.jquery.js"></script>
+        @*<script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.toastr.js"></script>
+            <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.blockUI.js"></script>
+            <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.sweet-alert.js"></script>
+            <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.spin.js"></script>*@
+    </environment>
+
+    <!-- View specific styles -->
+    @RenderSection("styles", required: false)
+
+    @*<script type="text/javascript">
+            //This is used to get the application's root path from javascript. It's useful if you're running application in a virtual directory under IIS.
+            var abp = abp || {}; abp.appPath = '@ApplicationPath';
+        </script>*@
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    @*<!--[if lt IE 9]>
+            <script src="@Url.Content("~/Scripts/others/html5shiv.js")"></script>
+            <script src="@Url.Content("~/Scripts/others/respond.min.js")"></script>
+        <![endif]-->*@
+
+    @*@Scripts.Render("~/Bundles/vendor/js/top")*@
+
+</head>
+<body class="mall-main">
+
+    
+    <div class="mall-header">
+        <div class="layui-logo ">
+            <i class="layui-icon " style="font-size:20px;">&#xe657;</i>
+            <div class="layui-inline" style="margin-left:10px;">
+                麦迪商城
+            </div>
+        </div>
+        <ul class="layui-nav layui-layout-left">
+            @await Component.InvokeAsync(typeof(TopMenuViewComponent), new { activeMenu = ViewBag.ActiveMenu })
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="/Account/Login">登陆</a>
+            </li>
+            @await Component.InvokeAsync(typeof(LanguageSelectionViewComponent))
+        </ul>
+    </div>
+
+    <div class="mall-body">
+        <div class="layui-container">
+            @RenderBody()
+        </div>
+    </div>
+
+     
+    <!-- Global scripts -->
+
+    <environment names="Development">
+        @*<script src="~/lib/json2/json2.js"></script>*@
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        @*<script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+        <script src="~/lib/moment/min/moment-with-locales.js"></script>
+        <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+        <script src="~/lib/blockUI/jquery.blockUI.js"></script>
+        <script src="~/lib/toastr/toastr.js"></script>
+        <script src="~/lib/sweetalert/dist/sweetalert-dev.js"></script>
+        <script src="~/lib/spin.js/spin.js"></script>
+        <script src="~/lib/spin.js/jquery.spin.js"></script>*@
+        <script src="~/lib/layui/layui.js"></script>
+
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/abp.js"></script>
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.jquery.js"></script>
+        @*<script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.toastr.js"></script>
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.blockUI.js"></script>
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.sweet-alert.js"></script>
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.spin.js"></script>*@
+    </environment>
+
+    <environment names="Staging,Production">
+        <script src="~/view-resources/Views/_Bundles/layout-libs.min.js" asp-append-version="true"></script>
+    </environment>
+
+    <script>
+        //初始化
+        layui.use(["element"], function (data) {
+            var element = layui.element;
+            //var $ = layui.jquery;
+            console.log($.trim("aaa"))
+        });
+        abp.localization.defaultSourceName = '@LocalizationSourceName';
+        @*if (moment) { //Localizing momentjs
+            moment.locale('@CultureInfo.CurrentUICulture.Name');
+        }*@
+
+       
+    </script>
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="~/AbpServiceProxies/GetAll?v=@(Clock.Now.Ticks)" type="text/javascript"></script>
+    <script src="~/AbpScripts/GetScripts?v=@(Clock.Now.Ticks)" type="text/javascript"></script>
+
+    <!-- View specific scripts -->
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

@@ -16,9 +16,11 @@ namespace Mall.LoginApp
 {
     public interface ILoginManager
     {
-        //Task<>
+        //通过账号来获取登陆对象
         Task<Mall_Account> GetUserByAccountAsync(string account);
+        //登陆系统
         Task<Mall_Account> SignAsync(LoginModel login);
+        //创建证件当事人
         Task<ClaimsPrincipal> GetPrincipalAsync(Mall_Account user, string authenticationType);
     }
 

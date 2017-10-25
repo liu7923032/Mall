@@ -5,11 +5,11 @@
     //TODO: Get current virtual path
     var ApplicationPath = "/";
 }
+
 @foreach (var menuItem in Model.MainMenu.Items)
 {
     <li  class="@(Model.ActiveMenuItemName == menuItem.Name ? "active" : "") layui-nav-item">
-        @if (menuItem.Items.IsNullOrEmpty())
-        {
+       
             <a href="@Model.CalculateMenuUrl(ApplicationPath, menuItem)">
                 @if (!string.IsNullOrWhiteSpace(menuItem.Icon))
                 {
@@ -17,30 +17,5 @@
                 }
                 @menuItem.DisplayName
             </a>
-        }
-        else
-        {
-            <a href="" data-toggle="dropdown">
-                @if (!string.IsNullOrWhiteSpace(menuItem.Icon))
-                {
-                    <i class="@menuItem.Icon"></i>
-                }
-                @menuItem.DisplayName
-            </a>
-            <ul class="dropdown-menu">
-                @foreach (var subMenuItem in menuItem.Items)
-                {
-                    <li>
-                        <a href="@Model.CalculateMenuUrl(ApplicationPath, subMenuItem)">
-                            @if (!string.IsNullOrWhiteSpace(subMenuItem.Icon))
-                            {
-                                <i class="@subMenuItem.Icon"></i>
-                            }
-                            @subMenuItem.DisplayName
-                        </a>
-                    </li>
-                }
-            </ul>
-        }
     </li>
 }
