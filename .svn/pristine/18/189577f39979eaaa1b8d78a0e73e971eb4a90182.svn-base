@@ -1,0 +1,72 @@
+﻿
+
+
+
+<div class="layui-container mall-details">
+    <!-------------上半区:主要是图片和相关描述--------------->
+    <div class="layui-row layui-col-space20">
+        <div class="layui-col-md5">
+            <div class="mall-pic">
+                <img src="https://img10.360buyimg.com/n1/s450x450_jfs/t9787/309/1633930906/65379/8fb80cc0/59e42831N83d658b3.jpg"/>
+            </div>
+            @*<div class="layui-carousel mall-pics" id="pics">
+                <div carousel-item>
+                    <div>条目1</div>
+                    <div>条目2</div>
+                    <div>条目3</div>
+                    <div>条目4</div>
+                    <div>条目5</div>
+                </div>
+            </div>*@
+        </div>
+        <div class="layui-col-md7" >
+            <div class="mall-desc">
+                <div class="mall-d-title">最酷炫的手机(Iphone)</div>
+                <div class="mall-d-parameter"></div>
+                <div class="mall-d-btns">
+                    <a class="layui-btn layui-btn-big layui-btn-danger">加入购物车</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr  class="layui-bg-gray"/>
+    <!-------------下半区:主要是详细参数和评论--------------->
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-tab layui-tab-brief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">商品介绍</li>
+                    <li>用户评论</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="mall-desc">
+
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="mall-"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        layui.use(['element', 'carousel'], function () {
+
+            var carousel = layui.carousel;
+
+            carousel.render({
+                elem: '#pics'
+                , width: '100%' //设置容器宽度
+                , arrow: 'always' //始终显示箭头
+                //,anim: 'updown' //切换动画方式
+            });
+        });
+    </script>
+}

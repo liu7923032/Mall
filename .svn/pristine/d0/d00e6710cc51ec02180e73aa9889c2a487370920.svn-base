@@ -1,0 +1,21 @@
+﻿@using Abp.Collections.Extensions
+@using Mall.Web.Views.Shared.Components.TopMenu
+@model TopMenuViewModel
+@{
+    //TODO: Get current virtual path
+    var ApplicationPath = "/";
+}
+
+@foreach (var menuItem in Model.MainMenu.Items)
+{
+    <li  class="@(Model.ActiveMenuItemName == menuItem.Name ? "active" : "") layui-nav-item">
+       
+            <a href="@Model.CalculateMenuUrl(ApplicationPath, menuItem)">
+                @if (!string.IsNullOrWhiteSpace(menuItem.Icon))
+                {
+                    <i class="@menuItem.Icon"></i>
+                }
+                @menuItem.DisplayName
+            </a>
+    </li>
+}
