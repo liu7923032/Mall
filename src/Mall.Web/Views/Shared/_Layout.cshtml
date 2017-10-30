@@ -120,24 +120,25 @@
     <script type="text/javascript">
 
         //初始化layui
-        layui.use(["element", "util","layer"], function () {
+        layui.use(["element", "util"], function () {
             var util = layui.util;
 
-            var layer = layui.layer;
+           
             util.fixbar({
-                car:true,
-                top: true
-               ,css: { right: 50, bottom: 100 }
-               , bgcolor: '#009688'
-               ,click: function (type) {
-                    if (type === 'bar1') {
+               car:true,
+               top: true,
+               css: { right: 50, bottom: 100 },
+               bgcolor: '#009688',
+               click: function (type) {
+                   if (type === 'top') {
                         window.top();
-                    } else if (type === 'bar2') {
+                   } else if (type === 'car') {
                         layer.msg('两个bar都可以设定是否开启')
-                    }
+                   }
                 }
             });
-            
+
+
         });
         abp.localization.defaultSourceName = '@LocalizationSourceName';
         @*if (moment) { //Localizing momentjs
