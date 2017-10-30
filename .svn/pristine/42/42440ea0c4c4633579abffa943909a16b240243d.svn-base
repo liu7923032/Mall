@@ -1,0 +1,29 @@
+﻿
+
+/*仿制bootstrap 做的layui input-group*/
+.layui-input-group {
+    position: relative;
+    display: table;
+    border-collapse: separate;
+
+    span {
+        font-weight: 500;
+        padding: 6px 12px;
+        border: 1px solid #e6e6e6;
+        line-height: 1;
+        text-align: center;
+        display: table-cell;
+        background-color: #eee;
+        cursor: pointer;
+    }
+
+    input {
+        width: 100%;
+        line-height: 1;
+        display: table-cell;
+        padding: 0 10px;
+        text-align: center;
+        color: blue;
+        font-weight: 800;
+    }
+}

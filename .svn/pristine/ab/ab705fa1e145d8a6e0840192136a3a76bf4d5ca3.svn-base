@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Mall.Product;
+
+namespace Mall.Web.Models.Home
+{
+    public class ProductListViewModel
+    {
+
+        public IReadOnlyList<ProductDto> Products
+        { get; set; }
+    }
+}
