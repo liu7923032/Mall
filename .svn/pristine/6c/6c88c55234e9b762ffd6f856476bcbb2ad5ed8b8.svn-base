@@ -12,8 +12,8 @@ using System;
 namespace Mall.Migrations
 {
     [DbContext(typeof(MallDbContext))]
-    [Migration("20171020115945_initialize")]
-    partial class initialize
+    [Migration("20171031073044_initlize")]
+    partial class initlize
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -49,7 +49,7 @@ namespace Mall.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Mall_Accounts");
+                    b.ToTable("Mall_Account");
                 });
 
             modelBuilder.Entity("Mall.Domain.Entities.Mall_Cart", b =>
@@ -69,7 +69,7 @@ namespace Mall.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Mall_Carts");
+                    b.ToTable("Mall_Cart");
                 });
 
             modelBuilder.Entity("Mall.Domain.Entities.Mall_CartItem", b =>
@@ -87,15 +87,15 @@ namespace Mall.Migrations
 
                     b.Property<decimal>("ItemPrice");
 
-                    b.Property<int?>("Mall_CartId");
-
                     b.Property<int>("ProductId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Mall_CartId");
+                    b.HasIndex("CartId");
 
-                    b.ToTable("Mall_CartItems");
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Mall_CartItem");
                 });
 
             modelBuilder.Entity("Mall.Domain.Entities.Mall_Category", b =>
@@ -126,7 +126,7 @@ namespace Mall.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Mall_Categories");
+                    b.ToTable("Mall_Category");
                 });
 
             modelBuilder.Entity("Mall.Domain.Entities.Mall_Order", b =>
@@ -160,7 +160,7 @@ namespace Mall.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Mall_Orders");
+                    b.ToTable("Mall_Order");
                 });
 
             modelBuilder.Entity("Mall.Domain.Entities.Mall_Product", b =>
@@ -202,14 +202,30 @@ namespace Mall.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Mall_Products");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("Mall_Product");
                 });
 
             modelBuilder.Entity("Mall.Domain.Entities.Mall_CartItem", b =>
                 {
-                    b.HasOne("Mall.Domain.Entities.Mall_Cart")
-                        .WithMany("_cartItemList")
-                        .HasForeignKey("Mall_CartId");
+                    b.HasOne("Mall.Domain.Entities.Mall_Cart", "Cart")
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Mall.Domain.Entities.Mall_Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Mall.Domain.Entities.Mall_Product", b =>
+                {
+                    b.HasOne("Mall.Domain.Entities.Mall_Category", "Category")
+                        .WithMany("Products")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

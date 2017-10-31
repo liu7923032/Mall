@@ -5,12 +5,12 @@ using System.Collections.Generic;
 
 namespace Mall.Migrations
 {
-    public partial class initialize : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Mall_Accounts",
+                name: "Mall_Account",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -26,11 +26,11 @@ namespace Mall.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mall_Accounts", x => x.Id);
+                    table.PrimaryKey("PK_Mall_Account", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mall_Carts",
+                name: "Mall_Cart",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -43,11 +43,11 @@ namespace Mall.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mall_Carts", x => x.Id);
+                    table.PrimaryKey("PK_Mall_Cart", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mall_Categories",
+                name: "Mall_Categorie",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -63,11 +63,11 @@ namespace Mall.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mall_Categories", x => x.Id);
+                    table.PrimaryKey("PK_Mall_Categorie", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mall_Orders",
+                name: "Mall_Order",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -86,11 +86,11 @@ namespace Mall.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mall_Orders", x => x.Id);
+                    table.PrimaryKey("PK_Mall_Order", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mall_Products",
+                name: "Mall_Product",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -111,11 +111,17 @@ namespace Mall.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mall_Products", x => x.Id);
+                    table.PrimaryKey("PK_Mall_Product", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Mall_Product_Mall_Categorie_CategoryId",
+                        column: x => x.CategoryId,
+                        principalTable: "Mall_Categorie",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "Mall_CartItems",
+                name: "Mall_CartItem",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -125,45 +131,60 @@ namespace Mall.Migrations
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
                     ItemNum = table.Column<int>(type: "int", nullable: false),
                     ItemPrice = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
-                    Mall_CartId = table.Column<int>(type: "int", nullable: true),
                     ProductId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Mall_CartItems", x => x.Id);
+                    table.PrimaryKey("PK_Mall_CartItem", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Mall_CartItems_Mall_Carts_Mall_CartId",
-                        column: x => x.Mall_CartId,
-                        principalTable: "Mall_Carts",
+                        name: "FK_Mall_CartItem_Mall_Cart_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Mall_Cart",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Mall_CartItem_Mall_Product_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Mall_Product",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Mall_CartItems_Mall_CartId",
-                table: "Mall_CartItems",
-                column: "Mall_CartId");
+                name: "IX_Mall_CartItem_CartId",
+                table: "Mall_CartItem",
+                column: "CartId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mall_CartItem_ProductId",
+                table: "Mall_CartItem",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mall_Product_CategoryId",
+                table: "Mall_Product",
+                column: "CategoryId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Mall_Accounts");
+                name: "Mall_Account");
 
             migrationBuilder.DropTable(
-                name: "Mall_CartItems");
+                name: "Mall_CartItem");
 
             migrationBuilder.DropTable(
-                name: "Mall_Categories");
+                name: "Mall_Order");
 
             migrationBuilder.DropTable(
-                name: "Mall_Orders");
+                name: "Mall_Cart");
 
             migrationBuilder.DropTable(
-                name: "Mall_Products");
+                name: "Mall_Product");
 
             migrationBuilder.DropTable(
-                name: "Mall_Carts");
+                name: "Mall_Categorie");
         }
     }
 }
