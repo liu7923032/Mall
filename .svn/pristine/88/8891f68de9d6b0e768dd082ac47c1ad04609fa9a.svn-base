@@ -6,9 +6,7 @@ using Mall.Product;
 
 namespace Mall.Web.Models.Home
 {
-    public class ProductListViewModel
+    public class ProductViewModel : ProductDto
     {
-        public IReadOnlyList<ProductDto> Products
-        { get; set; }
     }
 }

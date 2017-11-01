@@ -12,9 +12,10 @@ using System;
 namespace Mall.Migrations
 {
     [DbContext(typeof(MallDbContext))]
-    partial class MallDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171101021931_change_navagation_property")]
+    partial class change_navagation_property
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -75,8 +76,6 @@ namespace Mall.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("AllPrice");
 
                     b.Property<int>("CartId");
 
@@ -161,8 +160,6 @@ namespace Mall.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CartId");
-
                     b.ToTable("Mall_Order");
                 });
 
@@ -220,14 +217,6 @@ namespace Mall.Migrations
                     b.HasOne("Mall.Domain.Entities.Mall_Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("Mall.Domain.Entities.Mall_Order", b =>
-                {
-                    b.HasOne("Mall.Domain.Entities.Mall_Cart", "Cart")
-                        .WithMany()
-                        .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

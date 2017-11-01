@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using Newtonsoft.Json.Converters;
+
+namespace Mall
+{
+    /// <summary>
+    /// 设置日期格式
+    /// </summary>
+    public class MallDateFormat : IsoDateTimeConverter
+    {
+        public MallDateFormat()
+        {
+            base.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+        }
+
+        public MallDateFormat(string dateFormat)
+        {
+            base.DateTimeFormat = dateFormat;
+        }
+    }
+}

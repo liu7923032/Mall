@@ -1,0 +1,173 @@
+﻿
+@{
+    ViewData["Title"] = "我的订单";
+}
+<!---------订单信息---------->
+
+
+
+<div class="layui-container" style="background-color:white;">
+    <div class="row">
+        <div class="layui-col-md12" style="padding:10px 0px;font-size:15px;">
+            <span class="layui-breadcrumb " lay-separator="/">
+                <a href="/">首页</a>
+                <a><cite>订单</cite></a>
+            </span>
+        </div>
+    </div>
+    <hr class="layui-bg-gray" />
+    <!--------工具条--------->
+
+    <div class="layui-row">
+        <div class="layui-btn-group">
+            <a class="layui-btn " id="btnOrderReload"><i class="layui-icon">&#x1002;</i> 刷新</a>
+
+            <a class="layui-btn " id="btnCartPay"><i class="layui-icon">&#xe609;</i> 发货</a>
+        </div>
+    </div>
+
+    <!--------表格数据--------->
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table" >
+                <thead>
+                    <tr>
+                        <th>订单编号</th>
+                        <th>订单状态</th>
+                        <th>申请人</th>
+                        <th>申请时间</th>
+                        <th style="text-align:right">总积分</th>
+                        <th style="text-align:center;">操作</th>
+                    </tr>
+                </thead>
+                <tbody id="tbody_order">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--------数据合计--------->
+    <div class="layui-row">
+        <div class="layui-col-md12">
+
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+        layui.use(['laytpl','element', 'layer', 'jquery',], function () {
+
+            var laytpl = layui.laytpl
+              , layer = layui.layer
+              , $ = layui.jquery
+              , _orderService = abp.services.app.order;
+
+
+            var methods = {
+
+                initEvent: function () {
+                    //方法绑定事件
+                    $('#btnCartPay').click(function () {
+                        methods.pay();
+                    });
+
+                    $('#btnOrderReload').click(function () {
+                        methods.reloadTb();
+                    });
+
+                   
+                },
+                initData: function () {
+                    var params = {
+                        orderStatus: 0
+                    };
+                    _orderService.getMyOrders(params, {
+                        success: function (resData) {
+                            var getTpl = tpl_orders.innerHTML
+                            , view = document.getElementById('tbody_order');
+                            laytpl(getTpl).render(resData.items, function (html) {
+                                view.innerHTML = html;
+                            });
+                        }
+                    });
+                
+                },
+                //付款
+                pay: function () {
+                    //1.获取选中行的数据
+                    var cartData = table.cache["tb_myCart"];
+                    if (cartData.length == 0) {
+                        abp.message.error("购物车中没有要结算的商品");
+                        return
+                    }
+                    //1:找到表格中选择的数据
+                    layer.confirm('确认要结账?', function (index) {
+                        layer.closeIndex(index);
+                        _cartService.checkOut({
+                            success: function () {
+                                //1.清空购物车
+                                methods.reloadTb();
+                                //2.清空右边购物车数量
+                                $('#cart_pNum').text(0);
+
+                            }
+                        });
+                    });
+
+                },
+                //刷新table
+                reloadTb: function () {
+                    table.reload('tb_myCart');
+                },
+                //删除
+                delItem: function () {
+                    var productId = 1;
+                    _cartService.delProduct(productId, {
+                        success: function (res) {
+                            //删除成功后,将表格数据删除掉
+                        }
+                    });
+                },
+                //更新产品数量
+                updateItemNum: function () {
+                    var param = {
+                        productId: 1,
+                        itemNum: 1
+                    }
+                    _cartService.updateProductNums(param, {
+                        success: function (res) {
+                            //更新成功后,将表格数据更新成功
+
+                        }
+                    });
+                }
+            }
+
+            methods.initData();
+            //methods.initEvent();
+        });
+    </script>
+
+    <script type="text/html" id="tpl_orders">
+        {{# layui.each(d,function(index,item){ }}
+            <tr>
+                <td>{{item.orderNo}}</td>
+                <td style="text-align:center">{{item.orderStatus==0?"<span style='color:red;'>待处理</span>":"完结"}}</td>
+                <td>{{item.creatorName}}</td>
+                <td>{{item.creationTime}}</td>
+                <td style="text-align:right">{{item.allPrice}}</td>
+                <td style="text-align:center;">
+                    <a class="layui-btn layui-btn-mini">通过</a>
+                    <a class="layui-btn layui-btn-mini">拒绝</a>
+                </td>
+            </tr>
+        {{#  }); }}
+    </script>
+
+    <script type="text/html" id="tpl_bar">
+        <a class="layui-btn layui-btn-mini" lay-event="edit">拒绝</a>
+    </script>
+}

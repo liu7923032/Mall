@@ -11,9 +11,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <GenerateBindingRedirectsOutputType>true</GenerateBindingRedirectsOutputType>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="wwwroot\lib\layui\lay\modules\table.js" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Include="app.config" />
