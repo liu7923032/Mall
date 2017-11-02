@@ -32,6 +32,16 @@ namespace Mall.Order
         /// </summary>
         public string CreatorName { get; set; }
 
+        /// <summary>
+        /// 日期格式话
+        /// </summary>
+        [JsonConverter(typeof(MallDateFormat))]
+        public DateTime? ApproveTime { get; set; }
+        /// <summary>
+        /// 审核人
+        /// </summary>
+        public string ApproveUName { get; set; }
+
         [Required]
         public decimal AllPrice { get; set; }
     }
@@ -39,6 +49,23 @@ namespace Mall.Order
 
     public class GetAllOrderInput : PagedAndSortedResultRequestDto
     {
-        public OrderStatus? OrderStatus { get; set; }
+        public OrderStatus OrderStatus { get; set; }
+
+        public OrderType OrderType { get; set; }
+    }
+
+    /// <summary>
+    /// 用于查询订单状态
+    /// </summary>
+    public enum OrderType
+    {
+        /// <summary>
+        /// 查询我的订单
+        /// </summary>
+        Me = 0,
+        /// <summary>
+        /// 查询所有订单
+        /// </summary>
+        All
     }
 }

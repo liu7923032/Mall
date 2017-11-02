@@ -27,6 +27,9 @@ namespace Mall.Order
         /// <returns></returns>
         Task<Mall_Order> AcceptOrder(int orderId);
 
+        Task<int> GetMyOrderCount(OrderStatus orderStatus);
+
+        Task<int> GetOrderCount(OrderStatus orderStatus);
 
     }
     #endregion
@@ -46,21 +49,36 @@ namespace Mall.Order
         }
 
         /// <summary>
-        /// 获取我的订单
+        /// 通过状态获取订单
+        /// </summary>
+        /// <param name="orderStatus"></param>
+        /// <returns></returns>
+        private IQueryable<Mall_Order> GetOrders(OrderStatus orderStatus)
+        {
+            return _orderRepository.GetAll().Where(u => u.OrderStatus.Equals(orderStatus));
+        }
+
+
+        /// <summary>
+        /// 获取订单信息
         /// </summary>
         /// <param name="input"></param>
         /// <returns></returns>
         public async Task<PagedResultDto<OrderDto>> GetMyOrders(GetAllOrderInput input)
         {
 
-            var myOrders = _orderRepository.GetAll().Where(u => u.CreatorUserId.Value.Equals(UserId));
-
-            //1:处理OrderStatus
-            myOrders = myOrders.WhereIf(input.OrderStatus.HasValue, u => u.OrderStatus.Equals(input.OrderStatus.Value));
-
-            var data = from a in myOrders
+            var orders = GetOrders(input.OrderStatus);
+            //获取我的订单
+            if (input.OrderType == OrderType.Me)
+            {
+                orders = orders.Where(u => u.CreatorUserId.Value.Equals(UserId));
+            }
+            var data = from a in orders
                        join b in _accountRepository.GetAll()
                        on a.CreatorUserId.Value equals b.Id
+                       join c in _accountRepository.GetAll()
+                       on a.LastModifierUserId.Value equals c.Id into leftJoin
+                       from c in leftJoin.DefaultIfEmpty()
                        select new OrderDto
                        {
                            Id = a.Id,
@@ -69,12 +87,26 @@ namespace Mall.Order
                            CreationTime = a.CreationTime,
                            CreatorName = b.Account,
                            AllPrice = a.AllPrice,
-                           CartId = a.CartId
+                           CartId = a.CartId,
+                           ApproveTime = a.LastModificationTime,
+                           ApproveUName = c == null ? "" : c.Account
                        };
             //2:获取对数据进行排序和分页处理
             data = data.OrderByDescending(u => u.CreationTime).Skip(input.SkipCount).Take(input.MaxResultCount);
 
             return await Task.FromResult(new PagedResultDto<OrderDto>() { TotalCount = data.Count(), Items = data.ToList() });
+        }
+
+
+        public async Task<int> GetMyOrderCount(OrderStatus orderStatus)
+        {
+            return await GetOrders(orderStatus).Where(u => u.CreatorUserId.Value.Equals(UserId)).CountAsync();
+
+
+        }
+        public async Task<int> GetOrderCount(OrderStatus orderStatus)
+        {
+            return await GetOrders(orderStatus).CountAsync();
         }
 
         /// <summary>
@@ -91,6 +123,7 @@ namespace Mall.Order
             //3.更新
             return await _orderRepository.UpdateAsync(order);
         }
+
     }
     #endregion
 

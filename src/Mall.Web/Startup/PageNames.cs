@@ -6,6 +6,8 @@
         public const string Cart = "Cart";
         public const string Order = "Order";
 
+        public const string Approve = "Approve";
+
         /// <summary>
         /// 类别管理
         /// </summary>

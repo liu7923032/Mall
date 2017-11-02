@@ -111,11 +111,10 @@
 
     <script type="text/javascript">
 
-
-
-        layui.use(['laypage', 'jquery'], function () {
-            var laypage = layui.laypage;
-            var $ = layui.jquery;
+        layui.use(['laypage', 'jquery', 'layer'], function () {
+            var laypage = layui.laypage,
+                layer = layui.layer,
+                $ = layui.jquery;
 
             var methods = {
                 //获取所有的商品分类
@@ -130,10 +129,14 @@
                         params[categoryId] = categoryId;
                     }
 
+                    var index = layer.load();
                     abp.services.app.product.getAll(params, {
                         //成功后
                         success: function (data) {
+                            layer.close(index);
                             methods.readerList(data);
+                        }, fail: function () {
+                            layer.close(index);
                         }
                     });
                 },
@@ -152,8 +155,8 @@
                             strList += '<div class="layui-col-md3" >' +
                                           '<div class="mall-item" productId="' + item.id + '">' +
                                               '<div class="p-img">' + item.imgPic + '</div>' +
-                                              '<div class="p-title">'+item.name+'</div>' +
-                                              '<div class="p-price">'+item.price+' ￥</div>' +
+                                              '<div class="p-title">' + item.name + '</div>' +
+                                              '<div class="p-price">' + item.price + ' ￥</div>' +
                                           '</div>' +
                                        '</div>';
                             //添加layui-row 的闭环标签
@@ -171,7 +174,7 @@
                         var productId = $(this).attr('productId');
                         //打开新页面
                         var productName = $(this).find('.p-title').eq(0).text();
-                        
+
                         window.open("/Home/Details/" + productId, "");
                     });
                 },
@@ -191,7 +194,7 @@
                     });
                 }
             }
-            
+
             //1.0 初始化分页组件
             laypage.render({
                 elem: 'mall-page' //注意，这里的 test1 是 ID，不用加 # 号
@@ -208,6 +211,13 @@
             methods.initEvent();
         });
 
+    </script>
+
+    <!------------首页产品模板渲染-------------->
+    <script type="text/html">
+        {{#
+
+        #}}
     </script>
 
 }

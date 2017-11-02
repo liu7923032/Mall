@@ -1,0 +1,111 @@
+﻿
+@using Mall.Cart
+
+@{
+    ViewData["Title"] = "订单详情";
+}
+<!---------订单信息---------->
+
+
+
+<div class="layui-container" style="background-color:white;">
+    <div class="row">
+        <div class="layui-col-md12" style="padding:10px 0px;font-size:15px;">
+            <span class="layui-breadcrumb " lay-separator="/">
+                <a href="/">首页</a>
+                <a href="/Order/Index">订单</a>
+                <a><cite>订单详情</cite></a>
+            </span>
+        </div>
+    </div>
+    <hr class="layui-bg-gray" />
+
+    <!--------表格数据--------->
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <table class="layui-table ">
+                <colgroup>
+                    <col width="80">
+                    <col>
+                    <col>
+                    <col width="100">
+                    <col width="100">
+                    <col width="100">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th style="text-align:center;">编号</th>
+                        <th>物品名称</th>
+                        <th>物品规格</th>
+                        <th style="text-align:right;">数量</th>
+                        <th style="text-align:right;">积分</th>
+                        <th style="text-align:right;">小计</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        int index = 1, allNum = 0;
+                        decimal allPrice = 0;
+                        foreach (var item in Model.CartItems)
+                        {
+                            <tr>
+                                <td style="text-align:center;">@index</td>
+                                <td><a href="/Home/Details/@item.ProductId" style="color:blue;">@item.ItemName</a></td>
+                                <td>@item.ItemSpecs</td>
+                                <td style="text-align:right;">@item.ItemNum</td>
+                                <td style="text-align:right;">@item.ItemPrice</td>
+                                <td style="text-align:right;">@item.AllPrice</td>
+                            </tr>
+                            index++;
+                            allNum += item.ItemNum;
+                            allPrice += item.AllPrice;
+                        }
+                        //合计列
+                        <tr style="color:blue;">
+                            <td style="text-align:center;"></td>
+                            <td  colspan="2">合计数:@index</td>
+                            <td style="text-align:right;">@allNum</td>
+                            <td style="text-align:right;"></td>
+                            <td style="text-align:right;">@allPrice</td>
+                        </tr>
+                    }
+
+                   
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!--------数据合计--------->
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-text"></div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+        layui.use(['element', 'layer', 'jquery'], function () {
+
+            var laytpl =
+                layer = layui.layer
+              , $ = layui.jquery
+              , element = layui.element
+              , _orderService = abp.services.app.order;
+
+
+            var methods = {
+
+            }
+
+
+            //methods.initEvent();
+        });
+    </script>
+
+
+
+}

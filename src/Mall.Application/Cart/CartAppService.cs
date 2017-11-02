@@ -60,10 +60,10 @@ namespace Mall.Cart
         Task<PagedResultDto<CartItemDto>> GetMyCart(PageRequestDto input);
 
         /// <summary>
-        /// 通过购物车的唯一标识来获取
+        /// 通过购物车的唯一标识来获取购物车详细信息
         /// </summary>
         /// <returns></returns>
-        Task<PagedResultDto<CartItemDto>> GetCartById(int cartId);
+        Task<List<CartItemDto>> GetCartById(int cartId);
     }
     #endregion
 
@@ -221,11 +221,11 @@ namespace Mall.Cart
             return new PagedResultDto<CartItemDto>() { Items = cartItems, TotalCount = cartItems.Count() };
         }
 
-        public async Task<PagedResultDto<CartItemDto>> GetCartById(int cartId)
+        public async Task<List<CartItemDto>> GetCartById(int cartId)
         {
-            var carts = _cartItemRepository.GetAll().Where(u => u.CartId.Equals(cartId)).ToList();
+            var carts = _cartItemRepository.GetAll().Where(u => u.CartId.Equals(cartId)).Include("Product").ToList();
             //返回结果集
-            return await Task.FromResult(new PagedResultDto<CartItemDto>() { Items = carts.MapTo<List<CartItemDto>>(), TotalCount = carts.Count() });
+            return await Task.FromResult(carts.MapTo<List<CartItemDto>>());
         }
     }
     #endregion

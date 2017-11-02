@@ -12,6 +12,7 @@ namespace Mall.Authorization
         {
             context.CreatePermission(PermissionNames.Page_Category, L("Category"));
             context.CreatePermission(PermissionNames.Page_Product, L("Product"));
+            context.CreatePermission(PermissionNames.Page_Approve, L("Approve"));
         }
 
         private static ILocalizableString L(string name)

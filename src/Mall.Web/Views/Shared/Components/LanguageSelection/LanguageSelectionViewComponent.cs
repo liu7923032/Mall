@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Mall.Web.Views.Shared.Components.LanguageSelection
 {
-    public class LanguageSelectionViewComponent: MallViewComponent
+    public class LanguageSelectionViewComponent : MallViewComponent
     {
         private readonly ILanguageManager _languageManager;
 
@@ -15,12 +15,12 @@ namespace Mall.Web.Views.Shared.Components.LanguageSelection
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            var model = new LanguageSelectionViewModel
+            var model = await Task.FromResult(new LanguageSelectionViewModel
             {
                 CurrentLanguage = _languageManager.CurrentLanguage,
                 Languages = _languageManager.GetLanguages(),
                 CurrentUrl = Request.Path
-            };
+            });
 
             return View(model);
         }

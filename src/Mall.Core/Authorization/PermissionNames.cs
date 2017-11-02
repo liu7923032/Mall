@@ -10,5 +10,7 @@ namespace Mall.Authorization
 
         public const string Page_Product = "Pages.Product";
 
+        public const string Page_Approve = "Pages.Approve";
+
     }
 }

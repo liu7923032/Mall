@@ -17,10 +17,10 @@
         options.error = undefined;
 
         return $.Deferred(function ($dfd) {
-            abp.ui.block();
+            //abp.ui.block();
             $.ajax(options)
                 .done(function (data, textStatus, jqXHR) {
-                    abp.ui.unblock();
+                    //abp.ui.unblock();
                     if (data.__abp) {
                         abp.ajax.handleResponse(data, userOptions, $dfd, jqXHR);
                     } else {
@@ -29,7 +29,7 @@
                     }
                    
                 }).fail(function (jqXHR) {
-                    abp.ui.unblock();
+                    //abp.ui.unblock();
                     if (jqXHR.responseJSON && jqXHR.responseJSON.__abp) {
                         abp.ajax.handleResponse(jqXHR.responseJSON, userOptions, $dfd, jqXHR);
                     } else {

@@ -11,7 +11,7 @@
         <div class="layui-col-md12" style="padding:10px 0px;font-size:15px;">
             <span class="layui-breadcrumb " lay-separator="/">
                 <a href="/">首页</a>
-                <a><cite>我的订单</cite></a>
+                <a><cite>订单审批</cite></a>
             </span>
         </div>
     </div>
@@ -22,8 +22,8 @@
         <div class="layui-col-md12">
             <div class="layui-tab layui-tab-brief">
                 <ul class="layui-tab-title">
-                    <li class="layui-this">待处理</li>
-                    <li>已完结</li>
+                    <li class="layui-this">待审批</li>
+                    <li>已审批</li>
                 </ul>
                 <div class="layui-tab-content">
                     <div class="layui-tab-item layui-show">
@@ -32,19 +32,23 @@
                                 <col width="60" style="text-align:center;" />
                                 <col />
                                 <col width="100" style="text-align:center;" />
+                                <col width="100" style="text-align:right;" />
                                 <col width="100" />
                                 <col width="160" />
-                                <col width="100" style="text-align:right;" />
-                                <col width="100" style="text-align:center;" />
+                                <col width="100" />
+                                <col width="160" style="text-align:right;" />
+                                <col width="120" style="text-align:center;" />
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th style="text-align:center;">序号</th>
                                     <th>订单编号</th>
                                     <th>订单状态</th>
+                                    <th style="text-align:right">总积分</th>
                                     <th>申请人</th>
                                     <th>申请时间</th>
-                                    <th style="text-align:right">总积分</th>
+                                    <th>审批人</th>
+                                    <th>审批时间</th>
                                     <th style="text-align:center;">操作</th>
                                 </tr>
                             </thead>
@@ -54,23 +58,27 @@
                     <div class="layui-tab-item">
                         <table class="layui-table">
                             <colgroup>
-                                <col width="60" />
+                                <col width="60" style="text-align:center;" />
                                 <col />
-                                <col width="100" />
+                                <col width="100" style="text-align:center;" />
+                                <col width="100" style="text-align:right;"/>
                                 <col width="100" />
                                 <col width="160" />
-                                <col width="100" />
-                                <col width="100" />
+                                <col width="100"  />
+                                <col width="160" style="text-align:right;" />
+                                <col width="100" style="text-align:center;" />
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th >序号</th>
+                                    <th>序号</th>
                                     <th>订单编号</th>
                                     <th>订单状态</th>
+                                    <th>总积分</th>
                                     <th>申请人</th>
                                     <th>申请时间</th>
-                                    <th style="text-align:right">总积分</th>
-                                    <th style="text-align:center;">操作</th>
+                                    <th>审批人</th>
+                                    <th>审批时间</th>
+                                    <th>操作</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody_endOrder"></tbody>
@@ -96,7 +104,7 @@
 
 
     <script type="text/javascript">
-       
+
         layui.use(['laytpl', 'element', 'layer', 'jquery', 'laypage'], function () {
 
             var laytpl = layui.laytpl
@@ -117,10 +125,13 @@
                         var onThis = $(this);
                         //2.找到类型
                         var eventType = $(onThis).attr('lay-event');
-                        var cartId = onThis.parents('tr').attr('cartId');
 
                         if (eventType === "detail") {
+                            var cartId = onThis.parents('tr').attr('cartId');
                             methods.detail(cartId);
+                        } else if (eventType === "pass") {
+                            var orderId = onThis.parents('tr').attr('orderId');
+                            methods.pass(orderId);
                         }
                         //3.找到对象,并获取该对象的数据
                     });
@@ -130,8 +141,7 @@
                 initWaitData: function () {
                     //未完结订单
                     _orderService.getMyOrders({
-                        orderStatus: 0,
-                        orderType: 0
+                        orderStatus: 0,orderType:1
                     }, {
                         success: function (resData) {
                             var getTpl = tpl_orders.innerHTML
@@ -140,8 +150,6 @@
                                 view.innerHTML = html;
                             });
                             methods.initEvent("tbody_waitOrder");
-
-
                         }
                     });
 
@@ -149,7 +157,7 @@
                 //3:完结的订单
                 initEndData: function (params) {
 
-                    var params = $.extend(params, { orderStatus: 1, orderType: 0 });
+                    var params = $.extend(params, { orderStatus: 1, orderType: 1 });
 
                     //已完结订单
                     _orderService.getMyOrders(params, {
@@ -222,17 +230,19 @@
     <!--------表格数据模板--------->
     <script type="text/html" id="tpl_orders">
         {{# layui.each(d,function(index,item){ }}
-        <tr cartId="{{item.cartId}}">
+        <tr orderId="{{item.id}}" cartId="{{item.cartId}}">
             <td style="text-align:center;">{{index+1}}</td>
             <td>{{item.orderNo}}</td>
-            <td style="text-align:center;">{{item.orderStatus == 0?"<span style='color:red;'>待处理</span>":"<span style='color:green;'>完结</span>"}}</td>
+            <td>{{item.orderStatus == 0?"<span style='color:red;'>待处理</span>":"<span style='color:green;'>完结</span>"}}</td>
+            <td>{{item.allPrice}}</td>
             <td>{{item.creatorName}}</td>
             <td>{{item.creationTime}}</td>
-            <td style="text-align:right;">{{item.allPrice}}</td>
+            <td>{{item.approveUName}}</td>
+            <td>{{item.approveTime}}</td>
             <td style="text-align:center;">
                 <a class="layui-btn layui-btn-mini layui-btn-normal" lay-event="detail">详情</a>
                 {{# if( item.orderStatus == 0){ }}
-                    @*<a class="layui-btn layui-btn-mini layui-btn-danger" lay-event="cancel">作废</a>*@
+                    <a class="layui-btn layui-btn-mini layui-btn-danger" lay-event="pass">通过</a>
                 {{# } }}
             </td>
         </tr>
