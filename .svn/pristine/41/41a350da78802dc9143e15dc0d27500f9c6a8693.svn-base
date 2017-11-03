@@ -1,0 +1,154 @@
+﻿
+@using Mall.Web.Models.Home;
+
+
+<div class="layui-container mall-details" >
+    <div class="row">
+        <div class="layui-col-md12" style="padding:10px 0px;font-size:15px;">
+            <span class="layui-breadcrumb " lay-separator="/">
+                <a href="/">首页</a>
+                <a><cite>产品</cite></a>
+            </span>
+        </div>
+    </div>
+    <hr class="layui-bg-gray" />
+    <!-------------上半区:主要是图片和相关描述--------------->
+    <div class="layui-row layui-col-space20  ">
+        <div class="layui-col-md5">
+            <div class="mall-pic">
+                <img src="https://img10.360buyimg.com/n1/s450x450_jfs/t9787/309/1633930906/65379/8fb80cc0/59e42831N83d658b3.jpg"/>
+            </div>
+            @*<div class="layui-carousel mall-pics" id="pics">
+                <div carousel-item>
+                    <div>条目1</div>
+                    <div>条目2</div>
+                    <div>条目3</div>
+                    <div>条目4</div>
+                    <div>条目5</div>
+                </div>
+            </div>*@
+        </div>
+        <div class="layui-col-md7" >
+            <div class="mall-desc">
+                <div class="mall-d-title">@Model.Name</div>
+                <div class="mall-d-price">￥@Model.Price</div>
+                <div class="mall-d-content layui-text">
+                    @Model.Describe
+                </div>
+                <div class="mall-d-btns">
+                    <div class="layui-row layui-col-space10">
+                        <div class="layui-col-md5">
+                            <div class="layui-input-group">
+                                <span class="layui-input-group-addon" id="btnSub"><i class="layui-icon">&#xe654;</i></span>
+                                <input type="text" readonly="readonly" id="p_num" class="layui-input layui-input-inline" value="1" />
+                                <span class="layui-input-group-addon" id="btnAdd"><i class="layui-icon">&#xe654;</i></span>
+                            </div>
+                        </div>
+                        <div class="layui-col-md7">
+                            <a class="layui-btn layui-btn-normal layui-btn-danger" id="btnAddToCart">加入购物车</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr  class="layui-bg-gray"/>
+    <!-------------下半区:主要是详细参数和评论--------------->
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="layui-tab layui-tab-brief">
+                <ul class="layui-tab-title">
+                    <li class="layui-this">商品介绍</li>
+                    <li>用户评论</li>
+                </ul>
+                <div class="layui-tab-content">
+                    <div class="layui-tab-item layui-show">
+                        <div class="mall-desc">
+                            @Model.Describe
+                        </div>
+                    </div>
+                    <div class="layui-tab-item">
+                        <div class="">
+                            <div class="mall-editor"></div>
+                            <ul class="mall-remark">
+                                <li class="mall-remark-item">正好</li>
+                                <li class="mall-remark-item">正好</li>
+                                <li class="mall-remark-item">正好</li>
+                                <li class="mall-remark-item">正好</li>
+                                <li class="mall-remark-item">正好</li>
+                                <li class="mall-remark-item">正好</li>
+                                <li class="mall-remark-item">正好</li>
+                                <li class="mall-remark-item">正好</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script type="text/javascript">
+
+        var box={
+            productId:'1'
+        }
+
+        layui.use(['element','jquery','layer'], function () {
+
+            var $ = layui.jquery;
+            var layer = layui.layer;
+            var methods = {
+
+                initEvent:function(){
+                    $('#btnAdd').click(function () {
+                        methods.addNum();
+                    });
+                
+                    $('#btnSub').click(function () {
+                        methods.subNum();
+                    });
+
+                    $('#btnAddToCart').click(function () {
+                        methods.addToCart();
+                    })
+
+                },
+
+                addNum: function () {
+                    var value = $('#p_num').val();
+                    $('#p_num').val(parseInt(value)+1);
+                },
+                subNum: function () {
+                    var value =parseInt( $('#p_num').val());
+                    if (value==1) {
+                        abp.notify.info("数量最少为1");
+                        return;
+                    }
+                    $('#p_num').val(parseInt(value) - 1);
+                },
+                addToCart: function () {
+                    //1:找到产品id
+
+                    var params = {
+                        itemNum: parseInt($('#p_num').val()),
+                        productId: box.productId
+                    };
+                    abp.services.app.cart.addProductToCart(params, {
+                        //成功后
+                        success: function (data) {
+                            $('#cart_pNum').text(data);
+                            //进入购物车
+                            location.href = "/Cart/Index";
+                        }
+                    });
+                }
+            }
+
+            methods.initEvent();
+        });
+
+    </script>
+}

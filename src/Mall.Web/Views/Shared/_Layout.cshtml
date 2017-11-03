@@ -35,12 +35,8 @@
         <link rel="stylesheet" href="~/view-resources/Views/_Bundles/layout-libs.min.css" asp-append-version="true" />
     </environment>
 
-
-
     <!-- View specific styles -->
     @RenderSection("styles", required: false)
-
-
 
 </head>
 <body class="mall-main">
@@ -49,6 +45,7 @@
         <div class="layui-container">
             <div class="layui-logo ">
                 <i class="layui-icon " style="font-size:20px;">&#xe657;</i>
+                
                 <div class="layui-inline" style="margin-left:10px;">
                     麦迪商城
                 </div>
@@ -72,14 +69,6 @@
 
     @RenderBody()
 
-    <!-- 固定块 -->
-    @*<ul class="layui-fixbar">
-        <li class="layui-icon" lay-type="bar1" style="background-color:#009688;">
-            <span class="layui-badge" id="cart_pNum" style="position:absolute;top:0;right:0;">0</span>
-            &#xe657;
-        </li>*@
-        @*<li class="layui-icon" lay-type="top" style="background-color:#009688;">&#xe604;</li>*@
-    @*</ul>*@
 
     <!-- Global scripts -->
     <environment names="Development">
@@ -100,7 +89,7 @@
     <script type="text/javascript">
 
         //初始化layui
-        layui.use("util", function () {
+        layui.use(["util","element"], function () {
             var util = layui.util;
 
             var methods = {
@@ -129,33 +118,13 @@
                     }
                 }
             });
-
-            //util.fixbar({
-            //    bar1: true,
-            //    css: { right: 50, bottom: 100 },
-            //    bgcolor: '#009688',
-            //    showHeight: 100,
-            //    click: function (type) {
-            //        abp.log.debug(type);
-            //        if (type == 'bar1') {
-            //            location.href = "/Cart/Index";
-            //        } else if (type == 'top') {
-
-            //        }
-            //    }
-            //});
-
+            //购物车数据加载
             methods.getCartNum();
 
         });
         abp.localization.defaultSourceName = '@LocalizationSourceName';
-        @*if (moment) { //Localizing momentjs
-            moment.locale('@CultureInfo.CurrentUICulture.Name');
-        }*@
-
+       
     </script>
-
-
 
     <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
     <script src="~/AbpServiceProxies/GetAll?v=@(Clock.Now.Ticks)" type="text/javascript"></script>

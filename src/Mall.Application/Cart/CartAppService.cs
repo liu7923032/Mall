@@ -44,7 +44,7 @@ namespace Mall.Cart
         /// </summary>
         /// <param name="itemDto"></param>
         /// <returns></returns>
-        Task<bool> UpdateProductNums(UpdateCartItemInput input);
+        Task UpdateProductNums(CartItemInput input);
 
         /// <summary>
         /// 付款结账
@@ -57,7 +57,7 @@ namespace Mall.Cart
         /// 获取当前人员的购物车信息
         /// </summary>
         /// <returns></returns>
-        Task<PagedResultDto<CartItemDto>> GetMyCart(PageRequestDto input);
+        Task<PagedResultDto<CartItemDto>> GetMyCart();
 
         /// <summary>
         /// 通过购物车的唯一标识来获取购物车详细信息
@@ -154,17 +154,17 @@ namespace Mall.Cart
             await _cartItemRepository.DeleteAsync(cartItem);
         }
 
-        public async Task<bool> UpdateProductNums(UpdateCartItemInput input)
+        public async Task UpdateProductNums(CartItemInput input)
         {
             //1：找到购物车
             var cart = await GetCurrentCart();
             //2：找到商品
-            var cartItem = await _cartItemRepository.FirstOrDefaultAsync(u => u.Id.Equals(input.Id));
+            var cartItem = await _cartItemRepository.FirstOrDefaultAsync(u => u.CartId.Equals(cart.Id) && u.ProductId.Equals(input.ProductId));
             cartItem.ItemNum = input.ItemNum;
             //3：计算小计
             cartItem.AllPrice = cartItem.ItemNum * cartItem.ItemPrice;
             //3：更新商品
-            return await _cartItemRepository.UpdateAsync(cartItem) != null;
+            await _cartItemRepository.UpdateAsync(cartItem);
         }
 
         public async Task<bool> CheckOut()
@@ -203,22 +203,23 @@ namespace Mall.Cart
             return await Task.FromResult(productNum);
         }
 
-        public async Task<PagedResultDto<CartItemDto>> GetMyCart(PageRequestDto input)
+        public async Task<PagedResultDto<CartItemDto>> GetMyCart()
         {
             var cart = await GetCurrentCart();
             int cartId = cart == null ? 0 : cart.Id;
             //获取数据集
-            var result = _cartItemRepository.GetAll().Where(u => u.CartId.Equals(cartId)).Include("Product").Skip(input.SkipCount).Take(input.Limit);
+            var cartItems = _cartItemRepository.GetAll().Where(u => u.CartId.Equals(cartId)).Include("Product");
+            //.Skip(input.SkipCount).Take(input.Limit);
             //返回结果集
-            List<CartItemDto> cartItems = result.MapTo<List<CartItemDto>>();
-            cartItems.Add(new CartItemDto()
-            {
-                ItemName = "合计:",
-                ItemNum = cartItems.Sum(u => u.ItemNum),
-                AllPrice = cartItems.Sum(u => u.AllPrice)
-            });
+            //List<CartItemDto> cartItems = result.MapTo<List<CartItemDto>>();
+            //cartItems.Add(new CartItemDto()
+            //{
+            //    ItemName = "合计:",
+            //    ItemNum = cartItems.Sum(u => u.ItemNum),
+            //    AllPrice = cartItems.Sum(u => u.AllPrice)
+            //});
 
-            return new PagedResultDto<CartItemDto>() { Items = cartItems, TotalCount = cartItems.Count() };
+            return new PagedResultDto<CartItemDto>() { Items = cartItems.MapTo<List<CartItemDto>>(), TotalCount = cartItems.Count() };
         }
 
         public async Task<List<CartItemDto>> GetCartById(int cartId)

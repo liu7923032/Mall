@@ -1,0 +1,12 @@
+﻿{
+  "culture": "en",
+  "texts": {
+    "logo": "MedicalSystem",
+    "Mall": "Mall",
+    "Cart": "Cart",
+    "Order": "Order",
+    "Approve": "Approve",
+    "Category": "Category",
+    "Proudct": "Proudct"
+  }
+}

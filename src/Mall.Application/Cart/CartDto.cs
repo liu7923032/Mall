@@ -8,6 +8,20 @@ using Mall.Domain.Entities;
 
 namespace Mall.Cart
 {
+
+
+    [AutoMapTo(typeof(Mall_CartItem))]
+    public class CartItemInput
+    {
+        [Required]
+        public int ProductId { get; set; }
+
+        [Required]
+        public int ItemNum { get; set; }
+
+    }
+
+
     [AutoMap(typeof(Mall_CartItem))]
     public class CartItemDto : CartItemInput, IEntityDto<int>
     {
@@ -31,26 +45,6 @@ namespace Mall.Cart
         /// </summary>
         public decimal AllPrice { get; set; }
 
-    }
-
-    [AutoMapTo(typeof(Mall_CartItem))]
-    public class CartItemInput
-    {
-        [Required]
-        public int ProductId { get; set; }
-
-        [Required]
-        public int ItemNum { get; set; }
-        
-    }
-
-    public class UpdateCartItemInput : IEntityDto<int>
-    {
-        [Required]
-        public int Id { get; set; }
-
-        [Required]
-        public int ItemNum { get; set; }
     }
 
 

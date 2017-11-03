@@ -61,24 +61,24 @@
                                 <col width="60" style="text-align:center;" />
                                 <col />
                                 <col width="100" style="text-align:center;" />
-                                <col width="100" style="text-align:right;"/>
+                                <col width="100" />
                                 <col width="100" />
                                 <col width="160" />
                                 <col width="100"  />
                                 <col width="160" style="text-align:right;" />
-                                <col width="100" style="text-align:center;" />
+                                <col width="100"  />
                             </colgroup>
                             <thead>
                                 <tr>
                                     <th>序号</th>
                                     <th>订单编号</th>
                                     <th>订单状态</th>
-                                    <th>总积分</th>
+                                    <th style="text-align:right;">总积分</th>
                                     <th>申请人</th>
                                     <th>申请时间</th>
                                     <th>审批人</th>
                                     <th>审批时间</th>
-                                    <th>操作</th>
+                                    <th style="text-align:center;">操作</th>
                                 </tr>
                             </thead>
                             <tbody id="tbody_endOrder"></tbody>
@@ -234,7 +234,7 @@
             <td style="text-align:center;">{{index+1}}</td>
             <td>{{item.orderNo}}</td>
             <td>{{item.orderStatus == 0?"<span style='color:red;'>待处理</span>":"<span style='color:green;'>完结</span>"}}</td>
-            <td>{{item.allPrice}}</td>
+            <td style="text-align:right;">{{item.allPrice}}</td>
             <td>{{item.creatorName}}</td>
             <td>{{item.creationTime}}</td>
             <td>{{item.approveUName}}</td>

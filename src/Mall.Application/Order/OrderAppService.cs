@@ -25,7 +25,7 @@ namespace Mall.Order
         /// 确认订单
         /// </summary>
         /// <returns></returns>
-        Task<Mall_Order> AcceptOrder(int orderId);
+        Task AcceptOrder(int orderId);
 
         Task<int> GetMyOrderCount(OrderStatus orderStatus);
 
@@ -42,10 +42,15 @@ namespace Mall.Order
     {
         private IRepository<Mall_Order> _orderRepository;
         private IRepository<Mall_Account> _accountRepository;
-        public OrderAppService(IRepository<Mall_Order> orderRepository, IRepository<Mall_Account> accountRepository)
+        private IRepository<Mall_Integral> _integralRepository;
+
+        public OrderAppService(IRepository<Mall_Order> orderRepository,
+            IRepository<Mall_Account> accountRepository,
+            IRepository<Mall_Integral> integralRepository)
         {
             this._accountRepository = accountRepository;
             this._orderRepository = orderRepository;
+            this._integralRepository = integralRepository;
         }
 
         /// <summary>
@@ -114,14 +119,35 @@ namespace Mall.Order
         /// </summary>
         /// <param name="orderId"></param>
         /// <returns></returns>
-        public async Task<Mall_Order> AcceptOrder(int orderId)
+        public async Task AcceptOrder(int orderId)
         {
             //1.找到订单
             var order = await _orderRepository.FirstOrDefaultAsync(u => u.Id.Equals(orderId));
             //2.更新订单状态
             order.OrderStatus = OrderStatus.Complete;
-            //3.更新
-            return await _orderRepository.UpdateAsync(order);
+            await _orderRepository.UpdateAsync(order);
+            //3.添加积分消费记录
+            Mall_Integral mall_Integral = new Mall_Integral()
+            {
+                CostType = CostType.Cost,
+                Integral = order.AllPrice,
+                IntergralDesc = $"来源订单:{order.OrderNo}",
+                UserId = UserId,
+            };
+            await _integralRepository.InsertAsync(mall_Integral);
+            //4.更新人员当前积分
+            var curUser = await _accountRepository.GetAsync(UserId);
+            if (curUser.Integral == null)
+            {
+                curUser.Integral = -order.AllPrice;
+            }
+            else
+            {
+                curUser.Integral -= order.AllPrice;
+            }
+            await _accountRepository.UpdateAsync(curUser);
+            //批量保存
+            await CurrentUnitOfWork.SaveChangesAsync();
         }
 
     }

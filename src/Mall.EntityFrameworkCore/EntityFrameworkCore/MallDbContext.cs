@@ -22,12 +22,19 @@ namespace Mall.EntityFrameworkCore
         public virtual DbSet<Mall_Order> Mall_Order { get; set; }
 
         public virtual DbSet<Mall_Category> Mall_Category { get; set; }
+
+    
         /// <summary>
         /// 商品信息
         /// </summary>
         public virtual DbSet<Mall_Product> Mall_Product { get; set; }
 
         public virtual DbSet<Mall_Account> Mall_Account { get; set; }
+
+        /// <summary>
+        /// 积分信息
+        /// </summary>
+        public virtual DbSet<Mall_Integral> Mall_Integral { get; set; }
         #endregion
 
         public MallDbContext(DbContextOptions<MallDbContext> options) 
