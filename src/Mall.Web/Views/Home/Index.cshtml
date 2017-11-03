@@ -7,7 +7,7 @@
 }
 
 
-<!----------放置商品分类------------->
+<!----------商品分类------------->
 <div class="mall-category">
     <div class="layui-container">
         <ul class="layui-clear">
@@ -21,75 +21,11 @@
         </ul>
     </div>
 </div>
-
+<!----------商品明细------------->
 <div class="layui-container">
     <div class="layui-row layui-col-space30">
-        <div class="layui-col-md9 ">
-            <div class="layui-row layui-col-space10">
-                <div class="layui-col-md3">
-                    <div class="mall-item" productId="1">
-                        <div class="p-img"></div>
-                        <div class="p-title">吹风机</div>
-                        <div class="p-price">1000￥</div>
-                    </div>
-                </div>
-                <div class="layui-col-md3">
-                    <div class="mall-item">
-                        <div class="p-img"></div>
-                        <div class="p-title">吹风机</div>
-                        <div class="p-price">1000￥</div>
-                    </div>
-                </div>
-                <div class="layui-col-md3">
-                    <div class="mall-item">
-                        <div class="p-img"></div>
-                        <div class="p-title">吹风机</div>
-                        <div class="p-price">1000￥</div>
-                    </div>
-                </div>
-                <div class="layui-col-md3">
-                    <div class="mall-item">
-                        <div class="p-img"></div>
-                        <div class="p-title">吹风机</div>
-                        <div class="p-price">1000￥</div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-row layui-col-space10">
-                <div class="layui-col-md3">
-                    <div class="mall-item">
-                        <div class="p-img"></div>
-                        <div class="p-title">吹风机</div>
-                        <div class="p-price">1000￥</div>
-                    </div>
-                </div>
-                <div class="layui-col-md3">
-                    <div class="mall-item">
-                        <div class="p-img"></div>
-                        <div class="p-title">吹风机</div>
-                        <div class="p-price">1000￥</div>
-                    </div>
-                </div>
-                <div class="layui-col-md3">
-                    <div class="mall-item">
-                        <div class="p-img"></div>
-                        <div class="p-title">吹风机</div>
-                        <div class="p-price">1000￥</div>
-                    </div>
-                </div>
-                <div class="layui-col-md3">
-                    <div class="mall-item">
-                        <div class="p-img"></div>
-                        <div class="p-title">吹风机</div>
-                        <div class="p-price">1000￥</div>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-row">
-                <div class="layui-col-md12">
-                    <div class="" id="mall-page"></div>
-                </div>
-            </div>
+        <div class="layui-col-md9 " id="view_home">
+
         </div>
         <div class="layui-col-md3">
             <div class="layui-collapse" style="background-color:white;">
@@ -100,18 +36,34 @@
             </div>
         </div>
     </div>
+
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="" id="mall-page"></div>
+        </div>
+    </div>
 </div>
 
 
 
-@section scripts{
+@section Scripts{
+
+
 
     <script type="text/javascript">
 
-        layui.use(['laypage', 'jquery', 'layer'], function () {
-            var laypage = layui.laypage,
+        layui.use(['element', 'jquery', 'laypage', 'laytpl', 'layer'], function () {
+
+            var $ = layui.jquery,
+                element = layui.element,
+                laypage = layui.laypage,
+                laytpl = layui.laytpl,
                 layer = layui.layer,
-                $ = layui.jquery;
+                _productService = abp.services.app.product,
+                getTpl = tpl_home.innerHTML,
+                view = document.getElementById('view_home'),
+                categoryId = undefined;
+
 
             var methods = {
                 //获取所有的商品分类
@@ -150,12 +102,12 @@
                             strList += '<div class="layui-row layui-col-space10" >'
                         } else {
                             strList += '<div class="layui-col-md3" >' +
-                                          '<div class="mall-item" productId="' + item.id + '">' +
-                                              '<div class="p-img">' + item.imgPic + '</div>' +
-                                              '<div class="p-title">' + item.name + '</div>' +
-                                              '<div class="p-price">' + item.price + ' ￥</div>' +
-                                          '</div>' +
-                                       '</div>';
+                                '<div class="mall-item" productId="' + item.id + '">' +
+                                '<div class="p-img">' + item.imgPic + '</div>' +
+                                '<div class="p-title">' + item.name + '</div>' +
+                                '<div class="p-price">' + item.price + ' ￥</div>' +
+                                '</div>' +
+                                '</div>';
                             //添加layui-row 的闭环标签
                             if (index % 3 === 0) {
                                 strList += '</div>'
@@ -164,16 +116,10 @@
                     });
 
                     //将字符串添加到dom中
+                    console.log(strList);
 
                     //对product item 进行绑定事件
-                    $('.mall-item').click(function () {
-
-                        var productId = $(this).attr('productId');
-                        //打开新页面
-                        var productName = $(this).find('.p-title').eq(0).text();
-
-                        window.open("/Home/Details/" + productId, "");
-                    });
+                   
                 },
                 initEvent: function () {
                     //2.0 绑定分类的点击事件
@@ -187,34 +133,95 @@
                         }
                         var categoryId = $(this).attr('categoryId');
                         //选择类别的时候,默认都是选择第一页
-                        methods.getProduct(categoryId, 1);
+                        methods.readerHtml(categoryId, 1);
                     });
+                },
+                readerHtml: function (cateId, page) {
+                    var params = {
+                        sorting: "",
+                        skipCount: (page - 1) * 8,
+                        maxResultCount: 8,
+                    }
+                    //没有切换分类的情况
+                    var isFirst = cateId != categoryId;
+
+                    if (cateId) {
+                        params["categoryId"] = cateId;
+                        categoryId = cateId;
+                    } 
+
+                    var index = layer.load();
+                    _productService.getAll(params, {
+                        success: function (res) {
+                            layer.close(index);
+
+                            laytpl(getTpl).render(res.items, function (html) {
+                                view.innerHTML = html;
+                                //绑定事件
+                                methods.initPEvent();
+                            });
+
+                            methods.initPage(res.totalCount, isFirst);
+                        },
+                        fail: function () {
+                            layer.close(index);
+                        }
+                    });
+
+                },
+                initPEvent: function () {
+                    $('.mall-item').click(function () {
+
+                        var productId = $(this).attr('productId');
+                        //打开新页面
+                        var productName = $(this).find('.p-title').eq(0).text();
+
+                        window.open("/Home/Details/" + productId, "");
+                    });
+
+                },
+                //分页
+                initPage: function (count, isFirst) {
+                    if (!isFirst) {
+                        return false;
+                    }
+                    //1.0 初始化分页组件
+                    laypage.render({
+                        elem: 'mall-page' //注意，这里的 test1 是 ID，不用加 # 号
+                        , count: count //数据总数，从服务端得到
+                        , limit: 8 //每页显示的数量
+                        , jump: function (obj, first) {
+                            //获取categoryId
+                            var categoryId = $('.layui-this').eq(0).attr('categoryId');
+                            if (!first) {
+                                //获取列表
+                                methods.readerHtml(categoryId, obj.curr);
+                            }
+                        }
+                    });
+
                 }
             }
 
-            //1.0 初始化分页组件
-            laypage.render({
-                elem: 'mall-page' //注意，这里的 test1 是 ID，不用加 # 号
-              , count: 50 //数据总数，从服务端得到
-              , limit: 8 //每页显示的数量
-              , jump: function (obj) {
-                  //获取categoryId
-                  var categoryId = $('.layui-this').eq(0).attr('categoryId');
-                  //获取列表
-                  methods.getProduct(categoryId, obj.curr);
-              }
-            });
-
             methods.initEvent();
+            methods.readerHtml(0, 1);
         });
 
     </script>
 
     <!------------首页产品模板渲染-------------->
-    <script type="text/html">
-        {{#
-
-        #}}
+    <script type="text/html" id="tpl_home">
+        <div class="layui-row layui-col-space10">
+            {{# layui.each(d,function(index,item){ }}
+            <div class="layui-col-md3">
+                <div class="mall-item" productId="{{item.id}}">
+                    <div class="p-img"><img src="{{item.pic}}" /></div>
+                    <div class="p-title">{{item.name}}</div>
+                    <div class="p-price">{{item.price}}￥</div>
+                </div>
+            </div>
+            {{#})}}
+        </div>
     </script>
 
 }

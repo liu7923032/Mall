@@ -12,9 +12,10 @@ using System;
 namespace Mall.Migrations
 {
     [DbContext(typeof(MallDbContext))]
-    partial class MallDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171103122333_Initlize_new")]
+    partial class Initlize_new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
