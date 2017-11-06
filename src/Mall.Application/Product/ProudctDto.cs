@@ -48,6 +48,7 @@ namespace Mall.Product
     /// <summary>
     /// 
     /// </summary>
+    [AutoMapFrom(typeof(Mall_Product))]
     public class ProductDto : UpdateProductInput
     {
         public string CategoryName { get; set; }

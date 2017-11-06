@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Abp.Domain.Repositories;
+using Abp.Runtime.Caching;
 using Mall.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,8 +12,11 @@ namespace Mall.Web.Views.Shared.Components.User
     public class UserViewComponent : MallViewComponent
     {
         private IRepository<Mall_Account> _accountRepository;
-        public UserViewComponent(IRepository<Mall_Account> accountRepository)
+
+        private ICacheManager _cacheManager;
+        public UserViewComponent(IRepository<Mall_Account> accountRepository, ICacheManager cacheManager)
         {
+            _cacheManager = cacheManager;
             _accountRepository = accountRepository;
         }
 
@@ -22,7 +26,9 @@ namespace Mall.Web.Views.Shared.Components.User
             if (AbpSession.UserId.HasValue)
             {
                 int userID = Convert.ToInt32(AbpSession.UserId.Value);
-                var user = await _accountRepository.FirstOrDefaultAsync(u => u.Id.Equals(userID));
+                //此处使用缓存,将users对象都放到缓存中
+                var users = await _cacheManager.GetCache("ComponentCache").GetAsync("Users", () => _accountRepository.GetAllListAsync());
+                var user = users.FirstOrDefault(u => u.Id.Equals(userID));
                 model.Account = user.Account;
                 model.UserName = user.Account;
             }

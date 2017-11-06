@@ -1,0 +1,13 @@
+﻿{
+  "ConnectionStrings": {
+    "Default": "Server=localhost\\sqlexpress; Database=MallDb; UId=sa;Password=123456;MultipleActiveResultSets=true;"
+  },
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  }
+}

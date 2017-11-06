@@ -119,7 +119,7 @@
                     console.log(strList);
 
                     //对product item 进行绑定事件
-                   
+
                 },
                 initEvent: function () {
                     //2.0 绑定分类的点击事件
@@ -148,7 +148,7 @@
                     if (cateId) {
                         params["categoryId"] = cateId;
                         categoryId = cateId;
-                    } 
+                    }
 
                     var index = layer.load();
                     _productService.getAll(params, {
@@ -167,6 +167,7 @@
                             layer.close(index);
                         }
                     });
+<<<<<<< HEAD
 
                 },
                 initPEvent: function () {
@@ -199,6 +200,14 @@
                             }
                         }
                     });
+=======
+                },
+                //渲染数据
+                readerHtml: function () {
+
+                },
+                initPage: function (count,isFirst) {
+>>>>>>> 9f08535f159854a7c78ea8d258287ef41728fd1c
 
                 }
             }
@@ -216,12 +225,11 @@
             <div class="layui-col-md3">
                 <div class="mall-item" productId="{{item.id}}">
                     <div class="p-img"><img src="{{item.pic}}" /></div>
-                    <div class="p-title">{{item.name}}</div>
+                    <div class="p-title">{{item.title}}</div>
                     <div class="p-price">{{item.price}}￥</div>
                 </div>
             </div>
             {{#})}}
         </div>
     </script>
-
 }

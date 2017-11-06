@@ -37,7 +37,13 @@ namespace Mall.Web.Startup
                         PageNames.Approve,
                         L("Approve"),
                         url: "/Order/Approve",
-                        
+                        icon: ""
+                        )
+                ).AddItem(
+                    new MenuItemDefinition(
+                        PageNames.Category,
+                        L("Category"),
+                        url: "/Category/Index",
                         icon: ""
                         )
                 );
