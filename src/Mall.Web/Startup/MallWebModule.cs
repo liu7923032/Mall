@@ -1,4 +1,5 @@
-﻿using Abp.AspNetCore;
+﻿using System;
+using Abp.AspNetCore;
 using Abp.AspNetCore.Configuration;
 using Abp.Modules;
 using Abp.Reflection.Extensions;
@@ -25,18 +26,24 @@ namespace Mall.Web.Startup
 
         public override void PreInitialize()
         {
+            //1.0 配置连接字符串
             Configuration.DefaultNameOrConnectionString = _appConfiguration.GetConnectionString(MallConsts.ConnectionStringName);
 
+            //2.0 添加导航菜单
             Configuration.Navigation.Providers.Add<MallNavigationProvider>();
 
 
-            //Configuration.Modules.AbpAspNetCore().DefaultWrapResultAttribute.
-
+            //3.0 将Application 程序集注册到服务
             Configuration.Modules.AbpAspNetCore()
                 .CreateControllersForAppServices(
                     typeof(MallApplicationModule).GetAssembly()
                 );
 
+            //4.0 配置默认的缓存过期时间是10个小时
+            Configuration.Caching.ConfigureAll((cache) =>
+            {
+                cache.DefaultSlidingExpireTime= TimeSpan.FromHours(10);
+            });
 
         }
 

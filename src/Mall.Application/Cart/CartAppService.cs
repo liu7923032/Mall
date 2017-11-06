@@ -119,6 +119,7 @@ namespace Mall.Cart
             {
                 cart = new Mall_Cart();
                 await _cartRepository.InsertAsync(cart);
+                //为了获取最新购物车的id
                 await CurrentUnitOfWork.SaveChangesAsync();
             }
 

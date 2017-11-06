@@ -28,7 +28,7 @@ namespace Mall.Web.Controllers
         public async Task<IActionResult> Index()
         {
             //第一次加载数据
-            ViewBag.EndOrderNum = await _orderAppService.GetMyOrderCount(Domain.Entities.OrderStatus.Complete);
+            ViewData["EndOrderNum"]= await _orderAppService.GetMyOrderCount(Domain.Entities.OrderStatus.Complete);
 
             return View();
         }
@@ -53,7 +53,7 @@ namespace Mall.Web.Controllers
         /// <returns></returns>
         public async Task<ActionResult> Approve()
         {
-            ViewBag.EndOrderNum = await _orderAppService.GetOrderCount(Domain.Entities.OrderStatus.Complete);
+            ViewData["EndOrderNum"] = await _orderAppService.GetMyOrderCount(Domain.Entities.OrderStatus.Complete);
             return View();
         }
     }

@@ -273,24 +273,6 @@
 
     </script>
 
-    <!--------这个是物料名称的模板信息---------->
-    <script type="text/html" id="tpl_itemName">
-        {{#  if(d.id!== 0){ }}
-        <a href="/Home/Details/{{d.id}}" class="layui-table-link" target="_blank">{{ d.itemName }}</a>
-        {{#  }else { }}
-        <span style="color:blue;">总计</span>
-        {{#  } }}
-    </script>
-
-    <!--------这个是操作按钮的---------->
-    <script type="text/html" id="tpl_cart_bar">
-        {{#  if(d.id!== 0){ }}
-        <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
-        {{#  } }}
-    </script>
-
-
-
 
 
 }

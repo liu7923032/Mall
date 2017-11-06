@@ -189,6 +189,13 @@
                         //选择类别的时候,默认都是选择第一页
                         methods.getProduct(categoryId, 1);
                     });
+                },
+                //渲染数据
+                readerHtml: function () {
+
+                },
+                initPage: function (count,isFirst) {
+
                 }
             }
 
@@ -212,9 +219,15 @@
 
     <!------------首页产品模板渲染-------------->
     <script type="text/html">
-        {{#
-
-        #}}
+        {{# layui.each(d,function(index,item){}}
+        <div class="layui-col-md3" pId="{{item.productId}}">
+            <div class="mall-item">
+                <div class="p-img">{{item.imgPic}}</div>
+                <div class="p-title">{{item.title}}</div>
+                <div class="p-price">{{item.price}}￥</div>
+            </div>
+        </div>
+        {{# })}}
     </script>
 
 }

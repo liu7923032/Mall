@@ -7,6 +7,8 @@ using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
+using Abp.Notifications;
+using Abp.Runtime.Session;
 using Mall.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,13 +46,17 @@ namespace Mall.Order
         private IRepository<Mall_Account> _accountRepository;
         private IRepository<Mall_Integral> _integralRepository;
 
+        private INotificationPublisher _notificationPublisher;
+
         public OrderAppService(IRepository<Mall_Order> orderRepository,
             IRepository<Mall_Account> accountRepository,
-            IRepository<Mall_Integral> integralRepository)
+            IRepository<Mall_Integral> integralRepository,
+            INotificationPublisher notificationPublisher)
         {
             this._accountRepository = accountRepository;
             this._orderRepository = orderRepository;
             this._integralRepository = integralRepository;
+            this._notificationPublisher = notificationPublisher;
         }
 
         /// <summary>
@@ -146,8 +152,9 @@ namespace Mall.Order
                 curUser.Integral -= order.AllPrice;
             }
             await _accountRepository.UpdateAsync(curUser);
-            //批量保存
-            await CurrentUnitOfWork.SaveChangesAsync();
+            //5.给用户发送通知
+            _notificationPublisher.Publish("订单审批完成通知", new MessageNotificationData("订单申请已审批通过"), null, NotificationSeverity.Info, new[] { AbpSession.ToUserIdentifier() });
+
         }
 
     }

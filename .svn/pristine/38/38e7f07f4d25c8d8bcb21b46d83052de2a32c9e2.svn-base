@@ -1,0 +1,233 @@
+﻿@using Mall.Web.Startup
+@using Mall.Web.Models.Home
+
+
+@{
+    ViewBag.ActiveMenu = PageNames.Mall;
+}
+
+
+<!----------放置商品分类------------->
+<div class="mall-category">
+    <div class="layui-container">
+        <ul class="layui-clear">
+            <li class=" category-item layui-this"><a href="/">首页</a></li>
+            @{
+                foreach (var item in Model.Categories)
+                {
+                    <li class="category-item" categoryId="@item.Id"><a href="javascript:void(0)">@item.Name</a></li>
+                }
+            }
+        </ul>
+    </div>
+</div>
+
+<div class="layui-container">
+    <div class="layui-row layui-col-space30">
+        <div class="layui-col-md9 ">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md3">
+                    <div class="mall-item" productId="1">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
+                    </div>
+                </div>
+                <div class="layui-col-md3">
+                    <div class="mall-item">
+                        <div class="p-img"></div>
+                        <div class="p-title">吹风机</div>
+                        <div class="p-price">1000￥</div>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-row">
+                <div class="layui-col-md12">
+                    <div class="" id="mall-page"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-collapse" style="background-color:white;">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title layui-bg-green">最新评论</h2>
+                    <div class="layui-colla-content layui-show">内容区域</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+
+    <script type="text/javascript">
+
+        layui.use(['laypage', 'jquery', 'layer'], function () {
+            var laypage = layui.laypage,
+                layer = layui.layer,
+                $ = layui.jquery;
+
+            var methods = {
+                //获取所有的商品分类
+                getProduct: function (categoryId, page) {
+                    var params = {
+                        sorting: "",
+                        skipCount: (page - 1) * 8,
+                        maxResultCount: 8,
+                    }
+
+                    if (categoryId) {
+                        params[categoryId] = categoryId;
+                    }
+
+                    var index = layer.load();
+                    abp.services.app.product.getAll(params, {
+                        //成功后
+                        success: function (data) {
+                            layer.close(index);
+                            methods.readerList(data);
+                        }, fail: function () {
+                            layer.close(index);
+                        }
+                    });
+                },
+                readerList: function (data) {
+
+                    var items = data.items;
+                    var total = data.totalCount;
+
+                    var strList = '';
+                    //渲染数据
+                    data.items.forEach(function (item, index) {
+
+                        if (index % 4 === 0) {
+                            strList += '<div class="layui-row layui-col-space10" >'
+                        } else {
+                            strList += '<div class="layui-col-md3" >' +
+                                          '<div class="mall-item" productId="' + item.id + '">' +
+                                              '<div class="p-img">' + item.imgPic + '</div>' +
+                                              '<div class="p-title">' + item.name + '</div>' +
+                                              '<div class="p-price">' + item.price + ' ￥</div>' +
+                                          '</div>' +
+                                       '</div>';
+                            //添加layui-row 的闭环标签
+                            if (index % 3 === 0) {
+                                strList += '</div>'
+                            }
+                        }
+                    });
+
+                    //将字符串添加到dom中
+
+                    //对product item 进行绑定事件
+                    $('.mall-item').click(function () {
+
+                        var productId = $(this).attr('productId');
+                        //打开新页面
+                        var productName = $(this).find('.p-title').eq(0).text();
+
+                        window.open("/Home/Details/" + productId, "");
+                    });
+                },
+                initEvent: function () {
+                    //2.0 绑定分类的点击事件
+                    $('.category-item').click(function () {
+                        //切换样式
+                        $('.layui-this').each(function () {
+                            $(this).removeClass('layui-this');
+                        })
+                        if (!$(this).hasClass('layui-this')) {
+                            $(this).addClass('layui-this');
+                        }
+                        var categoryId = $(this).attr('categoryId');
+                        //选择类别的时候,默认都是选择第一页
+                        methods.getProduct(categoryId, 1);
+                    });
+                },
+                //渲染数据
+                readerHtml: function () {
+
+                },
+                initPage: function (count,isFirst) {
+
+                }
+            }
+
+            //1.0 初始化分页组件
+            laypage.render({
+                elem: 'mall-page' //注意，这里的 test1 是 ID，不用加 # 号
+              , count: 50 //数据总数，从服务端得到
+              , limit: 8 //每页显示的数量
+              , jump: function (obj) {
+                  //获取categoryId
+                  var categoryId = $('.layui-this').eq(0).attr('categoryId');
+                  //获取列表
+                  methods.getProduct(categoryId, obj.curr);
+              }
+            });
+
+            methods.initEvent();
+        });
+
+    </script>
+
+    <!------------首页产品模板渲染-------------->
+    <script type="text/html">
+        {{# layui.each(d,function(index,item){}}
+        <div class="layui-col-md3" pId="{{item.productId}}">
+            <div class="mall-item">
+                <div class="p-img">{{item.imgPic}}</div>
+                <div class="p-title">{{item.title}}</div>
+                <div class="p-price">{{item.price}}￥</div>
+            </div>
+        </div>
+        {{# })}}
+    </script>
+
+}
