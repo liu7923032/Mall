@@ -1,0 +1,62 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Authorization;
+using Abp.AutoMapper;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Abp.Runtime.Caching;
+using Abp.Runtime.Session;
+using Mall.Cache;
+using Mall.Domain.Entities;
+
+namespace Mall.Category
+{
+
+    public interface ICategoryAppService : IAsyncCrudAppService<CategoryDto, int, GetAllCategoryInput, CreateCategoryInput, UpdateCategoryInput>
+    {
+        Task<List<CategoryDto>> GetAllListAsync();
+    }
+
+
+    public class CategoryAppService : AsyncCrudAppService<Mall_Category, CategoryDto, int, GetAllCategoryInput, CreateCategoryInput, UpdateCategoryInput>, ICategoryAppService
+    {
+        private ICacheManager _cacheManager;
+        private IRepository<Mall_Category> _categoryRepository;
+        public CategoryAppService(IRepository<Mall_Category> categoryRepository, ICacheManager cacheManager) : base(categoryRepository)
+        {
+            _categoryRepository = categoryRepository;
+            _cacheManager = cacheManager;
+        }
+
+        protected override IQueryable<Mall_Category> CreateFilteredQuery(GetAllCategoryInput input)
+        {
+            return base.CreateFilteredQuery(input)
+                .WhereIf(!string.IsNullOrEmpty(input.Name), u => u.Name.Contains(input.Name));
+        }
+
+        /// <summary>
+        /// 重载新建物料
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async override Task<CategoryDto> Create(CreateCategoryInput input)
+        {
+            //自动生成类别编号
+            var categoryNum = await _categoryRepository.CountAsync();
+
+            input.CategoryNo = (categoryNum + 1).ToString().PadLeft(2, '0');
+
+            return await base.Create(input);
+        }
+
+        public async Task<List<CategoryDto>> GetAllListAsync()
+        {
+            return await _cacheManager.GetCache(nameof(CacheNames))
+                        .GetAsync(CacheNames.Category, async () => await Task.FromResult(_categoryRepository.GetAllList().MapTo<List<CategoryDto>>()));
+        }
+    }
+}

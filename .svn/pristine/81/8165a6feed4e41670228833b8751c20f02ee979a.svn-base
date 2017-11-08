@@ -1,0 +1,40 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Domain.Repositories;
+using Abp.Runtime.Caching;
+using Mall.Cache;
+using Mall.Domain.Entities;
+using Mall.Web.Startup;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Mall.Web.Views.Shared.Components.User
+{
+    public class UserViewComponent : MallViewComponent
+    {
+        private IRepository<Mall_Account> _accountRepository;
+
+        private ICacheManager _cacheManager;
+        public UserViewComponent(IRepository<Mall_Account> accountRepository, ICacheManager cacheManager)
+        {
+            _cacheManager = cacheManager;
+            _accountRepository = accountRepository;
+        }
+
+        public async Task<IViewComponentResult> InvokeAsync()
+        {
+            UserViewModel model = new UserViewModel();
+            if (AbpSession.UserId.HasValue)
+            {
+                int userID = Convert.ToInt32(AbpSession.UserId.Value);
+                //此处使用缓存,将users对象都放到缓存中
+                var users = await _cacheManager.GetCache(nameof(CacheNames)).GetAsync(CacheNames.Users, () => _accountRepository.GetAllListAsync());
+                var user = users.FirstOrDefault(u => u.Id.Equals(userID));
+                model.Account = user.Account;
+                model.UserName = user.Account;
+            }
+            return View(model);
+        }
+    }
+}

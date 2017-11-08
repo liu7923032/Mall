@@ -1,0 +1,60 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+using Abp.Domain.Entities;
+using Abp.Domain.Entities.Auditing;
+
+namespace Mall.Domain.Entities
+{
+    /// <summary>
+    /// 产品名称
+    /// </summary>
+    public class Mall_Product : FullAuditedEntity
+    {
+        [Required]
+        [StringLength(50)]
+        public string Name { get; set; }
+
+        [Required]
+        [StringLength(40)]
+        public string ItemNo { get; set; }
+
+        [StringLength(1000)]
+        public string Describe { get; set; }
+
+        [Required]
+        public decimal Price { get; set; }
+        /// <summary>
+        /// 上传的主要图片
+        /// </summary>
+        [Required]
+        public string ImgPic { get; set; }
+
+        /// <summary>
+        /// 外键
+        /// </summary>
+        
+        [Required]
+        public int CategoryId { get; set; }
+
+        [ForeignKey("CategoryId")]
+        public virtual Mall_Category Category { get; set; }
+
+        /// <summary>
+        /// 一个产品有多个记录
+        /// </summary>
+        [NotMapped]
+        public virtual ICollection<Mall_CartItem> CartItems { get; set; }
+
+
+        public Mall_Product()
+        {
+            Price = 0;
+            IsDeleted = false;
+        }
+    }
+
+    
+}

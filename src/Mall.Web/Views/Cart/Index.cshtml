@@ -1,5 +1,9 @@
 ﻿
 
+@using Mall.Web.Startup
+@{
+    ViewBag.ActiveMenu = PageNames.Cart;
+}
 
 <div class="layui-container" style="background-color:white;">
     <div class="row">
@@ -21,7 +25,7 @@
             </div>
         </div>
         <div class="layui-col-md6" style="text-align:right;padding-right:10px;">
-            <div class="layui-text" style="font-size: 18px;margin-top: 8px;color: orangered;">当前拥有的积分:<span style="font-size: 20px;margin-left: 5px;color: red;" id="my_integral">80</span></div>
+            <div class="layui-text" style="font-size: 18px;margin-top: 8px;color: orangered;">当前拥有的积分:<span style="font-size: 20px;margin-left: 5px;color: red;" id="my_integral">@ViewBag.Integral</span></div>
         </div>
     </div>
 
@@ -69,42 +73,6 @@
                 , _cartService = abp.services.app.cart;
            
 
-            //table.render({
-            //    elem: '#tb_cart', //指定原始表格元素选择器（推荐id选择器）
-            //    limits: [10, 20, 30],
-            //    url: '/api/services/app/Cart/GetMyCart',
-            //    page: false,
-            //    // height: 'full-220',
-            //    even: true,//开启隔行背景
-            //    size: 'md',//小尺寸的表格
-            //    where: {
-
-            //    },
-            //    id: 'tb_myCart',
-            //    request: {
-            //        pageName: 'page' //页码的参数名称，默认：page
-            //        , limitName: 'limit' //每页数据量的参数名，默认：limit
-            //    },
-            //    response: {
-            //        statusName: 'success' //数据状态的字段名称，默认：code
-            //      , statusCode: true //成功的状态码，默认：0
-            //      , msgName: 'error' //状态信息的字段名称，默认：msg
-            //      , countName: 'totalCount' //数据总数的字段名称，默认：count
-            //      , dataName: 'items' //数据列表的字段名称，默认：data
-            //    },
-            //    cols: [[
-            //          { field: 'id', title: '标识', width: 80, align: 'center' },
-            //          { field: 'itemName', title: '物品名称', width: 200, templet: '#tpl_itemName' },
-            //          { field: 'itemSpecs', title: '物品规格', width: 300 },
-            //          { field: 'itemNum', title: '数量', width: 80, align: 'right', edit: 'text' },
-            //          { field: 'itemPrice', title: '积分', width: 80, sort: true, align: 'right' },
-            //          { field: 'allPrice', title: '小计', width: 80, sort: true, align: 'right' },
-            //          { field: 'action', title: '操作', width: 80, align: 'center', templet: '#tpl_cart_bar' },
-            //    ]],
-            //    done: function (res, curr, count) {
-            //        //计算合计项目
-            //    }
-            //});
 
             var methods = {
 
@@ -140,10 +108,15 @@
                         layer.close(index);
                         _cartService.checkOut({
                             success: function () {
-                                //1.清空购物车
-                                methods.readerTpl();
-                                //2.清空右边购物车数量
+                                //1.清空右边购物车数量
                                 $('#cart_pNum').text(0);
+                                //2.跳转到订单页面
+                                location.href = "/Order/Index";
+                                //1.清空购物车
+                                //methods.readerTpl();
+                             
+                               
+
                             }
                         });
                     });

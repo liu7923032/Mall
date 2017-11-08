@@ -1,0 +1,67 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
+using Abp.AspNetCore.Mvc.Authorization;
+using Abp.AutoMapper;
+using Mall.Category;
+using Mall.File;
+using Mall.Product;
+using Mall.Web.Models.Home;
+using Mall.Web.Startup;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Mall.Web.Controllers
+{
+    public class HomeController : MallControllerBase
+    {
+        private ICategoryAppService _categoryService;
+
+        private IProductAppService _productService;
+
+        private IFileAppService _fileAppService;
+
+        public HomeController(ICategoryAppService categoryService, IProductAppService productAppService, IFileAppService fileAppService)
+        {
+            _categoryService = categoryService;
+            _productService = productAppService;
+            _fileAppService = fileAppService;
+        }
+
+        public async Task<ActionResult> Index()
+        {
+
+            var categories = await _categoryService.GetAllListAsync();
+            var model = new CategoryListViewModel
+            {
+                Categories = categories
+            };
+
+            return View(model);
+        }
+
+        public async Task<ActionResult> Details(int id)
+        {
+            var product = await _productService.GetProductById(id);
+            //查询对应的图片信息
+            var fileData = await _fileAppService.GetFilesById(id);
+            var model = new ProductViewModel()
+            {
+                Id = product.Id,
+                ItemNo = product.ItemNo,
+                Describe = product.Describe,
+                Name = product.Name,
+                Price = product.Price,
+                CategoryId = product.CategoryId,
+                ImgPic = product.ImgPic,
+                Files = fileData
+            };
+            return await Task.FromResult(View(model));
+        }
+
+        public ActionResult About()
+        {
+            return View();
+        }
+    }
+}

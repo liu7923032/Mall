@@ -8,17 +8,19 @@
 
 
 <!----------商品分类------------->
-<div class="mall-category">
-    <div class="layui-container">
-        <ul class="layui-clear">
-            <li class=" category-item layui-this"><a href="/">首页</a></li>
-            @{
-                foreach (var item in Model.Categories)
-                {
-                    <li class="category-item" categoryId="@item.Id"><a href="javascript:void(0)">@item.Name</a></li>
+<div class="layui-container">
+    <div class="row">
+        <div class="mall-category">
+            <ul class="layui-clear">
+                <li class=" category-item layui-this"><a href="/">首页</a></li>
+                @{
+                    foreach (var item in Model.Categories)
+                    {
+                        <li class="category-item" categoryId="@item.Id"><a href="javascript:void(0)">@item.Name</a></li>
+                    }
                 }
-            }
-        </ul>
+            </ul>
+        </div>
     </div>
 </div>
 <!----------商品明细------------->
@@ -62,65 +64,12 @@
                 _productService = abp.services.app.product,
                 getTpl = tpl_home.innerHTML,
                 view = document.getElementById('view_home'),
-                categoryId = undefined;
+                categoryId = undefined,
+                isFirst = true;
 
 
             var methods = {
                 //获取所有的商品分类
-                getProduct: function (categoryId, page) {
-                    var params = {
-                        sorting: "",
-                        skipCount: (page - 1) * 8,
-                        maxResultCount: 8,
-                    }
-
-                    if (categoryId) {
-                        params[categoryId] = categoryId;
-                    }
-
-                    var index = layer.load();
-                    abp.services.app.product.getAll(params, {
-                        //成功后
-                        success: function (data) {
-                            layer.close(index);
-                            methods.readerList(data);
-                        }, fail: function () {
-                            layer.close(index);
-                        }
-                    });
-                },
-                readerList: function (data) {
-
-                    var items = data.items;
-                    var total = data.totalCount;
-
-                    var strList = '';
-                    //渲染数据
-                    data.items.forEach(function (item, index) {
-
-                        if (index % 4 === 0) {
-                            strList += '<div class="layui-row layui-col-space10" >'
-                        } else {
-                            strList += '<div class="layui-col-md3" >' +
-                                '<div class="mall-item" productId="' + item.id + '">' +
-                                '<div class="p-img">' + item.imgPic + '</div>' +
-                                '<div class="p-title">' + item.name + '</div>' +
-                                '<div class="p-price">' + item.price + ' ￥</div>' +
-                                '</div>' +
-                                '</div>';
-                            //添加layui-row 的闭环标签
-                            if (index % 3 === 0) {
-                                strList += '</div>'
-                            }
-                        }
-                    });
-
-                    //将字符串添加到dom中
-                    console.log(strList);
-
-                    //对product item 进行绑定事件
-
-                },
                 initEvent: function () {
                     //2.0 绑定分类的点击事件
                     $('.category-item').click(function () {
@@ -131,43 +80,37 @@
                         if (!$(this).hasClass('layui-this')) {
                             $(this).addClass('layui-this');
                         }
-                        var categoryId = $(this).attr('categoryId');
+
+                        categoryId = $(this).attr('categoryId');
+                        isFirst = true;
                         //选择类别的时候,默认都是选择第一页
-                        methods.readerHtml(categoryId, 1);
+                        methods.readerHtml();
                     });
                 },
-                readerHtml: function (cateId, page) {
-                    var params = {
-                        sorting: "",
-                        skipCount: (page - 1) * 8,
-                        maxResultCount: 8,
-                    }
-                    //没有切换分类的情况
-                    var isFirst = cateId != categoryId;
+                readerHtml: function (queryParam) {
 
-                    if (cateId) {
-                        params["categoryId"] = cateId;
-                        categoryId = cateId;
+                    var params = queryParam || { skipCount: 0, maxResultCount: 8 };
+                    if (categoryId != 0) {
+                        params["categoryId"] = categoryId;
                     }
 
                     var index = layer.load();
                     _productService.getAll(params, {
                         success: function (res) {
                             layer.close(index);
-
                             laytpl(getTpl).render(res.items, function (html) {
                                 view.innerHTML = html;
                                 //绑定事件
                                 methods.initPEvent();
                             });
-
-                            methods.initPage(res.totalCount, isFirst);
+                            if (isFirst) {
+                                methods.initPage(res.totalCount);
+                            }
                         },
                         fail: function () {
                             layer.close(index);
                         }
                     });
-<<<<<<< HEAD
 
                 },
                 initPEvent: function () {
@@ -182,10 +125,7 @@
 
                 },
                 //分页
-                initPage: function (count, isFirst) {
-                    if (!isFirst) {
-                        return false;
-                    }
+                initPage: function (count) {
                     //1.0 初始化分页组件
                     laypage.render({
                         elem: 'mall-page' //注意，这里的 test1 是 ID，不用加 # 号
@@ -193,23 +133,19 @@
                         , limit: 8 //每页显示的数量
                         , jump: function (obj, first) {
                             //获取categoryId
-                            var categoryId = $('.layui-this').eq(0).attr('categoryId');
+                            var params = {
+                                sorting: "",
+                                skipCount: (parseInt(obj.curr) - 1) * parseInt(obj.limit),
+                                maxResultCount: parseInt(obj.limit),
+                            }
                             if (!first) {
                                 //获取列表
-                                methods.readerHtml(categoryId, obj.curr);
+                                methods.readerHtml();
                             }
                         }
                     });
-=======
                 },
-                //渲染数据
-                readerHtml: function () {
 
-                },
-                initPage: function (count,isFirst) {
->>>>>>> 9f08535f159854a7c78ea8d258287ef41728fd1c
-
-                }
             }
 
             methods.initEvent();
@@ -224,8 +160,8 @@
             {{# layui.each(d,function(index,item){ }}
             <div class="layui-col-md3">
                 <div class="mall-item" productId="{{item.id}}">
-                    <div class="p-img"><img src="{{item.pic}}" /></div>
-                    <div class="p-title">{{item.title}}</div>
+                    <div class="p-img"><img src="{{item.imgPic}}" /></div>
+                    <div class="p-title">{{item.name}}</div>
                     <div class="p-price">{{item.price}}￥</div>
                 </div>
             </div>

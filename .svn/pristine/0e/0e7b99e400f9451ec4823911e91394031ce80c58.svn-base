@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Abp.Application.Services;
+using Abp.Domain.Repositories;
+using Mall.Domain.Entities;
+
+namespace Mall.File
+{
+    public interface IFileAppService : IAsyncCrudAppService<FileDto, int, GetFilesInput, CreateFileInput, UpdateFileInput>
+    {
+
+    }
+
+    public class FileAppService : AsyncCrudAppService<Mall_AttachFile, FileDto, int, GetFilesInput, CreateFileInput, UpdateFileInput>, IFileAppService
+    {
+        private IRepository<Mall_AttachFile> _fileRepository;
+        public FileAppService(IRepository<Mall_AttachFile> fileRepository) : base(fileRepository)
+        {
+            _fileRepository = fileRepository;
+        }
+
+        protected override IQueryable<Mall_AttachFile> CreateFilteredQuery(GetFilesInput input)
+        {
+            return base.CreateFilteredQuery(input);
+        }
+    }
+}

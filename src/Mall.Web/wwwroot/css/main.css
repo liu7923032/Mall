@@ -87,7 +87,10 @@ a {
 }
 .mall-item .p-img {
   height: 180px;
-  width: auto;
+  width: 100%;
+}
+.mall-item .p-img img {
+  width: 100%;
 }
 .mall-item .p-title {
   min-height: 30px;
@@ -121,6 +124,9 @@ a {
   border: 1px solid whitesmoke;
   width: 100%;
   height: 450px;
+}
+.mall-details .mall-pic img {
+  width: 100%;
 }
 .mall-details .mall-desc {
   border: 1px solid whitesmoke;

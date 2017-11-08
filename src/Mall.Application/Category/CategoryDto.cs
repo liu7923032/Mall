@@ -21,12 +21,14 @@ namespace Mall.Category
 
         public int? ParentId { get; set; }
 
-        [Required]
         [StringLength(20)]
         public string CategoryNo { get; set; }
 
+
         [StringLength(400)]
         public string Describe { get; set; }
+
+        public int SortNo { get; set; }
     }
 
     /// <summary>
@@ -42,7 +44,10 @@ namespace Mall.Category
     [AutoMap(typeof(Mall_Category))]
     public class CategoryDto: UpdateCategoryInput
     {
-
+        /// <summary>
+        /// 创建人
+        /// </summary>
+        public string CreateName { get; set; }
     }
 
     public class GetAllCategoryInput : PagedAndSortedResultRequestDto

@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Abp.Application.Services.Dto;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AutoMapper;
 using Mall.Category;
+using Mall.File;
 using Mall.Product;
 using Mall.Web.Models.Home;
 using Mall.Web.Startup;
@@ -17,34 +19,32 @@ namespace Mall.Web.Controllers
 
         private IProductAppService _productService;
 
-        public HomeController(ICategoryAppService categoryService, IProductAppService productAppService)
+        private IFileAppService _fileAppService;
+
+        public HomeController(ICategoryAppService categoryService, IProductAppService productAppService, IFileAppService fileAppService)
         {
             _categoryService = categoryService;
             _productService = productAppService;
+            _fileAppService = fileAppService;
         }
 
         public async Task<ActionResult> Index()
         {
-            //1.0 获取所有的产品类别
-            var categories = (await _categoryService.GetAll(new GetAllCategoryInput()
-            {
-                MaxResultCount = 10,
-                SkipCount = 0,
-                Sorting = "CategoryNo"
-            })).Items;
 
+            var categories = await _categoryService.GetAllListAsync();
             var model = new CategoryListViewModel
             {
                 Categories = categories
             };
-
 
             return View(model);
         }
 
         public async Task<ActionResult> Details(int id)
         {
-            var product = await _productService.Get(new EntityDto<int>() { Id = id });
+            var product = await _productService.GetProductById(id);
+            //查询对应的图片信息
+            var fileData = await _fileAppService.GetFilesById(id);
             var model = new ProductViewModel()
             {
                 Id = product.Id,
@@ -53,7 +53,8 @@ namespace Mall.Web.Controllers
                 Name = product.Name,
                 Price = product.Price,
                 CategoryId = product.CategoryId,
-                Pic = product.Pic
+                ImgPic = product.ImgPic,
+                Files = fileData
             };
             return await Task.FromResult(View(model));
         }

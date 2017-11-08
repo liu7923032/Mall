@@ -48,6 +48,7 @@ namespace Mall.Domain.Entities
         [NotMapped]
         public virtual ICollection<Mall_CartItem> CartItems { get; set; }
 
+
         public Mall_Product()
         {
             Price = 0;

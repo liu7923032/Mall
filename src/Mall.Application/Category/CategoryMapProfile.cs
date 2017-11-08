@@ -6,12 +6,12 @@ using Mall.Domain.Entities;
 
 namespace Mall.Category
 {
-    public class CategoryMapProfile: Profile
+    public class CategoryMapProfile : Profile
     {
         public CategoryMapProfile()
         {
             CreateMap<CreateCategoryInput, Mall_Category>();
-            CreateMap<CategoryDto, Mall_Category>();
+            CreateMap<Mall_Category, CategoryDto>();
             CreateMap<UpdateCategoryInput, Mall_Category>();
         }
     }

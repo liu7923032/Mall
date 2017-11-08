@@ -1,0 +1,294 @@
+DEBUG 2017-11-07 19:15:40,324 [2    ] Abp.Modules.AbpModuleManager             - Loading Abp modules...
+DEBUG 2017-11-07 19:15:40,379 [2    ] Abp.Modules.AbpModuleManager             - Found 10 ABP modules in total.
+DEBUG 2017-11-07 19:15:40,404 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.Web.Startup.MallWebModule, Mall.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,407 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.MallApplicationModule, Mall.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,408 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.MallCoreModule, Mall.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,409 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.AutoMapper.AbpAutoMapperModule, Abp.AutoMapper, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,409 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.AbpKernelModule, Abp, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,410 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.EntityFrameworkCore.MallEntityFrameworkCoreModule, Mall.EntityFrameworkCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,410 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.EntityFrameworkCore.AbpEntityFrameworkCoreModule, Abp.EntityFrameworkCore, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,410 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.EntityFramework.AbpEntityFrameworkCommonModule, Abp.EntityFramework.Common, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,411 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.AspNetCore.AbpAspNetCoreModule, Abp.AspNetCore, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,411 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.Web.AbpWebCommonModule, Abp.Web.Common, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,417 [2    ] Abp.Modules.AbpModuleManager             - 10 modules loaded.
+DEBUG 2017-11-07 19:15:40,702 [2    ] ameworkCore.AbpEntityFrameworkCoreModule - Registering DbContext: Mall.EntityFrameworkCore.MallDbContext, Mall.EntityFrameworkCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:15:40,819 [2    ] Abp.Localization.LocalizationManager     - Initializing 3 localization sources.
+DEBUG 2017-11-07 19:15:40,829 [2    ] Abp.Localization.LocalizationManager     - Initialized localization source: Abp
+DEBUG 2017-11-07 19:15:40,974 [2    ] Abp.Localization.LocalizationManager     - Initialized localization source: Mall-cn
+DEBUG 2017-11-07 19:15:40,976 [2    ] Abp.Localization.LocalizationManager     - Initialized localization source: AbpWeb
+DEBUG 2017-11-07 19:15:41,201 [2    ] Abp.BackgroundJobs.BackgroundJobManager  - Start background worker: Abp.BackgroundJobs.BackgroundJobManager
+DEBUG 2017-11-07 19:15:41,274 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Found 9 classes define auto mapping attributes
+DEBUG 2017-11-07 19:15:41,274 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Product.CreateProductInput
+DEBUG 2017-11-07 19:15:41,279 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Product.UpdateProductInput
+DEBUG 2017-11-07 19:15:41,279 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Product.ProductDto
+DEBUG 2017-11-07 19:15:41,279 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Category.CreateCategoryInput
+DEBUG 2017-11-07 19:15:41,280 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Category.UpdateCategoryInput
+DEBUG 2017-11-07 19:15:41,280 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Category.CategoryDto
+DEBUG 2017-11-07 19:15:41,280 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Cart.CartItemInput
+DEBUG 2017-11-07 19:15:41,280 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Cart.CartItemDto
+DEBUG 2017-11-07 19:15:41,280 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Web.Models.Home.ProductViewModel
+INFO  2017-11-07 19:15:42,501 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/  
+WARN  2017-11-07 19:15:42,586 [9    ] Abp.Logging.LogHelper                    - ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.
+WARN  2017-11-07 19:15:42,607 [9    ] Abp.Logging.LogHelper                    - ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.
+INFO  2017-11-07 19:15:42,730 [9    ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:15:43,070 [9    ] uthorization.DefaultAuthorizationService - Authorization was successful for user: admin.
+INFO  2017-11-07 19:15:43,920 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Web.Controllers.HomeController.Index (Mall.Web) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:15:44,842 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Category.CategoryAppService.GetAllListAsync is executed by user 1 in 880 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:15:44,899 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Web.Controllers.HomeController.Index is executed by user 1 in 1046 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:15:48,170 [9    ] ViewFeatures.Internal.ViewResultExecutor - Executing ViewResult, running view at path /Views/Home/Index.cshtml.
+INFO  2017-11-07 19:15:50,249 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Web.Controllers.HomeController.Index (Mall.Web) in 7207.2466ms
+INFO  2017-11-07 19:15:50,265 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 7790.0796ms 200 text/html; charset=utf-8
+INFO  2017-11-07 19:15:50,289 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpScripts/GetScripts?v=636456789502259173  
+INFO  2017-11-07 19:15:50,290 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpServiceProxies/GetAll?v=636456789502248132  
+INFO  2017-11-07 19:15:50,315 [9    ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:15:50,316 [14   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:15:50,328 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/lib/layui-extend/layui.css  
+INFO  2017-11-07 19:15:50,334 [13   ] NetCore.StaticFiles.StaticFileMiddleware - The file /lib/layui-extend/layui.css was not modified
+INFO  2017-11-07 19:15:50,344 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 9.7564ms 304 text/css
+INFO  2017-11-07 19:15:50,371 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) with arguments () - ModelState is Valid
+INFO  2017-11-07 19:15:50,392 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) with arguments (Abp.AspNetCore.Mvc.Proxying.ApiProxyGenerationModel) - ModelState is Valid
+WARN  2017-11-07 19:15:50,465 [14   ] Abp.Logging.LogHelper                    - ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.
+INFO  2017-11-07 19:15:50,476 [14   ] tCore.Mvc.Internal.ContentResultExecutor - Executing ContentResult with HTTP Response ContentType of application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:15:50,479 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) in 135.4648ms
+INFO  2017-11-07 19:15:50,481 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 211.825ms 200 application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:15:50,517 [9    ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:15:50,520 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) in 161.932ms
+INFO  2017-11-07 19:15:50,522 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 252.8083ms 200 text/plain; charset=utf-8
+INFO  2017-11-07 19:15:50,629 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/api/services/app/Cart/GetCartProjectNum application/json 
+INFO  2017-11-07 19:15:50,631 [14   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:15:51,100 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:15:51,227 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Cart.CartAppService.GetCartProjectNum is executed by user 1 in 128 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:15:51,230 [9    ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:15:51,243 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) in 598.7642ms
+INFO  2017-11-07 19:15:51,246 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 616.7012ms 200 application/json; charset=utf-8
+INFO  2017-11-07 19:15:54,036 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/Category/Product  
+INFO  2017-11-07 19:15:54,038 [14   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:15:54,044 [14   ] uthorization.DefaultAuthorizationService - Authorization was successful for user: admin.
+INFO  2017-11-07 19:15:54,048 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Web.Controllers.CategoryController.Product (Mall.Web) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:15:54,051 [14   ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Category.CategoryAppService.GetAllListAsync is executed by user 1 in 0 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:15:54,051 [14   ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Web.Controllers.CategoryController.Product is executed by user 1 in 4 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:15:54,269 [14   ] ViewFeatures.Internal.ViewResultExecutor - Executing ViewResult, running view at path /Views/Category/Product.cshtml.
+INFO  2017-11-07 19:15:54,391 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Web.Controllers.CategoryController.Product (Mall.Web) in 347.5487ms
+INFO  2017-11-07 19:15:54,394 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 356.49ms 200 text/html; charset=utf-8
+INFO  2017-11-07 19:15:54,457 [10   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpScripts/GetScripts?v=636456789543686224  
+INFO  2017-11-07 19:15:54,458 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpServiceProxies/GetAll?v=636456789543685951  
+INFO  2017-11-07 19:15:54,470 [10   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:15:54,474 [13   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:15:54,485 [10   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) with arguments () - ModelState is Valid
+INFO  2017-11-07 19:15:54,495 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) with arguments (Abp.AspNetCore.Mvc.Proxying.ApiProxyGenerationModel) - ModelState is Valid
+INFO  2017-11-07 19:15:54,499 [13   ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:15:54,505 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) in 14.8515ms
+INFO  2017-11-07 19:15:54,509 [10   ] tCore.Mvc.Internal.ContentResultExecutor - Executing ContentResult with HTTP Response ContentType of application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:15:54,523 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 52.1548ms 200 text/plain; charset=utf-8
+INFO  2017-11-07 19:15:54,526 [10   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) in 48.893ms
+INFO  2017-11-07 19:15:54,533 [10   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 73.8633ms 200 application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:15:54,600 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/api/services/app/Cart/GetCartProjectNum application/json 
+INFO  2017-11-07 19:15:54,605 [14   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:15:54,613 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:15:54,624 [13   ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Cart.CartAppService.GetCartProjectNum is executed by user 1 in 15 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:15:54,626 [13   ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:15:54,631 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) in 21.6362ms
+INFO  2017-11-07 19:15:54,640 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 33.9771ms 200 application/json; charset=utf-8
+INFO  2017-11-07 19:16:01,808 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 POST http://localhost:10010/File/Upload/ multipart/form-data; boundary=----WebKitFormBoundaryqjvyO7LvcxaEUaXX 270110
+INFO  2017-11-07 19:16:01,820 [13   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:16:01,838 [13   ] uthorization.DefaultAuthorizationService - Authorization was successful for user: admin.
+INFO  2017-11-07 19:16:01,959 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Web.Controllers.FileController.Upload (Mall.Web) with arguments (Microsoft.AspNetCore.Http.Internal.FormFile, ) - ModelState is Valid
+INFO  2017-11-07 19:16:32,888 [14   ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Web.Controllers.FileController.Upload is executed by user 1 in 30932 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:16:32,890 [14   ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:16:32,894 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Web.Controllers.FileController.Upload (Mall.Web) in 31061.1202ms
+INFO  2017-11-07 19:16:32,901 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 31122.3296ms 200 application/json; charset=utf-8
+DEBUG 2017-11-07 19:22:24,471 [2    ] Abp.Modules.AbpModuleManager             - Loading Abp modules...
+DEBUG 2017-11-07 19:22:24,514 [2    ] Abp.Modules.AbpModuleManager             - Found 10 ABP modules in total.
+DEBUG 2017-11-07 19:22:24,538 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.Web.Startup.MallWebModule, Mall.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,541 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.MallApplicationModule, Mall.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,541 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.MallCoreModule, Mall.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,542 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.AutoMapper.AbpAutoMapperModule, Abp.AutoMapper, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,542 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.AbpKernelModule, Abp, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,543 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.EntityFrameworkCore.MallEntityFrameworkCoreModule, Mall.EntityFrameworkCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,543 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.EntityFrameworkCore.AbpEntityFrameworkCoreModule, Abp.EntityFrameworkCore, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,543 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.EntityFramework.AbpEntityFrameworkCommonModule, Abp.EntityFramework.Common, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,544 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.AspNetCore.AbpAspNetCoreModule, Abp.AspNetCore, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,544 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.Web.AbpWebCommonModule, Abp.Web.Common, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,547 [2    ] Abp.Modules.AbpModuleManager             - 10 modules loaded.
+DEBUG 2017-11-07 19:22:24,782 [2    ] ameworkCore.AbpEntityFrameworkCoreModule - Registering DbContext: Mall.EntityFrameworkCore.MallDbContext, Mall.EntityFrameworkCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:22:24,893 [2    ] Abp.Localization.LocalizationManager     - Initializing 3 localization sources.
+DEBUG 2017-11-07 19:22:24,905 [2    ] Abp.Localization.LocalizationManager     - Initialized localization source: Abp
+DEBUG 2017-11-07 19:22:25,090 [2    ] Abp.Localization.LocalizationManager     - Initialized localization source: Mall-cn
+DEBUG 2017-11-07 19:22:25,091 [2    ] Abp.Localization.LocalizationManager     - Initialized localization source: AbpWeb
+DEBUG 2017-11-07 19:22:25,309 [2    ] Abp.BackgroundJobs.BackgroundJobManager  - Start background worker: Abp.BackgroundJobs.BackgroundJobManager
+DEBUG 2017-11-07 19:22:25,358 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Found 9 classes define auto mapping attributes
+DEBUG 2017-11-07 19:22:25,358 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Product.CreateProductInput
+DEBUG 2017-11-07 19:22:25,361 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Product.UpdateProductInput
+DEBUG 2017-11-07 19:22:25,362 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Product.ProductDto
+DEBUG 2017-11-07 19:22:25,362 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Category.CreateCategoryInput
+DEBUG 2017-11-07 19:22:25,362 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Category.UpdateCategoryInput
+DEBUG 2017-11-07 19:22:25,363 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Category.CategoryDto
+DEBUG 2017-11-07 19:22:25,363 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Cart.CartItemInput
+DEBUG 2017-11-07 19:22:25,363 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Cart.CartItemDto
+DEBUG 2017-11-07 19:22:25,363 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Web.Models.Home.ProductViewModel
+INFO  2017-11-07 19:22:26,441 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/  
+WARN  2017-11-07 19:22:26,502 [9    ] Abp.Logging.LogHelper                    - ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.
+WARN  2017-11-07 19:22:26,516 [9    ] Abp.Logging.LogHelper                    - ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.
+INFO  2017-11-07 19:22:26,563 [9    ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:22:26,760 [9    ] uthorization.DefaultAuthorizationService - Authorization was successful for user: admin.
+INFO  2017-11-07 19:22:27,270 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Web.Controllers.HomeController.Index (Mall.Web) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:22:27,958 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Category.CategoryAppService.GetAllListAsync is executed by user 1 in 651 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:22:28,014 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Web.Controllers.HomeController.Index is executed by user 1 in 772 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:22:30,321 [9    ] ViewFeatures.Internal.ViewResultExecutor - Executing ViewResult, running view at path /Views/Home/Index.cshtml.
+INFO  2017-11-07 19:22:32,193 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Web.Controllers.HomeController.Index (Mall.Web) in 5447.9576ms
+INFO  2017-11-07 19:22:32,214 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 5795.6449ms 200 text/html; charset=utf-8
+INFO  2017-11-07 19:22:32,217 [10   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpServiceProxies/GetAll?v=636456793521687877  
+INFO  2017-11-07 19:22:32,222 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpScripts/GetScripts?v=636456793521696147  
+INFO  2017-11-07 19:22:32,246 [10   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:22:32,247 [13   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:22:32,256 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/lib/layui-extend/layui.css  
+INFO  2017-11-07 19:22:32,265 [9    ] NetCore.StaticFiles.StaticFileMiddleware - The file /lib/layui-extend/layui.css was not modified
+INFO  2017-11-07 19:22:32,286 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 13.4233ms 304 text/css
+INFO  2017-11-07 19:22:32,313 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) with arguments () - ModelState is Valid
+INFO  2017-11-07 19:22:32,333 [10   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) with arguments (Abp.AspNetCore.Mvc.Proxying.ApiProxyGenerationModel) - ModelState is Valid
+WARN  2017-11-07 19:22:32,393 [13   ] Abp.Logging.LogHelper                    - ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.
+INFO  2017-11-07 19:22:32,407 [13   ] tCore.Mvc.Internal.ContentResultExecutor - Executing ContentResult with HTTP Response ContentType of application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:22:32,412 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) in 128.6828ms
+INFO  2017-11-07 19:22:32,422 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 192.8739ms 200 application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:22:32,528 [10   ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:22:32,546 [10   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) in 231.8952ms
+INFO  2017-11-07 19:22:32,560 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/api/services/app/Cart/GetCartProjectNum application/json 
+INFO  2017-11-07 19:22:32,586 [10   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 330.9918ms 200 text/plain; charset=utf-8
+INFO  2017-11-07 19:22:32,591 [13   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:22:33,068 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:22:33,196 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Cart.CartAppService.GetCartProjectNum is executed by user 1 in 130 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:22:33,199 [9    ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:22:33,212 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) in 608.8392ms
+INFO  2017-11-07 19:22:33,214 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 679.4336ms 200 application/json; charset=utf-8
+INFO  2017-11-07 19:22:35,519 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/Category/Product  
+INFO  2017-11-07 19:22:35,524 [14   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:22:35,532 [14   ] uthorization.DefaultAuthorizationService - Authorization was successful for user: admin.
+INFO  2017-11-07 19:22:35,536 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Web.Controllers.CategoryController.Product (Mall.Web) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:22:35,540 [14   ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Category.CategoryAppService.GetAllListAsync is executed by user 1 in 0 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:22:35,541 [14   ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Web.Controllers.CategoryController.Product is executed by user 1 in 7 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:22:35,726 [14   ] ViewFeatures.Internal.ViewResultExecutor - Executing ViewResult, running view at path /Views/Category/Product.cshtml.
+INFO  2017-11-07 19:22:35,872 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Web.Controllers.CategoryController.Product (Mall.Web) in 341.1185ms
+INFO  2017-11-07 19:22:35,874 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 356.8453ms 200 text/html; charset=utf-8
+INFO  2017-11-07 19:22:35,893 [10   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpServiceProxies/GetAll?v=636456793558466940  
+INFO  2017-11-07 19:22:35,894 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpScripts/GetScripts?v=636456793558467461  
+INFO  2017-11-07 19:22:35,905 [13   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:22:35,907 [10   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:22:35,912 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) with arguments () - ModelState is Valid
+INFO  2017-11-07 19:22:35,918 [10   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) with arguments (Abp.AspNetCore.Mvc.Proxying.ApiProxyGenerationModel) - ModelState is Valid
+INFO  2017-11-07 19:22:35,919 [13   ] tCore.Mvc.Internal.ContentResultExecutor - Executing ContentResult with HTTP Response ContentType of application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:22:35,922 [10   ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:22:35,926 [10   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) in 11.7013ms
+INFO  2017-11-07 19:22:35,936 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) in 14.4003ms
+INFO  2017-11-07 19:22:35,939 [10   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 45.1558ms 200 text/plain; charset=utf-8
+INFO  2017-11-07 19:22:35,942 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 46.2595ms 200 application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:22:35,965 [15   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/api/services/app/Cart/GetCartProjectNum application/json 
+INFO  2017-11-07 19:22:35,970 [15   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:22:35,977 [15   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:22:35,989 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Cart.CartAppService.GetCartProjectNum is executed by user 1 in 13 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:22:35,990 [9    ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:22:35,992 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) in 17.5051ms
+INFO  2017-11-07 19:22:35,994 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 29.2289ms 200 application/json; charset=utf-8
+INFO  2017-11-07 19:22:39,918 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 POST http://localhost:10010/File/Upload/ multipart/form-data; boundary=----WebKitFormBoundaryhE7d6BOgoFQBoO8p 270110
+INFO  2017-11-07 19:22:39,929 [9    ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:22:40,023 [9    ] uthorization.DefaultAuthorizationService - Authorization was successful for user: admin.
+INFO  2017-11-07 19:22:40,316 [15   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Web.Controllers.FileController.Upload (Mall.Web) with arguments (Microsoft.AspNetCore.Http.Internal.FormFile, ) - ModelState is Valid
+INFO  2017-11-07 19:22:40,355 [13   ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Web.Controllers.FileController.Upload is executed by user 1 in 44 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:22:40,360 [15   ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:22:40,363 [15   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Web.Controllers.FileController.Upload (Mall.Web) in 420.3684ms
+INFO  2017-11-07 19:22:40,373 [15   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 540.3591ms 200 application/json; charset=utf-8
+DEBUG 2017-11-07 19:23:54,998 [2    ] Abp.Modules.AbpModuleManager             - Loading Abp modules...
+DEBUG 2017-11-07 19:23:55,036 [2    ] Abp.Modules.AbpModuleManager             - Found 10 ABP modules in total.
+DEBUG 2017-11-07 19:23:55,057 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.Web.Startup.MallWebModule, Mall.Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,060 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.MallApplicationModule, Mall.Application, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,060 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.MallCoreModule, Mall.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,061 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.AutoMapper.AbpAutoMapperModule, Abp.AutoMapper, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,061 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.AbpKernelModule, Abp, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,061 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Mall.EntityFrameworkCore.MallEntityFrameworkCoreModule, Mall.EntityFrameworkCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,062 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.EntityFrameworkCore.AbpEntityFrameworkCoreModule, Abp.EntityFrameworkCore, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,062 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.EntityFramework.AbpEntityFrameworkCommonModule, Abp.EntityFramework.Common, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,062 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.AspNetCore.AbpAspNetCoreModule, Abp.AspNetCore, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,063 [2    ] Abp.Modules.AbpModuleManager             - Loaded module: Abp.Web.AbpWebCommonModule, Abp.Web.Common, Version=3.1.2.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,066 [2    ] Abp.Modules.AbpModuleManager             - 10 modules loaded.
+DEBUG 2017-11-07 19:23:55,295 [2    ] ameworkCore.AbpEntityFrameworkCoreModule - Registering DbContext: Mall.EntityFrameworkCore.MallDbContext, Mall.EntityFrameworkCore, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+DEBUG 2017-11-07 19:23:55,431 [2    ] Abp.Localization.LocalizationManager     - Initializing 3 localization sources.
+DEBUG 2017-11-07 19:23:55,443 [2    ] Abp.Localization.LocalizationManager     - Initialized localization source: Abp
+DEBUG 2017-11-07 19:23:55,582 [2    ] Abp.Localization.LocalizationManager     - Initialized localization source: Mall-cn
+DEBUG 2017-11-07 19:23:55,584 [2    ] Abp.Localization.LocalizationManager     - Initialized localization source: AbpWeb
+DEBUG 2017-11-07 19:23:55,802 [2    ] Abp.BackgroundJobs.BackgroundJobManager  - Start background worker: Abp.BackgroundJobs.BackgroundJobManager
+DEBUG 2017-11-07 19:23:55,856 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Found 9 classes define auto mapping attributes
+DEBUG 2017-11-07 19:23:55,856 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Product.CreateProductInput
+DEBUG 2017-11-07 19:23:55,860 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Product.UpdateProductInput
+DEBUG 2017-11-07 19:23:55,860 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Product.ProductDto
+DEBUG 2017-11-07 19:23:55,860 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Category.CreateCategoryInput
+DEBUG 2017-11-07 19:23:55,861 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Category.UpdateCategoryInput
+DEBUG 2017-11-07 19:23:55,861 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Category.CategoryDto
+DEBUG 2017-11-07 19:23:55,861 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Cart.CartItemInput
+DEBUG 2017-11-07 19:23:55,861 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Cart.CartItemDto
+DEBUG 2017-11-07 19:23:55,861 [2    ] Abp.AutoMapper.AbpAutoMapperModule       - Mall.Web.Models.Home.ProductViewModel
+INFO  2017-11-07 19:23:56,798 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/  
+WARN  2017-11-07 19:23:56,850 [9    ] Abp.Logging.LogHelper                    - ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.
+WARN  2017-11-07 19:23:56,862 [9    ] Abp.Logging.LogHelper                    - ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.
+INFO  2017-11-07 19:23:56,902 [9    ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:23:57,096 [9    ] uthorization.DefaultAuthorizationService - Authorization was successful for user: admin.
+INFO  2017-11-07 19:23:57,610 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Web.Controllers.HomeController.Index (Mall.Web) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:23:58,231 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Category.CategoryAppService.GetAllListAsync is executed by user 1 in 588 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:23:58,319 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Web.Controllers.HomeController.Index is executed by user 1 in 738 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:24:00,721 [9    ] ViewFeatures.Internal.ViewResultExecutor - Executing ViewResult, running view at path /Views/Home/Index.cshtml.
+INFO  2017-11-07 19:24:02,625 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Web.Controllers.HomeController.Index (Mall.Web) in 5544.8049ms
+INFO  2017-11-07 19:24:02,635 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 5856.9625ms 200 text/html; charset=utf-8
+INFO  2017-11-07 19:24:02,649 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpScripts/GetScripts?v=636456794426026924  
+INFO  2017-11-07 19:24:02,676 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpServiceProxies/GetAll?v=636456794426018658  
+INFO  2017-11-07 19:24:02,677 [9    ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:24:02,679 [14   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:24:02,724 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) with arguments () - ModelState is Valid
+INFO  2017-11-07 19:24:02,769 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) with arguments (Abp.AspNetCore.Mvc.Proxying.ApiProxyGenerationModel) - ModelState is Valid
+WARN  2017-11-07 19:24:02,829 [9    ] Abp.Logging.LogHelper                    - ISettingStore is not implemented, using DefaultConfigSettingStore which does not support GetAllListAsync.
+INFO  2017-11-07 19:24:02,840 [9    ] tCore.Mvc.Internal.ContentResultExecutor - Executing ContentResult with HTTP Response ContentType of application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:24:02,843 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) in 143.0863ms
+INFO  2017-11-07 19:24:02,848 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 196.2226ms 200 application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:24:02,895 [14   ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:24:02,898 [14   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) in 185.6214ms
+INFO  2017-11-07 19:24:02,901 [14   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 244.199ms 200 text/plain; charset=utf-8
+INFO  2017-11-07 19:24:03,087 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/api/services/app/Cart/GetCartProjectNum application/json 
+INFO  2017-11-07 19:24:03,090 [13   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:24:03,521 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:24:03,653 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Cart.CartAppService.GetCartProjectNum is executed by user 1 in 134 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:24:03,656 [9    ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:24:03,671 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) in 566.6649ms
+INFO  2017-11-07 19:24:03,673 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 586.2208ms 200 application/json; charset=utf-8
+INFO  2017-11-07 19:24:04,638 [15   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/Category/Product  
+INFO  2017-11-07 19:24:04,641 [15   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:24:04,651 [15   ] uthorization.DefaultAuthorizationService - Authorization was successful for user: admin.
+INFO  2017-11-07 19:24:04,655 [15   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Web.Controllers.CategoryController.Product (Mall.Web) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:24:04,659 [15   ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Category.CategoryAppService.GetAllListAsync is executed by user 1 in 0 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:24:04,660 [15   ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Web.Controllers.CategoryController.Product is executed by user 1 in 6 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:24:04,826 [15   ] ViewFeatures.Internal.ViewResultExecutor - Executing ViewResult, running view at path /Views/Category/Product.cshtml.
+INFO  2017-11-07 19:24:04,956 [15   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Web.Controllers.CategoryController.Product (Mall.Web) in 307.9349ms
+INFO  2017-11-07 19:24:04,960 [15   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 321.3369ms 200 text/html; charset=utf-8
+INFO  2017-11-07 19:24:04,979 [10   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpScripts/GetScripts?v=636456794449345220  
+INFO  2017-11-07 19:24:04,982 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/AbpServiceProxies/GetAll?v=636456794449344963  
+INFO  2017-11-07 19:24:05,003 [10   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:24:05,025 [13   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:24:05,031 [10   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) with arguments () - ModelState is Valid
+INFO  2017-11-07 19:24:05,037 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) with arguments (Abp.AspNetCore.Mvc.Proxying.ApiProxyGenerationModel) - ModelState is Valid
+INFO  2017-11-07 19:24:05,042 [13   ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:24:05,043 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 GET http://localhost:10010/api/services/app/Cart/GetCartProjectNum application/json 
+INFO  2017-11-07 19:24:05,047 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Proxying.AbpServiceProxiesController.GetAll (Abp.AspNetCore) in 17.0633ms
+INFO  2017-11-07 19:24:05,051 [10   ] tCore.Mvc.Internal.ContentResultExecutor - Executing ContentResult with HTTP Response ContentType of application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:24:05,054 [9    ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:24:05,069 [13   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 71.7766ms 200 text/plain; charset=utf-8
+INFO  2017-11-07 19:24:05,074 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) with arguments ((null)) - ModelState is Valid
+INFO  2017-11-07 19:24:05,076 [10   ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Abp.AspNetCore.Mvc.Controllers.AbpScriptsController.GetScripts (Abp.AspNetCore) in 26.2979ms
+INFO  2017-11-07 19:24:05,078 [10   ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 99.4823ms 200 application/x-javascript; charset=utf-8
+INFO  2017-11-07 19:24:05,089 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Cart.CartAppService.GetCartProjectNum is executed by user 1 in 19 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:24:05,091 [9    ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:24:05,094 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Cart.CartAppService.GetCartProjectNum (Mall.Application) in 35.095ms
+INFO  2017-11-07 19:24:05,103 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 52.3787ms 200 application/json; charset=utf-8
+INFO  2017-11-07 19:24:08,919 [10   ] soft.AspNetCore.Hosting.Internal.WebHost - Request starting HTTP/1.1 POST http://localhost:10010/File/Upload/ multipart/form-data; boundary=----WebKitFormBoundaryWtEMq3iGQFDAXEO1 270110
+INFO  2017-11-07 19:24:08,958 [10   ] tion.Cookies.CookieAuthenticationHandler - AuthenticationScheme: Cookies was successfully authenticated.
+INFO  2017-11-07 19:24:09,091 [10   ] uthorization.DefaultAuthorizationService - Authorization was successful for user: admin.
+INFO  2017-11-07 19:24:09,253 [13   ] ore.Mvc.Internal.ControllerActionInvoker - Executing action method Mall.Web.Controllers.FileController.Upload (Mall.Web) with arguments (Microsoft.AspNetCore.Http.Internal.FormFile, ) - ModelState is Valid
+INFO  2017-11-07 19:24:09,284 [9    ] Abp.Auditing.SimpleLogAuditingStore      - AUDIT LOG: Mall.Web.Controllers.FileController.Upload is executed by user 1 in 38 ms from ::1 IP address with succeed.
+INFO  2017-11-07 19:24:09,286 [9    ] etCore.Mvc.Internal.ObjectResultExecutor - Executing ObjectResult, writing value Microsoft.AspNetCore.Mvc.ControllerContext.
+INFO  2017-11-07 19:24:09,303 [9    ] ore.Mvc.Internal.ControllerActionInvoker - Executed action Mall.Web.Controllers.FileController.Upload (Mall.Web) in 331.8347ms
+INFO  2017-11-07 19:24:09,311 [9    ] soft.AspNetCore.Hosting.Internal.WebHost - Request finished in 418.1684ms 200 application/json; charset=utf-8

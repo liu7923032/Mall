@@ -1,0 +1,64 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
+using Abp.Domain.Repositories;
+using Abp.Timing;
+using Abp.Web.Models;
+using Mall.Domain.Entities;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Mall.Web.Controllers
+{
+    public class FileController : MallControllerBase
+    {
+        private IHostingEnvironment hostingEnv;
+        //private IRepository<Mall_AttachFile> _fileRepository;
+
+        public FileController(IHostingEnvironment hostingEnv)
+        {
+            this.hostingEnv = hostingEnv;
+        }
+
+        public async Task<AjaxResponse> Upload(IFormFile file, string param = "")
+        {
+            if (file == null)
+            {
+                return await Task.FromResult(new AjaxResponse(false) { Result = "文件不存在" });
+            }
+            Mall_AttachFile attachFile = new Mall_AttachFile();
+            attachFile.FileName = ContentDispositionHeaderValue
+                            .Parse(file.ContentDisposition)
+                           .FileName
+                           .Trim('"');
+            attachFile.Describe = param;
+            attachFile.ContentType = file.ContentType;
+            attachFile.FileSize = (file.Length / 1024).ToString() + "KB";
+            attachFile.FileType = Path.GetExtension(attachFile.FileName);
+
+
+            string fileDir = hostingEnv.WebRootPath + $"\\upload\\product\\{Clock.Now.ToString("yyyy_MM")}\\";
+            if (!Directory.Exists(fileDir))
+            {
+                Directory.CreateDirectory(fileDir);
+            }
+            string newFile = $"{ attachFile.FilePath }{Guid.NewGuid().ToString()}{attachFile.FileType}";
+            attachFile.FilePath = newFile.Replace("\\", "//");
+
+            using (FileStream fs = System.IO.File.Create(newFile))
+            {
+                // 复制文件新路径
+                await file.CopyToAsync(fs);
+                // 清空缓冲区数据
+                fs.Flush();
+            }
+
+            return await Task.FromResult(new AjaxResponse(true) { Result = attachFile });
+
+        }
+    }
+}

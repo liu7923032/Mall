@@ -11,6 +11,7 @@ using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Mall.Extend;
 using Microsoft.EntityFrameworkCore;
+using Abp.Timing;
 
 namespace Mall.Cart
 {
@@ -102,9 +103,11 @@ namespace Mall.Cart
         /// <returns></returns>
         private string GenerateOrderNo()
         {
-            //var orders = await _orderRepository.GetAll().Where(u=>u.CreationTime.)
+            int curYear = Clock.Now.Year, curMonth = Clock.Now.Month;
+
+            var counts = _orderRepository.Count(u => u.CreationTime.Year.Equals(curYear) && u.CreationTime.Month.Equals(curMonth));
             //1：通过日期来
-            return $"MO_{UserId}_{DateTime.Now.ToString("yyyyMMddHHmmss")}";
+            return $"MO{DateTime.Now.ToString("yyyyMM")}{(counts + 1).ToString().PadLeft(4, '0')}";
         }
 
 

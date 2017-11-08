@@ -63,6 +63,38 @@ namespace Mall.Migrations
                     b.ToTable("Mall_Account");
                 });
 
+            modelBuilder.Entity("Mall.Domain.Entities.Mall_AttachFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ContentType")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<string>("Describe");
+
+                    b.Property<string>("FileName")
+                        .IsRequired();
+
+                    b.Property<string>("FilePath")
+                        .IsRequired();
+
+                    b.Property<string>("FileSize");
+
+                    b.Property<string>("FileType")
+                        .IsRequired();
+
+                    b.Property<string>("ParentId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Mall_AttachFile");
+                });
+
             modelBuilder.Entity("Mall.Domain.Entities.Mall_Cart", b =>
                 {
                     b.Property<int>("Id")
@@ -136,6 +168,8 @@ namespace Mall.Migrations
                         .HasMaxLength(50);
 
                     b.Property<int?>("ParentId");
+
+                    b.Property<int>("SortNo");
 
                     b.HasKey("Id");
 

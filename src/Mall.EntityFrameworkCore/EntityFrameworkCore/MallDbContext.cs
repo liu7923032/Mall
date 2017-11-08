@@ -21,9 +21,11 @@ namespace Mall.EntityFrameworkCore
         /// </summary>
         public virtual DbSet<Mall_Order> Mall_Order { get; set; }
 
+        /// <summary>
+        /// 产品分类
+        /// </summary>
         public virtual DbSet<Mall_Category> Mall_Category { get; set; }
 
-    
         /// <summary>
         /// 商品信息
         /// </summary>
@@ -35,6 +37,11 @@ namespace Mall.EntityFrameworkCore
         /// 积分信息
         /// </summary>
         public virtual DbSet<Mall_Integral> Mall_Integral { get; set; }
+
+        /// <summary>
+        /// 图片附档信息
+        /// </summary>
+        public virtual DbSet<Mall_AttachFile> Mall_AttachFile { get; set; }
         #endregion
 
         public MallDbContext(DbContextOptions<MallDbContext> options) 

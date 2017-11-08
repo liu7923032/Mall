@@ -19,10 +19,10 @@ namespace Mall.Product
         [StringLength(50)]
         public string Name { get; set; }
 
-        [Required]
         [StringLength(40)]
         public string ItemNo { get; set; }
 
+        [Required]
         [StringLength(1000)]
         public string Describe { get; set; }
 
@@ -32,8 +32,12 @@ namespace Mall.Product
         [Required]
         public int CategoryId { get; set; }
 
-        public string Pic { get; set; }
+        /// <summary>
+        /// 附件信息
+        /// </summary>
+        public string FileIds { get; set; }
 
+        public string ImgPic { get; set; }
     }
 
     /// <summary>

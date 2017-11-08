@@ -126,6 +126,7 @@
             if (data) {
                 if (data.success === true) {
                     $dfd && $dfd.resolve(data.result, data, jqXHR);
+                   
                     userOptions.success && userOptions.success(data.result, data, jqXHR);
 
                     if (data.targetUrl) {

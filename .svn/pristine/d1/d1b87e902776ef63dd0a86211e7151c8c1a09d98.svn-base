@@ -1,0 +1,60 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Abp.Application.Services.Dto;
+using Abp.AspNetCore.Mvc.Authorization;
+using Abp.AutoMapper;
+using Mall.Category;
+using Mall.Product;
+using Mall.Web.Models.Home;
+using Mall.Web.Startup;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Mall.Web.Controllers
+{
+    public class HomeController : MallControllerBase
+    {
+        private ICategoryAppService _categoryService;
+
+        private IProductAppService _productService;
+
+        public HomeController(ICategoryAppService categoryService, IProductAppService productAppService)
+        {
+            _categoryService = categoryService;
+            _productService = productAppService;
+        }
+
+        public async Task<ActionResult> Index()
+        {
+
+            var categories = await _categoryService.GetAllListAsync();
+            var model = new CategoryListViewModel
+            {
+                Categories = categories
+            };
+
+            return View(model);
+        }
+
+        public async Task<ActionResult> Details(int id)
+        {
+            var product = await _productService.Get(new EntityDto<int>() { Id = id });
+            var model = new ProductViewModel()
+            {
+                Id = product.Id,
+                ItemNo = product.ItemNo,
+                Describe = product.Describe,
+                Name = product.Name,
+                Price = product.Price,
+                CategoryId = product.CategoryId,
+                Pic = product.Pic
+            };
+            return await Task.FromResult(View(model));
+        }
+
+        public ActionResult About()
+        {
+            return View();
+        }
+    }
+}

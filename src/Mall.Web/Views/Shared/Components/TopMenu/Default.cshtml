@@ -5,17 +5,30 @@
     //TODO: Get current virtual path
     var ApplicationPath = "/";
 }
-
 @foreach (var menuItem in Model.MainMenu.Items)
 {
-    <li  class="@(Model.ActiveMenuItemName == menuItem.Name ? "active" : "") layui-nav-item">
-       
-            <a href="@Model.CalculateMenuUrl(ApplicationPath, menuItem)">
-                @if (!string.IsNullOrWhiteSpace(menuItem.Icon))
+    <li class="@(Model.ActiveMenuItemName == menuItem.Name ? "layui-this" : "") layui-nav-item">
+        <a href="@Model.CalculateMenuUrl(ApplicationPath, menuItem)">
+            @if (!string.IsNullOrWhiteSpace(menuItem.Icon))
                 {
-                    <i class="@menuItem.Icon"></i>
+                <i class="@menuItem.Icon"></i>
+            }
+            @menuItem.DisplayName
+           
+        </a>
+        @if (menuItem.Items.Count > 0)
+        {
+            <dl class="layui-nav-child layui-anim layui-anim-upbit">
+                @foreach(var item in menuItem.Items)
+                {
+                    <dd>
+                        @if (!string.IsNullOrEmpty(item.Url))
+                        {
+                            <a href="@item.Url">@item.DisplayName</a>
+                        }
+                    </dd>
                 }
-                @menuItem.DisplayName
-            </a>
+            </dl>
+        }
     </li>
 }

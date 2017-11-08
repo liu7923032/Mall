@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using Abp.Application.Services.Dto;
+using Abp.Domain.Entities;
+
+namespace Mall.File
+{
+
+    public class CreateFileInput
+    {
+        [Required]
+        public string FileName { get; set; }
+
+        [Required]
+        public string FileSize { get; set; }
+
+        [Required]
+        public string FilePath { get; set; }
+
+        public string FileType { get; set; }
+
+        public string ContentType { get; set; }
+    }
+
+    public class UpdateFileInput : CreateFileInput, IEntityDto<int>
+    {
+        public int Id { get; set; }
+
+    }
+
+    public class FileDto : UpdateFileInput
+    {
+
+    }
+
+
+    public class GetFilesInput
+    {
+
+    }
+}

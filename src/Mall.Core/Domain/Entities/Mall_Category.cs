@@ -30,9 +30,16 @@ namespace Mall.Domain.Entities
         public string Describe { get; set; }
 
         /// <summary>
+        /// 用于显示排序
+        /// </summary>
+        public int SortNo { get; set; }
+
+        /// <summary>
         /// 导航属性
         /// </summary>
         public virtual ICollection<Mall_Product> Products { get; set; }
+
+       
 
     }
 }

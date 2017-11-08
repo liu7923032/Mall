@@ -6,13 +6,24 @@
         public const string Cart = "Cart";
         public const string Order = "Order";
 
-        public const string Approve = "Approve";
 
+
+        /// <summary>
+        /// 后台管理页面
+        /// </summary>
+        public const string Manage = "Manage";
+        /// <summary>
+        /// 订单审批
+        /// </summary>
+        public const string Approve = "Approve";
         /// <summary>
         /// 类别管理
         /// </summary>
         public const string Category = "Category";
-
+        /// <summary>
+        /// 产品管理
+        /// </summary>
         public const string Product = "Product";
+
     }
 }

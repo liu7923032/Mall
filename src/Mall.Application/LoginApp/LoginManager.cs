@@ -7,8 +7,10 @@ using Abp;
 using Abp.Application.Services;
 using Abp.Dependency;
 using Abp.Domain.Repositories;
+using Abp.Runtime.Caching;
 using Abp.Runtime.Session;
 using Mall.Authorization;
+using Mall.Cache;
 using Mall.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
@@ -22,17 +24,25 @@ namespace Mall.LoginApp
         Task<Mall_Account> SignAsync(LoginModel login);
         //创建证件当事人
         Task<ClaimsPrincipal> GetPrincipalAsync(Mall_Account user, string authenticationType);
+        //通过用户来获取账号人员信息
+        Task<AccountDto> GetUserById(int id);
     }
 
 
     public class LoginManager : ILoginManager, ITransientDependency
     {
         private IRepository<Mall_Account> _accountRepository;
+        private IUserCache _userCache;
 
-
-        public LoginManager(IRepository<Mall_Account> repository)
+        public LoginManager(IRepository<Mall_Account> repository, IUserCache userCache)
         {
             _accountRepository = repository;
+            _userCache = userCache;
+        }
+
+        public async Task<AccountDto> GetUserById(int id)
+        {
+            return await _userCache.GetAsync(id);
         }
 
         public async Task<Mall_Account> GetUserByAccountAsync(string account)
@@ -69,15 +79,15 @@ namespace Mall.LoginApp
             return await Task.FromResult(user);
         }
 
-        public async Task<ClaimsPrincipal> GetPrincipalAsync(Mall_Account user,string authenticationType)
+        public async Task<ClaimsPrincipal> GetPrincipalAsync(Mall_Account user, string authenticationType)
         {
-            
+
             ClaimsIdentity identity = new ClaimsIdentity(authenticationType);
             identity.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()));
             identity.AddClaim(new Claim(ClaimTypes.Name, user.Account));
             return await Task.FromResult(new ClaimsPrincipal(identity));
         }
 
-       
+
     }
 }
