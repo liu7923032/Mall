@@ -18,12 +18,9 @@ namespace Mall.LoginApp
 
     public class UserCache : EntityCache<Mall_Account, AccountDto>, IUserCache, ISingletonDependency
     {
-        private IRepository<Mall_Account> _accountRepository;
-        private ICacheManager _cacheManager;
-        public UserCache(ICacheManager cacheManager, IRepository<Mall_Account> repository, string cacheName = CacheNames.Users) : base(cacheManager, repository)
+        public UserCache(ICacheManager cacheManager, IRepository<Mall_Account> repository) : base(cacheManager, repository)
         {
-            _accountRepository = repository;
-            _cacheManager = cacheManager;
+           
         }
 
         //public async Task<List<AccountDto>> GetAllUsers()
