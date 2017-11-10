@@ -1,7 +1,7 @@
 ﻿{
   "ConnectionStrings": {
-    "Default": "Server=localhost\\sqlexpress; Database=MallDb; Trusted_Connection = True;MultipleActiveResultSets=true;"
-    //"Default": "Server=192.168.0.60; Database=PmisDb;User Id=sa;Password=hellomdsd1234;MultipleActiveResultSets=true;"
+    //"Default": "Server=localhost\\sqlexpress; Database=MallDb; Trusted_Connection = True;MultipleActiveResultSets=true;"
+    "Default": "Server=192.168.0.60; Database=PmisDb;User Id=sa;Password=hellomdsd1234;MultipleActiveResultSets=true;"
   },
   "Authorzation": {
     "Server": "http://e.mdsd.cn:9000/",

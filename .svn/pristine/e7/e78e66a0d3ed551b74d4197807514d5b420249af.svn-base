@@ -12,8 +12,8 @@ using System;
 namespace Mall.Migrations
 {
     [DbContext(typeof(MallDbContext))]
-    [Migration("20171107014718_category_addsort")]
-    partial class category_addsort
+    [Migration("20171110032102_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -62,6 +62,38 @@ namespace Mall.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Mall_Account");
+                });
+
+            modelBuilder.Entity("Mall.Domain.Entities.Mall_AttachFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ContentType")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<string>("Describe");
+
+                    b.Property<string>("FileName")
+                        .IsRequired();
+
+                    b.Property<string>("FilePath")
+                        .IsRequired();
+
+                    b.Property<string>("FileSize");
+
+                    b.Property<string>("FileType")
+                        .IsRequired();
+
+                    b.Property<string>("ParentId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Mall_AttachFile");
                 });
 
             modelBuilder.Entity("Mall.Domain.Entities.Mall_Cart", b =>

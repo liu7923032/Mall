@@ -12,8 +12,8 @@ using System;
 namespace Mall.Migrations
 {
     [DbContext(typeof(MallDbContext))]
-    [Migration("20171101071039_add_property_allprice")]
-    partial class add_property_allprice
+    [Migration("20171110032102_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,6 +35,11 @@ namespace Mall.Migrations
 
                     b.Property<long?>("CreatorUserId");
 
+                    b.Property<string>("Email")
+                        .HasMaxLength(20);
+
+                    b.Property<decimal?>("Integral");
+
                     b.Property<bool>("IsActive");
 
                     b.Property<bool>("IsLock");
@@ -47,9 +52,48 @@ namespace Mall.Migrations
                         .IsRequired()
                         .HasMaxLength(100);
 
+                    b.Property<string>("Phone")
+                        .HasMaxLength(20);
+
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasMaxLength(10);
+
                     b.HasKey("Id");
 
                     b.ToTable("Mall_Account");
+                });
+
+            modelBuilder.Entity("Mall.Domain.Entities.Mall_AttachFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ContentType")
+                        .IsRequired();
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<string>("Describe");
+
+                    b.Property<string>("FileName")
+                        .IsRequired();
+
+                    b.Property<string>("FilePath")
+                        .IsRequired();
+
+                    b.Property<string>("FileSize");
+
+                    b.Property<string>("FileType")
+                        .IsRequired();
+
+                    b.Property<string>("ParentId");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Mall_AttachFile");
                 });
 
             modelBuilder.Entity("Mall.Domain.Entities.Mall_Cart", b =>
@@ -126,9 +170,35 @@ namespace Mall.Migrations
 
                     b.Property<int?>("ParentId");
 
+                    b.Property<int>("SortNo");
+
                     b.HasKey("Id");
 
                     b.ToTable("Mall_Category");
+                });
+
+            modelBuilder.Entity("Mall.Domain.Entities.Mall_Integral", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CostType");
+
+                    b.Property<DateTime>("CreationTime");
+
+                    b.Property<long?>("CreatorUserId");
+
+                    b.Property<decimal>("Integral");
+
+                    b.Property<string>("IntergralDesc");
+
+                    b.Property<int>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Mall_Integral");
                 });
 
             modelBuilder.Entity("Mall.Domain.Entities.Mall_Order", b =>
@@ -221,6 +291,14 @@ namespace Mall.Migrations
                     b.HasOne("Mall.Domain.Entities.Mall_Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("Mall.Domain.Entities.Mall_Integral", b =>
+                {
+                    b.HasOne("Mall.Domain.Entities.Mall_Account", "Account")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

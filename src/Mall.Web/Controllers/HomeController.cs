@@ -4,6 +4,7 @@ using Abp.Application.Services.Dto;
 using Abp.AspNetCore.Mvc.Authorization;
 using Abp.AutoMapper;
 using Mall.Category;
+using Mall.Comment;
 using Mall.File;
 using Mall.Product;
 using Mall.Web.Models.Home;
@@ -20,6 +21,7 @@ namespace Mall.Web.Controllers
         private IProductAppService _productService;
 
         private IFileAppService _fileAppService;
+
 
         public HomeController(ICategoryAppService categoryService, IProductAppService productAppService, IFileAppService fileAppService)
         {
@@ -43,8 +45,9 @@ namespace Mall.Web.Controllers
         public async Task<ActionResult> Details(int id)
         {
             var product = await _productService.GetProductById(id);
-            //查询对应的图片信息
+            //1:查询对应的图片信息
             var fileData = await _fileAppService.GetFilesById(id);
+            //2:吵着
             var model = new ProductViewModel()
             {
                 Id = product.Id,
@@ -59,9 +62,6 @@ namespace Mall.Web.Controllers
             return await Task.FromResult(View(model));
         }
 
-        public ActionResult About()
-        {
-            return View();
-        }
+        
     }
 }

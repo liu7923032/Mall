@@ -13,7 +13,7 @@
     </div>
     <hr class="layui-bg-gray" />
     <!-------------上半区:主要是图片和相关描述--------------->
-    <div class="layui-row layui-col-space20  ">
+    <div class="layui-row layui-col-space20">
         <div class="layui-col-md5">
             <div class="mall-pic">
                 <div class="layui-carousel " id="pics">
@@ -55,7 +55,7 @@
     <!-------------下半区:主要是详细参数和评论--------------->
     <div class="layui-row">
         <div class="layui-col-md12">
-            <div class="layui-tab layui-tab-brief">
+            <div class="layui-tab layui-tab-brief" lay-filter="p-tab">
                 <ul class="layui-tab-title">
                     <li class="layui-this">商品介绍</li>
                     <li>用户评论</li>
@@ -69,15 +69,15 @@
                     <div class="layui-tab-item">
                         <div class="">
                             <div class="mall-editor"></div>
-                            <ul class="mall-remark">
-                                <li class="mall-remark-item">正好</li>
-                                <li class="mall-remark-item">正好</li>
-                                <li class="mall-remark-item">正好</li>
-                                <li class="mall-remark-item">正好</li>
-                                <li class="mall-remark-item">正好</li>
-                                <li class="mall-remark-item">正好</li>
-                                <li class="mall-remark-item">正好</li>
-                                <li class="mall-remark-item">正好</li>
+                            <ul class="mall-comments" id="p-comments">
+                                <li class="mall-p-comment">
+                                    <div class="comment-header">
+
+                                    </div>
+                                    <div class="comment-body">
+
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -91,19 +91,18 @@
 @section Scripts{
     <script type="text/javascript">
 
-        layui.use(['element', 'jquery', 'layer', 'carousel'], function () {
+        layui.use(['element', 'jquery', 'layer', 'carousel', 'element', 'flow'], function () {
 
             var $ = layui.jquery
             , layer = layui.layer
-            , carousel = layui.carousel;
+            , carousel = layui.carousel
+            , element = layui.element
+            , flow = layui.flow
+            , productId = parseInt(@Model.Id)
+            , _commentService = abp.services.app.comment
+            , _cartService = abp.services.app.cart;
 
-            carousel.render({
-                elem: '#pics'
-                , width: '100%' //设置容器宽度
-                , height:'100%'
-                , arrow: 'always' //始终显示箭头
-                //,anim: 'updown' //切换动画方式
-            });
+
             var methods = {
 
                 initEvent: function () {
@@ -119,8 +118,23 @@
                         methods.addToCart();
                     })
 
-                },
+                    //初始化
+                    carousel.render({
+                        elem: '#pics'
+                        , width: '100%' //设置容器宽度
+                        , height: '100%'
+                        , arrow: 'always' //始终显示箭头
+                        //,anim: 'updown' //切换动画方式
+                    });
 
+                    //瀑布流加载评论信息
+                    flow.load({
+                        elem: '#p-comments' //流加载容器
+                       , done: function (page, next) { //执行下一页的回调
+                           methods.getComments(page, next);
+                       }
+                    });
+                },
                 addNum: function () {
                     var value = $('#p_num').val();
                     $('#p_num').val(parseInt(value) + 1);
@@ -138,9 +152,9 @@
 
                     var params = {
                         itemNum: parseInt($('#p_num').val()),
-                        productId: box.productId
+                        productId: productId
                     };
-                    abp.services.app.cart.addProductToCart(params, {
+                    _cartService.addProductToCart(params, {
                         //成功后
                         success: function (data) {
                             $('#cart_pNum').text(data);
@@ -148,6 +162,27 @@
                             location.href = "/Cart/Index";
                         }
                     });
+                },
+                getComments: function (page, next) {
+
+                    var params = {
+                        "productId": productId,
+                        "skipCount": (parseInt(page) - 1) * 20,
+                        "maxSizeCount": 20
+                    }
+                    _commentService.getAll(params, {
+                        success: function (resData) {
+
+                            var strData = resData.map(function (item) {
+                                return '<li class="mall-p-comment">' +
+                                            
+                                       '</li>';
+
+                            }).join('');
+
+                            next(strData, parseInt(page) < parseInt(resData.totalCount));
+                        }
+                    })
                 }
             }
 

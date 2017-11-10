@@ -48,6 +48,11 @@ namespace Mall.Domain.Entities
         [NotMapped]
         public virtual ICollection<Mall_CartItem> CartItems { get; set; }
 
+        /// <summary>
+        /// 一个商品有多个评论
+        /// </summary>
+        [NotMapped]
+        public virtual ICollection<Mall_Comment> Comments { get; set; }
 
         public Mall_Product()
         {

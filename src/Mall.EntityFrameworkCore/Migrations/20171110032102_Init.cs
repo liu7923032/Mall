@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Mall.Migrations
 {
-    public partial class initlize : Migration
+    public partial class Init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -18,15 +18,40 @@ namespace Mall.Migrations
                     Account = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    Integral = table.Column<decimal>(type: "decimal(18, 2)", nullable: true),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsLock = table.Column<bool>(type: "bit", nullable: false),
                     LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
-                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
+                    Password = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mall_Account", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mall_AttachFile",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ContentType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    Describe = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileSize = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ParentId = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mall_AttachFile", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -59,11 +84,36 @@ namespace Mall.Migrations
                     LastModificationTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     LastModifierUserId = table.Column<long>(type: "bigint", nullable: true),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    ParentId = table.Column<int>(type: "int", nullable: true)
+                    ParentId = table.Column<int>(type: "int", nullable: true),
+                    SortNo = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mall_Category", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Mall_Integral",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CostType = table.Column<int>(type: "int", nullable: false),
+                    CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
+                    Integral = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
+                    IntergralDesc = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Mall_Integral", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Mall_Integral_Mall_Account_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Mall_Account",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,6 +137,12 @@ namespace Mall.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Mall_Order", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Mall_Order_Mall_Cart_CartId",
+                        column: x => x.CartId,
+                        principalTable: "Mall_Cart",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -126,6 +182,7 @@ namespace Mall.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    AllPrice = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
                     CartId = table.Column<int>(type: "int", nullable: false),
                     CreationTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatorUserId = table.Column<long>(type: "bigint", nullable: true),
@@ -161,6 +218,16 @@ namespace Mall.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Mall_Integral_UserId",
+                table: "Mall_Integral",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Mall_Order_CartId",
+                table: "Mall_Order",
+                column: "CartId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Mall_Product_CategoryId",
                 table: "Mall_Product",
                 column: "CategoryId");
@@ -169,19 +236,25 @@ namespace Mall.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Mall_Account");
+                name: "Mall_AttachFile");
 
             migrationBuilder.DropTable(
                 name: "Mall_CartItem");
 
             migrationBuilder.DropTable(
+                name: "Mall_Integral");
+
+            migrationBuilder.DropTable(
                 name: "Mall_Order");
 
             migrationBuilder.DropTable(
-                name: "Mall_Cart");
+                name: "Mall_Product");
 
             migrationBuilder.DropTable(
-                name: "Mall_Product");
+                name: "Mall_Account");
+
+            migrationBuilder.DropTable(
+                name: "Mall_Cart");
 
             migrationBuilder.DropTable(
                 name: "Mall_Category");
