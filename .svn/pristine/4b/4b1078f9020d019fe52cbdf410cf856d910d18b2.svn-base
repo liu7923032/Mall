@@ -1,0 +1,57 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Authorization;
+using Abp.Domain.Repositories;
+using Mall.Domain.Entities;
+
+namespace Mall.Integral
+{
+    #region 1.0 接口抽象
+    public interface IIntegralAppService : IAsyncCrudAppService<IntegralDto, int, GetIntegralsInput, CreateIntegralInput, UpdateIntegralInput>
+    {
+
+    }
+    #endregion
+
+
+    #region 2.0 具体实现
+    public class IntegralAppService : AsyncCrudAppService<Mall_Integral, IntegralDto, int, GetIntegralsInput, CreateIntegralInput, UpdateIntegralInput>, IIntegralAppService
+    {
+
+        private IRepository<Mall_Account> _accountRepository;
+
+        public IntegralAppService(IRepository<Mall_Integral> integralRepository, IRepository<Mall_Account> accountRepository) : base(integralRepository)
+        {
+            this._accountRepository = accountRepository;
+        }
+
+
+        /// <summary>
+        /// 新增积分是
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        [AbpAllowAnonymous]
+        public async override Task<IntegralDto> Create(CreateIntegralInput input)
+        {
+            var user = await _accountRepository.GetAsync(input.DeptOrUser);
+            //更新该人员的主要积分信息
+            if (input.CostType == CostType.Earn)
+            {
+                user.Integral += input.Integral;
+            }
+            else
+            {
+                user.Integral -= input.Integral;
+            }
+
+            return await base.Create(input);
+        }
+
+    }
+    #endregion
+
+}

@@ -1,0 +1,58 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
+using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
+using Mall.Domain.Entities;
+
+namespace Mall.Integral
+{
+    [AutoMapTo(typeof(Mall_Integral))]
+    public class CreateIntegralInput
+    {
+        /// <summary>
+        /// 花费
+        /// </summary>
+        [Required]
+        public CostType CostType { get; set; }
+        /// <summary>
+        /// 积分
+        /// </summary>
+        [Required]
+        public decimal Integral { get; set; }
+        /// <summary>
+        /// 消费人员
+        /// </summary>
+        [Required]
+        public int DeptOrUser { get; set; }
+
+        [Required]
+        public string TypeName { get; set; }
+        /// <summary>
+        /// 说明
+        /// </summary>
+        public string Describe { get; set; }
+    }
+
+    public class UpdateIntegralInput : CreateIntegralInput, IEntityDto<int>
+    {
+        public int Id { get; set; }
+
+    }
+
+
+    public class IntegralDto : UpdateIntegralInput
+    {
+
+    }
+
+    /// <summary>
+    /// 通过人员来获取积分
+    /// </summary>
+    public class GetIntegralsInput
+    {
+        //通过人员来获取积分
+        public int UserId { get; set; }
+    }
+}

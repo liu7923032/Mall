@@ -91,9 +91,10 @@
                 , _fileService = abp.services.app.file
                 , tableData = []
                 , layIndex = -1   //弹窗
-                , editIndex      //layedit的索引
+                , editorIndex      //layedit的索引
                 , categoryId = 0 //当前的分类
-                , isFirst = true;  //当前是第几次请求数据
+                , isFirst = true //当前是第几次请求数据
+                , isInitUp = false;  //是否初始化过上传组件
 
 
             var methods = {
@@ -101,7 +102,7 @@
                 initEvent: function () {
                     $('#btnPAdd').click(function () {
                         //弹出对话框
-                        methods.openDialog();
+                        methods.openDialog({});
                     });
 
                     $('#btnSearch').click(function () {
@@ -111,18 +112,39 @@
                     });
 
                     $('#txtSearch').keypress(function (e) {
-                        // 回车键事件  
+                        // 回车键事件
                         if (e.which == 13) {
                             methods.renderTpl({ "name": $('#txtSearch').val() });
                         }
                     });
-                    
+
 
                     $('.category-item').click(function () {
+                        //切换样式
+                        $('.layui-this').each(function () {
+                            $(this).removeClass('layui-this');
+                        })
+                        if (!$(this).hasClass('layui-this')) {
+                            $(this).addClass('layui-this');
+                        }
+
                         var cateId = $(this).attr('categoryId');
                         categoryId = cateId;
+
                         isFirst = true;
                         methods.renderTpl();
+                    });
+
+
+
+                    form.verify({
+                        describe: function (value, item) { //value：表单的值、item：表单的DOM对象
+                            layedit.sync(editorIndex)
+                            var desc = layedit.getContent(editorIndex);
+                            if (desc.length < 6) {
+                                return "商品详情描述不能小于5个字符";
+                            }
+                        }
                     });
 
                     form.on('submit(btnSubmit)', function (data) {
@@ -143,7 +165,7 @@
                       , before: function (obj) {
                           //预读本地文件示例，不支持ie8
                           obj.preview(function (index, file, result) {
-                              $('#fileList').append('<img src="' + result + '" alt="' + file.name + '" class="layui-upload-img">')
+                              $('#fileList').append('<li><img src="' + result + '" alt="' + file.name + '" class="layui-upload-img"></li>')
                           });
                       }
                       , done: function (res) {
@@ -165,11 +187,35 @@
                         success: function (res) {
                             $('#fileList').children().remove();
                             if (res.items.length > 0) {
+                                var imgDoc = "";
                                 var fileIds = res.items.map(function (item) {
-                                    $('#fileList').append('<img src="' + item.filePath + '" alt="' + item.fileName + '" class="layui-upload-img">')
+                                    imgDoc += '<li fileId="' + item.id + '"><img src="' + item.filePath + '" alt="' + item.fileName + '" class="layui-upload-img"><i class="layui-icon p-del" >&#x1006;</i></li>';
                                     return item.id;
                                 }).join(',')
+                                $('#fileList').append(imgDoc)
                                 $('#frm_product').find('input[name=fileIds]').val(fileIds);
+                                //注册事件
+                                $('#fileList').find('.p-del').click(function () {
+                                    var fileId = $(this).parents('li').eq(0).attr('fileId');
+                                    methods.delFile(fileId);
+                                });
+                            }
+                        }
+                    });
+                },
+                //删除图片
+                delFile: function (fileId) {
+                    _fileService.delete({ id: fileId }, {
+                        success: function () {
+                            //删除对象
+                            $('#fileList>li[fileId=' + fileId + ']').eq(0).remove();
+                            //找到对象,接着清除ids
+                            var fileIds = $('#frm_product').find('input[name=fileIds]').val();
+                            if (fileIds.length > 0) {
+                                fileIds = fileIds.split(',').filter(function (item) {
+                                    return item != fileId;
+                                });
+                                $('#frm_product').find('input[name=fileIds]').val(fileIds)
                             }
                         }
                     });
@@ -191,6 +237,7 @@
                     });
                 },
                 edit: function (productId) {
+
                     //$('#frm_product').reset();
                     var rows = tableData.filter(function (item) {
                         return item.id == productId;
@@ -200,23 +247,22 @@
                         return;
                     }
                     //弹出对话框
-                    methods.openDialog();
-                    //设置表单内容
-                    methods.loadForm(rows[0]);
+                    methods.openDialog(rows[0]);
                     //加载附件
                     methods.loadFile(productId);
                 },
-                openDialog: function () {
+                openDialog: function (data) {
+
                     layIndex = layer.open({
                         type: 1
                         , title: '产品表单'
+                        , id: 'Layer_Content'
                         , area: '700px'
                         , content: tpl_dlg_product.innerHTML
                         , success: function () {
-                            form.render('select');
-                            if (layIndex == -1) {
-                                methods.initUpload();
-                            }
+                            //1: 渲染上传组件
+                            methods.initUpload();
+                            methods.loadForm(data);
                         }
                     });
                 },
@@ -245,6 +291,7 @@
                         //2：修改
                         _productService.update(frmObj, {
                             success: function () {
+                                console.log("成功后的layerIndex:" + layIndex);
                                 layer.close(layIndex);
                                 layer.msg("更新成功");
                                 methods.renderTpl();
@@ -254,6 +301,7 @@
 
                 },
                 loadForm: function (data) {
+
                     Object.keys(data).forEach(function (key, index) {
                         var tagName = '[name=' + key + ']';
                         var $tag = $('#frm_product').find(tagName).eq(0);
@@ -261,15 +309,21 @@
                             return false;
                         }
                         $tag.val(data[key]);
-                        if ($tag.is('select')) {
-                            form.render('select');
-                        }
                     });
+                    //1：重新渲染select 组件
+                    form.render('select');
+                    //2：重新渲染editor
+                    editorIndex = layedit.build('frm_describe', {
+                        height: 200
+                    });
+
                 },
                 renderTpl: function (params) {
+
+
                     var index = layer.load();
                     var param = $.extend(methods.getParam(), params);
-                    console.log(param);
+
                     if (categoryId && categoryId.length > 0) {
                         param["categoryId"] = categoryId;
                     }
@@ -279,13 +333,14 @@
                             tableData = resData.items;
                             laytpl(getTpl).render(resData.items, function (html) {
                                 view.innerHTML = html;
-                                methods.initTabEvent();
+
                             });
                             //第一次的时候蔡进行加载
                             if (isFirst) {
                                 methods.initPage(resData.totalCount);
                                 //执行完后,将isFirst重新赋值为false
                                 isFirst = false;
+                                methods.initTabEvent();
                             }
                         },
                         fail: function () {
@@ -293,7 +348,7 @@
                         }
                     });
                 },
-                getParam:function(params){
+                getParam: function (params) {
                     return $.extend({
                         skipCount: 0,
                     }, params);
@@ -376,7 +431,7 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">商品详情</label>
                 <div class="layui-input-block">
-                    <textarea placeholder="请输入内容" rows="7" class="layui-textarea" lay-verity="required" id="frm_describe" name="describe"></textarea>
+                    <textarea placeholder="请输入内容" rows="7" class="layui-textarea" lay-verify="describe" id="frm_describe" name="describe"></textarea>
                 </div>
             </div>
             <div class="layui-form-item">
@@ -386,10 +441,13 @@
                         <button type="button" class="layui-btn " id="frm_btnUpload">上传 <i class="layui-icon">&#xe681;</i></button>
                     </div>
                 </div>
+                <div class="layui-input-inline">
+                    <span id="txtImgWarn" style="color:red;margin-left:10px;">[图片必须上传]</span>
+                </div>
             </div>
             <div class="layui-form-item">
                 <div class="layui-input-block">
-                    <div id="fileList" class="layui-upload-list"></div>
+                    <ul id="fileList" class="layui-upload-list"></ul>
                 </div>
             </div>
             <div class="layui-form-item" style="text-align:center;margin-bottom:0px;">

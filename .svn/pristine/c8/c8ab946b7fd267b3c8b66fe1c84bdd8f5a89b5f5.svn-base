@@ -1,0 +1,185 @@
+﻿@using Mall.Web.Startup
+@using Mall.Web.Models.Home
+
+
+@{
+    ViewBag.ActiveMenu = PageNames.Mall;
+}
+
+
+<!----------商品分类------------->
+<div class="layui-container">
+    <div class="row">
+        <div class="mall-category">
+            <ul class="layui-clear">
+                <li class="category-item layui-this" categoryId="0"><a href="javascript:void(0)">首页</a></li>
+                @{
+                    foreach (var item in Model.Categories)
+                    {
+                        <li class="category-item" categoryId="@item.Id"><a href="javascript:void(0)">@item.Name</a></li>
+                    }
+                }
+            </ul>
+
+        </div>
+    </div>
+</div>
+<!----------商品明细------------->
+<div class="layui-container">
+    <div class="layui-row layui-col-space30">
+        <div class="layui-col-md9 " id="view_home">
+
+        </div>
+        <div class="layui-col-md3">
+            <div class="layui-collapse" style="background-color:white;">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title layui-bg-green">最新评论</h2>
+                    <div class="layui-colla-content layui-show">内容区域</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <div class="" id="mall-page"></div>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+
+        layui.use(['element', 'jquery', 'laypage', 'laytpl', 'layer', 'flow'], function () {
+
+            var $ = layui.jquery,
+                element = layui.element,
+                laypage = layui.laypage,
+                laytpl = layui.laytpl,
+                layer = layui.layer,
+                flow = layui.flow,
+                _productService = abp.services.app.product,
+                view = document.getElementById('view_home'),
+                categoryId = 0,
+                isFirst = true;
+
+
+            var methods = {
+                initEvent: function () {
+                    //2.0 绑定分类的点击事件
+                    $('.category-item').click(function () {
+                        //切换样式
+                        $('.layui-this').each(function () {
+                            $(this).removeClass('layui-this');
+                        })
+                        if (!$(this).hasClass('layui-this')) {
+                            $(this).addClass('layui-this');
+                        }
+                        categoryId = $(this).attr('categoryId');
+                        $('#view_home').children().remove();
+                        //选择类别的时候,默认都是选择第一页
+                        methods.initFlow();
+                    });
+                },
+                initFlow: function () {
+                    flow.load({
+                        elem: '#view_home' //流加载容器
+                        , isLazyimg: true
+                        , done: function (page, next) { //执行下一页的回调
+                            methods.getProducts(page, next);
+                        }
+                    });
+
+                    flow.lazyimg();
+                },
+                getProducts: function (page, next) {
+                    var params = {
+                        skipCount: (parseInt(page) - 1) * 12,
+                        maxResultCount:12,
+                        "categoryId": categoryId
+                    }
+
+                    _productService.getAll(params, {
+                        success: function (res) {
+                            isFirst = false;
+                            var strResult = "";
+
+                            res.items.forEach(function (item, index) {
+                                console.log(item)
+                                console.log(index)
+                                if (index % 4 == 0) {
+                                    strResult += '<div class="layui-row layui-col-space10">';
+
+                                }
+                                strResult += '<div class="layui-col-md3">' +
+                                                  '<div class="mall-item" productId="' + item.id + '">' +
+                                                      '<div class="p-img"><img lay-src="' + item.imgPic + '" /></div>' +
+                                                      '<div class="p-price"><em>¥</em><i> ' + item.price + '</i></div>' +
+                                                      '<div class="p-title" ><a title="' + item.name + '" href="javascript:void(0)">' + methods.getShowName(item.name) + '</a></div>' +
+                                                      '<div class="p-visit">已售' + item.saleNums + '件</div>' +
+                                                  '</div>' +
+                                               '</div>'
+                                if (index > 0 && (index+1) % 4 == 0) {
+                                    strResult += '</div>';
+                                }
+                            });
+
+                            //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                            //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                            next(strResult, page < parseInt(res.totalCount));
+                            methods.initPEvent();
+                        }
+                    });
+                },
+                getShowName: function (name) {
+                    var newName = $.trim(name);
+                    return methods.getPName(newName, 42);
+                },
+                //处理包含中英文的字符串
+                getPName: function (str,n) {
+                    if (str.replace(/[\u4e00-\u9fa5]/g, "**").length <= n) {
+                        return str;
+                    }
+                    else {
+                        var len = 0;
+                        var tmpStr = "";
+                        for (var i = 0; i < str.length; i++) {//遍历字符串
+                            if (/[\u4e00-\u9fa5]/.test(str[i])) {//中文 长度为两字节
+                                len += 2;
+                            }
+                            else {
+                                len += 1;
+                            }
+                            if (len > n) {
+                                break;
+                            }
+                            else {
+                                tmpStr += str[i];
+                            }
+                        }
+                        return tmpStr + " ..";
+                    }
+                },
+                //获取所有的商品分类
+                initPEvent: function () {
+                    $('.mall-item').click(function () {
+                        var productId = $(this).attr('productId');
+                        //打开新页面
+                        var productName = $(this).find('.p-title').eq(0).text();
+                        window.open("/Home/Details/" + productId, "");
+                    });
+                },
+            }
+
+            methods.initEvent();
+            methods.initFlow();
+        });
+
+    </script>
+
+
+}
+

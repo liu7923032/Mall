@@ -1,0 +1,179 @@
+﻿body {
+  background-color: #F2F2F0 !important;
+}
+/*.famfamfam-flags {
+    display: inline-block;
+}*/
+a {
+  cursor: pointer;
+}
+/*网站头部*/
+.mall-header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10000;
+  width: 100%;
+  height: 60px;
+  border-bottom: 1px solid #393D49;
+  border-right: 1px solid #393D49;
+  border-radius: 0;
+  background-color: #393D49;
+}
+.mall-header .layui-logo {
+  line-height: 60px;
+  font-size: 16px;
+  width: 120px;
+  height: 100%;
+  color: white;
+}
+/*商品分类*/
+.mall-category {
+  margin-bottom: 15px;
+  border-radius: 2px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  height: 50px;
+  line-height: 50px;
+  /*.category-first a {
+    }*/
+}
+.mall-category ul li {
+  position: relative;
+  display: inline-block;
+  height: 50px;
+}
+.mall-category ul li a {
+  padding: 0 20px;
+}
+.mall-category .layui-this a {
+  color: #5FB878;
+}
+/*商品列表*/
+.mall-item {
+  background-color: #fff;
+  border: 1px solid #F2F2F0;
+  width: 100%;
+  padding: 10px;
+  height: auto;
+  box-sizing: border-box;
+  /*box-shadow: 3px 4px 3px @border-color;*/
+  cursor: pointer;
+}
+.mall-item .p-img img {
+  height: 170px;
+  width: 100%;
+}
+.mall-item .p-title {
+  min-height: 30px;
+  width: auto;
+  font-size: 14px;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  color: black;
+}
+.mall-item .p-price {
+  min-height: 30px;
+  font-size: 16px;
+  color: orangered;
+  text-align: left;
+  vertical-align: middle;
+  font-weight: 800;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  font-style: normal;
+}
+.mall-item .p-visit {
+  color: #999;
+  text-align: left;
+  padding: 5px 10px;
+}
+.mall-item:hover {
+  z-index: 2;
+  box-shadow: 1px 1px 3px gray;
+}
+/*商品详情*/
+.mall-details {
+  background-color: #fff;
+}
+.mall-details .mall-pic {
+  border: 1px solid whitesmoke;
+  width: 100%;
+  height: 450px;
+}
+.mall-details .mall-pic img {
+  width: 100%;
+}
+.mall-details .mall-desc {
+  border: 1px solid whitesmoke;
+  height: 450px;
+  position: relative;
+}
+.mall-details .mall-desc .mall-d-title {
+  padding: 20px 15px;
+  color: #666;
+  font: 700 16px Arial, "microsoft yahei";
+  border-bottom: 1px solid whitesmoke;
+  background-color: whitesmoke;
+  position: relative;
+}
+.mall-details .mall-desc .mall-d-price {
+  color: orangered;
+  font-size: 20px;
+  padding: 10px;
+  border-bottom: 1px solid whitesmoke;
+  font-weight: 800;
+}
+.mall-details .mall-desc .mall-d-content {
+  position: relative;
+  padding: 15px;
+}
+.mall-details .mall-desc .mall-d-btns {
+  border-top: 1px solid whitesmoke;
+  position: absolute;
+  bottom: 10px;
+  margin-left: 10px;
+}
+.mall-comments {
+  min-height: 200px;
+  position: relative;
+  font-size: 14px;
+}
+.mall-comments .mall-p-comment {
+  position: relative;
+  padding: 10px;
+}
+.mall-comments .mall-p-comment .p-comment-about .avator {
+  border: 1px solid whitesmoke;
+  float: left;
+}
+.mall-comments .mall-p-comment .p-comment-about .avator img {
+  width: 48px;
+  height: 48px;
+}
+.mall-comments .mall-p-comment .p-comment-about .reply {
+  float: left;
+  padding: 0px 0px 5px 10px;
+}
+.mall-comments .mall-p-comment .p-comment-about .reply .user {
+  font-size: 16px;
+  color: deepskyblue;
+}
+.mall-comments .mall-p-comment .p-comment-about .reply .time {
+  margin-top: 5px;
+  color: #999;
+}
+.mall-comments .mall-p-comment .p-comment-body {
+  clear: both;
+  line-height: 24px;
+  padding: 10px 0 5px 0;
+}
+.mall-comments .mall-p-comment:after {
+  content: " ";
+  position: absolute;
+  border-bottom: 1px solid #DFDFDF;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  width: 100%;
+}
