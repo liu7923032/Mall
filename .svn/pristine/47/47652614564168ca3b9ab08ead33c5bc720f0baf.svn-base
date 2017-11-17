@@ -206,7 +206,6 @@ namespace Mall.Order
                 Integral = order.AllPrice,
                 UserId = UserId,
             });
-
             //4:作废该订单
             await _orderRepository.DeleteAsync(orderId);
         }

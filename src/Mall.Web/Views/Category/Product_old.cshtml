@@ -40,8 +40,33 @@
     </div>
     <div class="layui-row">
         <div class="layui-col-md12">
-            <table class="layui-table" id="tb_product" lay-filter="f_product"></table>
+            <table class="layui-table" id="tb_product">
+                <colgroup>
+                    <col width="60" />
+                    <col width="120" />
+                    <col width="100" />
+                    <col width="160" />
+                    <col />
+                    <col width="100" />
+                    <col width="160" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <td style="text-align:center;">标识</td>
+                        <td style="text-align:center;">分类</td>
+                        <td style="text-align:center;">编码</td>
+                        <td>名称</td>
+                        <td>描述</td>
+                        <td style="text-align:right;">价格</td>
+                        <td style="text-align:center;">操作</td>
+                    </tr>
+                </thead>
+                <tbody id="tbody_product"></tbody>
+            </table>
         </div>
+    </div>
+    <div class="layui-row">
+        <div id="p-page"></div>
     </div>
 </div>
 
@@ -51,16 +76,16 @@
 
     <script type="text/javascript">
 
-        layui.use(['laytpl', 'element', 'layer', 'jquery', 'form', 'layedit', 'upload', 'laypage', 'abptable'], function () {
+        layui.use(['laytpl', 'element', 'layer', 'jquery', 'form', 'layedit', 'upload', 'laypage'], function () {
             var laytpl = layui.laytpl
                 , element = layui.element
                 , layer = layui.layer
                 , $ = layui.jquery
                 , form = layui.form
+                , getTpl = tpl_product.innerHTML
                 , layedit = layui.layedit
                 , upload = layui.upload
                 , laypage = layui.laypage
-                , table = layui.abptable
                 , view = document.getElementById('tbody_product')
                 , _productService = abp.services.app.product
                 , _fileService = abp.services.app.file
@@ -80,6 +105,19 @@
                         methods.openDialog({});
                     });
 
+                    $('#btnSearch').click(function () {
+                        var value = $('#txtSearch').val();
+                        //弹出对话框
+                        methods.renderTpl({ "name": value });
+                    });
+
+                    $('#txtSearch').keypress(function (e) {
+                        // 回车键事件
+                        if (e.which == 13) {
+                            methods.renderTpl({ "name": $('#txtSearch').val() });
+                        }
+                    });
+
 
                     $('.category-item').click(function () {
                         //切换样式
@@ -92,9 +130,11 @@
 
                         var cateId = $(this).attr('categoryId');
                         categoryId = cateId;
-                        methods.reload();
 
+                        isFirst = true;
+                        methods.renderTpl();
                     });
+
 
 
                     form.verify({
@@ -112,75 +152,6 @@
                     });
 
 
-                    //第一个实例
-                    table.render({
-                        elem: '#tb_product'
-                      , url: '/api/services/app/Product/GetAll' //数据接口
-                      , page: true //开启分页
-                      , cols: [[ //表头
-                          { type: 'numbers' }
-                        , { field: 'categoryName', title: '分类', width: 120 }
-                        , { field: 'itemNo', title: '编码', width: 80 }
-                        , { field: 'name', title: '名称', width: 200 }
-                        , { field: 'describe', title: '描述' }
-                        , { field: 'price', title: '价格', width: 100, align: 'right', sort: true }
-                        , { field: 'pStatus', title: '商品状态', width: 100, templet: '#tpl_pStatus', unresize: true }
-                        , { field: 'action', title: '操作', width: 140, align: 'center', toolbar: '#tool_product' }
-                      ]]
-                    });
-
-
-                    //监听上架下架开关
-                    form.on('switch(f_pStatus)', function (obj) {
-                        _productService.upOrDown(this.value, {
-                            success: function () {
-                            },
-                            fail: function () {
-                                layer.alert("异常了");
-                            }
-                        });
-                    });
-                    //监听工具条事件
-                    table.on('tool(f_product)', function (obj) {
-                        var data = obj.data;
-                        if (obj.event === 'del') {
-                            layer.confirm('确定要删除该商品吗?', function (index) {
-                                _productService.delete({ id: data.id }, {
-                                    success: function (resData) {
-                                        obj.del();
-                                        layer.close(index);
-                                    }
-                                });
-                            });
-                        } else if (obj.event === 'edit') {
-                            methods.edit(data);
-                        }
-                    });
-
-                    $('#btnSearch').click(function () {
-                        var value = $('#txtSearch').val();
-                        methods.reload({ name: value });
-                    });
-
-                    $('#txtSearch').keypress(function (e) {
-                        // 回车键事件
-                        if (e.which == 13) {
-                            methods.reload({ "name": $('#txtSearch').val() });
-                        }
-                    });
-                },
-                reload: function (param) {
-                    var queryParams = {
-                        "categoryId": categoryId
-                    }
-                    var allQuery = $.extend(queryParams, param);
-                    //弹出对话框
-                    table.reload('tb_product', {
-                        page: {
-                            curr: 1 //重新从第 1 页开始
-                        }
-                        , where: allQuery
-                    });
                 },
                 //初始化上传组件
                 initUpload: function () {
@@ -249,12 +220,36 @@
                         }
                     });
                 },
+                initTabEvent: function () {
+                    var tbody = $('#tbody_product');
+                    tbody.on("click", '*[lay-event]', function () {
+                        //1.找到该按钮
+                        var onThis = $(this);
+                        //2.找到类型
+                        var eventType = $(onThis).attr('lay-event');
+                        var productId = onThis.parents('tr').attr('productId');
+                        if (eventType === "edit") {
+                            methods.edit(productId);
+                        } else if (eventType === "del") {
+                            methods.del(productId);
+                        }
+                        //3.找到对象,并获取该对象的数据
+                    });
+                },
+                edit: function (productId) {
 
-                edit: function (row) {
+                    //$('#frm_product').reset();
+                    var rows = tableData.filter(function (item) {
+                        return item.id == productId;
+                    });
+                    if (rows.length == 0) {
+                        layer.msg("数据不存在,请刷新重试");
+                        return;
+                    }
                     //弹出对话框
-                    methods.openDialog(row);
+                    methods.openDialog(rows[0]);
                     //加载附件
-                    methods.loadFile(row.id);
+                    methods.loadFile(productId);
                 },
                 openDialog: function (data) {
 
@@ -271,6 +266,17 @@
                         }
                     });
                 },
+                del: function (productId) {
+                    layer.confirm("确定要删除商品?", function (index) {
+                        _productService.delete({ id: productId }, {
+                            success: function (resData) {
+                                layer.close(index);
+                                //删除该行
+                                $('#tbody_product').find('tr[categoryId=' + categoryId + ']').eq(0).remove();
+                            }
+                        });
+                    });
+                },
                 saveIn: function (frmObj) {
                     if (frmObj.id == '') {
                         //1：新增
@@ -278,16 +284,17 @@
                             success: function () {
                                 layer.close(layIndex);
                                 layer.msg("新增成功");
-                                methods.reload();
+                                methods.renderTpl();
                             }
                         });
                     } else {
                         //2：修改
                         _productService.update(frmObj, {
                             success: function () {
+                                console.log("成功后的layerIndex:" + layIndex);
                                 layer.close(layIndex);
                                 layer.msg("更新成功");
-                                methods.reload();
+                                methods.renderTpl();
                             },
                         });
                     }
@@ -309,30 +316,87 @@
                     editorIndex = layedit.build('frm_describe', {
                         height: 200
                     });
+
                 },
+                renderTpl: function (params) {
+
+
+                    var index = layer.load();
+                    var param = $.extend(methods.getParam(), params);
+
+                    if (categoryId && categoryId.length > 0) {
+                        param["categoryId"] = categoryId;
+                    }
+                    _productService.getAll(param, {
+                        success: function (resData) {
+                            layer.close(index);
+                            tableData = resData.items;
+                            laytpl(getTpl).render(resData.items, function (html) {
+                                view.innerHTML = html;
+
+                            });
+                            //第一次的时候蔡进行加载
+                            if (isFirst) {
+                                methods.initPage(resData.totalCount);
+                                //执行完后,将isFirst重新赋值为false
+                                isFirst = false;
+                                methods.initTabEvent();
+                            }
+                        },
+                        fail: function () {
+                            layer.close(index);
+                        }
+                    });
+                },
+                getParam: function (params) {
+                    return $.extend({
+                        skipCount: 0,
+                    }, params);
+                },
+                initPage: function (count) {
+                    //执行一个laypage实例
+                    laypage.render({
+                        elem: 'p-page' //注意，这里的 test1 是 ID，不用加 # 号
+                      , count: count //数据总数，从服务端得到
+                      , limit: 10
+                      , jump: function (obj, first) {
+                          var params = {
+                              skipCount: (parseInt(obj.curr) - 1) * parseInt(obj.limit),
+                              maxResultCount: parseInt(obj.limit),
+                          }
+                          //obj包含了当前分页的所有参数，比如：
+                          //首次不执行
+                          if (!first) {
+                              methods.renderTpl(params);
+                          }
+                      }
+                    });
+                }
             }
 
             methods.initEvent();
+            methods.renderTpl();
+
 
         })
     </script>
 
     <!--------table template-------->
-
-    <script type="text/html" id="tpl_pStatus">
-        <!-- 这里的 checked 的状态只是演示 -->
-        <input type="checkbox" name="pstatus"  value="{{d.id}}" lay-skin="switch" lay-text=" 上架 | 下架 " lay-filter="f_pStatus" {{ d.pStatus ==1 ? 'checked' : '' }}>
-    </script>
-
-    <script type="text/html" id="barDemo">
-        <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="detail">查看</a>
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-    </script>
-
-    <script type="text/html" id="tool_product">
-        <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+    <script type="text/html" id="tpl_product">
+        {{# layui.each(d,function(index,item){}}
+        <tr productId="{{item.id}}">
+            <td style="text-align:center;">{{index+1}}</td>
+            <td style="text-align:center;">{{item.categoryName}}</td>
+            <td style="text-align:center;">{{item.itemNo}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.describe}}</td>
+            <td style="text-align:right;">{{item.price}}</td>
+            <td style="text-align:center;">
+                <a class="layui-btn layui-btn-mini" lay-event="edit">编辑</a>
+                <a class="layui-btn layui-btn-danger layui-btn-mini" lay-event="del">删除</a>
+            </td>
+        </tr>
+        {{#})}}
     </script>
 
     <!--------dialog-------->
