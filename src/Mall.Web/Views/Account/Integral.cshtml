@@ -1,0 +1,78 @@
+﻿
+@{
+    ViewData["Title"] = "Integral";
+}
+
+<div class="layui-container layui-bg-white">
+    <div class="layui-row">
+        <div class="layui-col-md12" style="padding:10px 0px;font-size:15px;">
+            <span class="layui-breadcrumb " lay-separator=">">
+                <a href="/">首页</a>
+                <a><cite>我的积分</cite></a>
+            </span>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md12" style="font-size:16px;padding:5px;">
+            当前累计积分:<span style="color:red;">@ViewBag.Integral</span>
+        </div>
+    </div>
+    <div class="layui-row">
+        <table id="tb_integral"></table>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+
+        layui.use(["jquery", "abptable"], function () {
+
+            var $ = layui.jquery
+            , table = layui.abptable
+            , integralService = abp.services.app.integral;
+
+            var methods = {
+                //页面初始化
+                initPage: function () {
+
+                    table.render({
+                        elem: '#tb_integral'
+                      , url: '/api/services/app/integral/getAll' //数据接口
+                      , page: true //开启分页
+                      , height: 'full-270'
+                      , cellMinWidth: 80
+                      , where: { userId: abp.session.userId, sorting: "" }
+                      , cols: [[ //表头
+                          { type: 'numbers' }
+                        , { field: 'typeName', title: '个人/部门', align: 'center', width: 100 }
+                        , { field: 'costType', title: '消费类别', align: 'center', width: 100, templet: "#tpl_integral_cost" }
+                        , { field: 'integral', title: '积分', align: 'center', width: 100, templet: "#tpl_integral" }
+                        , { field: 'current', title: '最后积分', align: 'center', width: 100 }
+                        , { field: 'describe', title: '积分描述', align: 'left' }
+                        , { field: 'actDate', title: '时间', align: 'center', width: 180 }
+                      ]]
+                    });
+                }
+            }
+
+            methods.initPage();
+        })
+    </script>
+
+    <script type="text/html" id="tpl_integral_cost">
+        {{# if(d.costType==0){ }}
+            <span style="color:red;">收入</span>
+        {{# } else { }}
+            <span style="color:green;">消费</span>
+        {{# }  }}
+    </script>
+
+<script type="text/html" id="tpl_integral">
+    {{# if(d.costType==0){ }}
+    <span style="color:red;font-weight:900;padding:5px;">↑</span>{{d.integral}}
+    {{# } else { }}
+    <span style="color:green;font-weight:900;padding:5px;">↓</span>{{d.integral}}
+    {{# }  }}
+</script>
+
+}

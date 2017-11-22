@@ -1,0 +1,53 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Mall.Domain.Entities;
+
+namespace Mall.Address
+{
+    #region 1.0 抽象接口
+    public interface IAddressAppService : IAsyncCrudAppService<AddressDto, int, GetAllAddressInput, CreateAddressInput, UpdateAddressInput>
+    {
+        Task SetDefault(int id);
+    }
+
+    #endregion
+
+    #region 2.0 具体实现
+    public class AddressAppService : AsyncCrudAppService<Mall_Address, AddressDto, int, GetAllAddressInput, CreateAddressInput, UpdateAddressInput>, IAddressAppService
+    {
+        private IRepository<Mall_Address> _addressRepository;
+        public AddressAppService(IRepository<Mall_Address> addressRepository) : base(addressRepository)
+        {
+            _addressRepository = addressRepository;
+        }
+
+        public async Task SetDefault(int id)
+        {
+            //1：找到地址
+            var addr = await _addressRepository.GetAsync(id);
+            //2: 设定
+            addr.IsDefault = true;
+            //3: 找到其他的将他们都变成非默认的
+            var otherAddress = await _addressRepository.GetAllListAsync(u => u.IsDefault&&u.Id!=id);
+            otherAddress.ForEach(u =>
+            {
+                u.IsDefault = false;
+            });
+        }
+
+        protected override IQueryable<Mall_Address> CreateFilteredQuery(GetAllAddressInput input)
+        {
+            var userId = input.CreatorUserId.HasValue ? AbpSession.UserId.Value : input.CreatorUserId.Value;
+            //只查自己的地址
+            return base.CreateFilteredQuery(input).Where(u => u.CreatorUserId.Value.Equals(userId));
+        }
+
+    }
+    #endregion
+}

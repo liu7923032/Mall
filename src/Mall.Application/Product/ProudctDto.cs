@@ -35,9 +35,30 @@ namespace Mall.Product
         /// <summary>
         /// 附件信息
         /// </summary>
+        [Required(ErrorMessage = "必须要上传图片")]
         public string FileIds { get; set; }
 
         public string ImgPic { get; set; }
+
+      
+    }
+
+    /// <summary>
+    /// 更新的dto
+    /// </summary>
+    public class UpdateProductInput : CreateProductInput, IEntityDto<int>
+    {
+        [Required]
+        public int Id { get; set; }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [AutoMapFrom(typeof(Mall_Product))]
+    public class ProductDto : UpdateProductInput
+    {
+        public string CategoryName { get; set; }
 
         /// <summary>
         /// 销售数量
@@ -51,27 +72,9 @@ namespace Mall.Product
     }
 
     /// <summary>
-    /// 更新的dto
-    /// </summary>
-    public class UpdateProductInput : CreateProductInput,IEntityDto<int>
-    {
-        [Required]
-        public int Id { get; set; }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    [AutoMapFrom(typeof(Mall_Product))]
-    public class ProductDto : UpdateProductInput
-    {
-        public string CategoryName { get; set; }
-    }
-
-    /// <summary>
     /// 查询条件
     /// </summary>
-    public class GetAllProductInput: PagedAndSortedResultRequestDto
+    public class GetAllProductInput : PagedAndSortedResultRequestDto
     {
         /// <summary>
         /// 通过名称来查询产品
@@ -84,6 +87,8 @@ namespace Mall.Product
         public int? CategoryId { get; set; }
 
         public int Page { get; set; }
+
+        public ProductStatus? PStatus { get; set; }
 
         public GetAllProductInput()
         {

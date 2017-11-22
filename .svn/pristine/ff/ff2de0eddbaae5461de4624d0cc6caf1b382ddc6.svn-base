@@ -1,0 +1,459 @@
+﻿
+
+@using Mall.Web.Startup
+@{
+    ViewBag.ActiveMenu = PageNames.Cart;
+}
+
+<div class="layui-container layui-bg-white">
+    <div class="row">
+        <div class="layui-col-md12" style="padding:10px 0px;font-size:15px;">
+            <span class="layui-breadcrumb " lay-separator=">">
+                <a href="/">首页</a>
+                <a><cite>购物车</cite></a>
+            </span>
+        </div>
+    </div>
+    <hr class="layui-bg-gray" />
+    <!--------工具条--------->
+
+    <div class="layui-row">
+        <div class="layui-col-md6">
+            <div class="layui-btn-group">
+                <a class="layui-btn " id="btnCartReload"><i class="layui-icon">&#x1002;</i> 刷新</a>
+
+            </div>
+        </div>
+        <div class="layui-col-md6" style="text-align:right;padding-right:10px;">
+            <div class="layui-text" style="font-size: 18px;margin-top: 8px;color: orangered;">当前拥有的积分:<span style="font-size: 20px;margin-left: 5px;color: red;" id="my_integral">@ViewBag.Integral</span></div>
+        </div>
+    </div>
+
+    <!--------表格数据--------->
+    <div class="layui-row" style="margin-top:10px;">
+        <div class="layui-col-md12">
+            <table class="layui-table" style="margin-top:0px;" lay-filter="tb_cart" id="tb_cart">
+                <colgroup>
+                    <col width="60" />
+                    <col width="200" />
+                    <col />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="100" />
+                    <col width="80" />
+                </colgroup>
+                <thead>
+                    <tr>
+                        <td style="text-align:center;">编号</td>
+                        <td>物品名称</td>
+                        <td>物品规格</td>
+                        <td style="text-align:right;">数量</td>
+                        <td style="text-align:right;">积分</td>
+                        <td style="text-align:right;">小计</td>
+                        <td style="text-align:center;">操作</td>
+                    </tr>
+                </thead>
+                <tbody id="tbody_cart"></tbody>
+            </table>
+        </div>
+    </div>
+    <!--------地址--------->
+    <div class="layui-row">
+        <fieldset class="layui-elem-field">
+            <legend>收货信息</legend>
+            <div class="layui-field-box">
+                <a class="layui-btn" id="btnAddAdress">新增地址</a>
+                <ul class="mall-address">
+                    <li>
+                        <div class="address-item address-selected">
+                            张三
+                            <b></b>
+                        </div>
+                        <div class="address-detail">
+                            <span class="addr-info">江苏省 苏州市 工业园区 归家巷222号麦迪大厦</span>
+                            <span class="addr-tel">18652428020</span>
+                        </div>
+                        <div class="address-btns">
+                            <a href="javascript:void(0)">设为默认地址</a>
+                            <a href="javascript:void(0)">编辑</a>
+                            <a href="javascript:void(0)" class="btn-del">删除</a>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="address-item">
+                            李四
+                            <b></b>
+                        </div>
+                        <div class="address-detail">
+                            <span class="addr-info">江苏省 苏州市 工业园区 归家巷222号麦迪大厦</span>
+                            <span class="addr-tel">18652428020</span>
+                        </div>
+                        <div class="address-btns">
+                            <a href="javascript:void(0)">设为默认地址</a>
+                            <a href="javascript:void(0)">编辑</a>
+                            <a href="javascript:void(0)" class="btn-del">删除</a>
+                        </div>
+                    </li>
+
+                    <li>
+                        <div class="address-item">
+                            王五
+                            <b></b>
+                        </div>
+                        <div class="address-detail">
+                            <span class="addr-info">江苏省 苏州市 工业园区 归家巷222号麦迪大厦</span>
+                            <span class="addr-tel">18652428020</span>
+                        </div>
+                        <div class="address-btns">
+                            <a href="javascript:void(0)">设为默认地址</a>
+                            <a href="javascript:void(0)">编辑</a>
+                            <a href="javascript:void(0)" class="btn-del">删除</a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </fieldset>
+
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-md-offset10 layui-col-md2">
+            <a class="layui-btn layui-btn-danger" id="btnCartPay"><i class="layui-icon">&#xe609;</i> 去结账</a>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{
+
+    <script type="text/javascript">
+        layui.use(['element', 'layer', 'jquery', 'laytpl', 'form'], function () {
+
+            var table = layui.table
+              , layer = layui.layer
+              , $ = layui.jquery
+              , laytpl = layui.laytpl
+              , form = layui.form
+              , province = {}, city = {}, area = {}
+              , _cartService = abp.services.app.cart;
+
+
+
+            var methods = {
+
+                initEvent: function () {
+                    //方法绑定事件
+                    $('#btnCartPay').click(function () {
+                        methods.pay();
+                    });
+
+                    $('#btnCartReload').click(function () {
+                        methods.readerTpl();
+                    });
+
+                    $('#btnAddAdress').click(function () {
+
+                        layer.open({
+                            type: 1,
+                            content: frm_address.innerHTML,
+                            area: ['800px', '430px']
+                            , title: "地址信息"
+                            , success: function () {
+                                methods.setProvince();
+                            }
+                        });
+                    });
+
+                    //加载省市
+                    $.getJSON("/lib/layui-extend/js/areas.json", function (data) {
+                        methods.loadData(data);
+                    });
+                },
+                //付款
+                pay: function () {
+                    //1.获取选中行的数据
+                    var lenth = $('#tbody_cart').find('tr[cartItemId]').length;
+
+                    if (lenth == 0) {
+                        layer.msg("购物车中没有要买的商品");
+                        return
+                    }
+                    //2.
+                    var myIntegral = parseInt($('#my_integral').text())
+                        , needIntegral = parseFloat($('#tdAllPrice').text());
+
+                    if (myIntegral < needIntegral) {
+                        layer.msg("当前拥有的积分不够");
+                        return;
+                    }
+
+                    //1:找到表格中选择的数据
+                    layer.confirm('确认要结账?', function (index) {
+                        layer.close(index);
+                        _cartService.checkOut({
+                            success: function () {
+                                //1.清空右边购物车数量
+                                $('#cart_pNum').text(0);
+                                //2.跳转到订单页面
+                                location.href = "/Order/Index";
+                                //1.清空购物车
+                                //methods.readerTpl();
+                            }
+                        });
+                    });
+
+                },
+                //删除
+                delItem: function (id) {
+                    layer.confirm('真的删除行么', function (index) {
+                        layer.close(index);
+                        //向服务端发送删除指令
+                        _cartService.delProduct(id, {
+                            success: function (data) {
+                                //检查如果只有合计行了,那么就删除
+                                methods.readerTpl();
+                            }
+                        });
+                    });
+                },
+                //更新产品数量
+                updateItemNum: function (productId, itemNum, upSuccess) {
+                    if (isNaN(itemNum)) {
+                        layer.msg("数量必须有数字");
+                        return;
+                    }
+                    var params = {
+                        "productId": productId,
+                        "itemNum": itemNum
+                    }
+                    _cartService.updateProductNums(params, {
+                        success: function (res) {
+                            //跟新合计信息
+                            if (typeof (upSuccess) == "function") {
+                                upSuccess();
+                            }
+                        }
+                    });
+                },
+
+                initRowEvent: function () {
+                    var tbody = $('#tbody_cart');
+                    tbody.on("click", '*[lay-event]', function (e) {
+                        //1.找到该按钮
+                        var onThis = $(this)
+                            , isEditing = $(this).attr('editing')
+                            , eventType = $(onThis).attr('lay-event')
+                            , cartItemId = onThis.parents('tr').attr('cartItemId');
+                        if (eventType === "del") {
+                            methods.delItem(cartItemId);
+                        } else if (eventType === "edit" && !isEditing) {
+                            var oldValue = onThis.text();
+                            onThis.html("<input type='text' class='layui-input row-editing' value='" + oldValue + "'/>");
+                            onThis.attr('editing', true);
+                            $('.row-editing').focus();
+                            $('.row-editing').blur(function () {
+                                var inputThis = $(this);
+                                var newValue = inputThis.val();
+                                //更新到服务器
+                                var pId = onThis.parents('tr').attr('productId')
+                                methods.updateItemNum(pId, newValue, function () {
+                                    onThis.html(newValue);
+                                    onThis.removeAttr('editing');
+                                    //更新合计
+                                    methods.readerTpl();
+                                });
+                            });
+
+                        }
+                    });
+
+                },
+
+                readerTpl: function () {
+                    //1：获取tpl
+                    var getTpl = tpl_cart.innerHTML
+                        , view = document.getElementById('tbody_cart');
+                    layer.load();
+                    _cartService.getMyCart({
+                        success: function (resData) {
+                            laytpl(getTpl).render(resData.items, function (html) {
+                                view.innerHTML = html;
+                            });
+
+                            methods.initRowEvent();
+
+                            layer.closeAll("loading")
+
+                            var t_price = 0, t_num = 0;
+                            resData.items.forEach(function (item) {
+                                t_num += parseFloat(item.itemNum);
+                                t_price += parseFloat(item.allPrice);
+                            })
+                            $('#tdAllNum').text(t_num);
+                            $('#tdAllPrice').text(t_price)
+                        }
+                    });
+                },
+
+                loadData: function (data) {
+                    for (var code in data) {
+                        if (!(code % 10000)) {
+                            //获取所有的省级行政单位
+                            province[code] = data[code];
+                        } else {
+                            //城市
+                            if (!(code % 100)) {
+                                city[code] = data[code];
+                            }
+                                //1:直辖市区.县
+                            else {
+                                area[code] = data[code];
+                            }
+                        }
+                    }
+                    //加载省份
+                },
+
+
+                setProvince: function () {
+                    var strResult = '<option value="">请选省份</option>';
+                    strResult += Object.keys(province).map(function (key) {
+                        return "<option value='" + key + "'>" + province[key] + "</option>";
+                    }).join('');
+
+                    $('#select_province').html(strResult);
+                    //初始化所有的form 元素
+                    form.render();
+
+                    //初始化市
+                    form.on('select(province)', function (data) {
+                        methods.setCity(data.value);
+                    });
+                    //初始化区域
+                    form.on('select(city)', function (data) {
+                        methods.setArea(data.value, 4);
+                    });
+                },
+                setCity: function (proviceId) {
+                    var strHead = '<option value="">请选城市</option>';
+                    //通过id来找到对应的城市信息
+                    var strBody = "";
+                    Object.keys(city).filter(function (key) {
+                        if (key.substr(0, 2) == proviceId.substr(0, 2)) {
+                            strBody += "<option value='" + key + "'>" + city[key] + "</option>"
+                        }
+                    });
+
+                    console.log(strBody);
+                    if (strBody.length > 0) {
+                        $('#select_city').parent().show();
+                        //这个是直辖市
+                        $('#select_city').html(strHead + strBody);
+                        form.render('select');
+                        
+                    } else {
+                        $('#select_city').parent().hide();
+                        methods.setArea(proviceId,2);
+                    }
+
+
+                },
+                setArea: function (cityId,num) {
+                    var strHead = '<option value="">请选区/县</option>';
+                    //通过id来找到对应的城市信息
+                    var strBody = "";
+                    Object.keys(area).filter(function (key) {
+                        if (key.substr(0, num) === cityId.substr(0, num)) {
+                            strBody += "<option value='" + key + "'>" + area[key] + "</option>"
+                        }
+                    });
+
+                    if (strBody.length > 0) {
+                        $('#select_area').html(strHead + strBody);
+                    } else {
+                        $('#select_area').parent().hide();
+                    }
+                    form.render('select');
+                }
+
+            }
+            methods.initEvent();
+            methods.readerTpl();
+        });
+    </script>
+
+    <!--------这个是购物车模板信息---------->
+    <script type="text/html" id="tpl_cart">
+        {{# layui.each(d,function(index,item){ }}
+        <tr cartItemId="{{item.id}}" productId="{{item.productId}}">
+            <td style="text-align:center;">{{index+1}}</td>
+            <td>{{item.itemName}}</td>
+            <td>{{item.itemSpecs}}</td>
+            <td style="text-align:right;" lay-event="edit">{{item.itemNum}}</td>
+            <td style="text-align:right;">{{item.itemPrice}}</td>
+            <td style="text-align:right;">{{item.allPrice}}</td>
+            <td style="text-align:center;">
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+            </td>
+        </tr>
+        {{# }) }}
+        <!------如果存在,那么就添加合计行------->
+        {{# if(d.length>0){ }}
+        <tr>
+            <td></td>
+            <td style="color:blue;">合计</td>
+            <td></td>
+            <td style="text-align:right;color:blue;" id="tdAllNum"></td>
+            <td></td>
+            <td style="text-align:right;color:blue;" id="tdAllPrice"></td>
+            <td></td>
+        </tr>
+        {{#}}}
+
+    </script>
+
+
+    <script type="text/html" id="frm_address">
+        <form class="layui-form" style="padding:15px 15px;">
+            <div class="layui-form-item">
+                <div class="layui-form-label">省市</div>
+                <div class="layui-input-inline">
+                    <select name="province" lay-filter="province" lay-verity="required" id="select_province"></select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="city" lay-filter="city" id="select_city"></select>
+                </div>
+                <div class="layui-input-inline">
+                    <select name="area" lay-filter="area" lay-verity="required" id="select_area"></select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">详细地址</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" lay-verity="required" placeholder="具体街道,例子:归家巷222号" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">收货人</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" lay-verity="required" placeholder="人员姓名" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">联系电话</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" lay-verity="required|number" placeholder="收货人电话" />
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-label">别名</div>
+                <div class="layui-input-block">
+                    <input type="text" class="layui-input" lay-verity="required" placeholder="公司,家里" />
+                </div>
+            </div>
+            <div class="layui-form-item" style="text-align:center;">
+                <a class="layui-btn layui-btn-normal" lay-filter="btnSubmit" lay-submit><i class="layui-icon">&#xe605;</i> 保存</a>
+            </div>
+        </form>
+    </script>
+
+}

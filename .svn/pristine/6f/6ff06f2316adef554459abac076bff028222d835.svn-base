@@ -1,0 +1,87 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text;
+using Abp.Domain.Entities.Auditing;
+
+namespace Mall.Domain.Entities
+{
+    public class Mall_Order : FullAuditedEntity
+    {
+        /// <summary>
+        /// 订单编号
+        /// </summary>
+        [Required]
+        [StringLength(20)]
+        public string OrderNo { get; set; }
+
+        /// <summary>
+        /// 购物车对应的Id
+        /// </summary>
+        [Required]
+        public int CartId { get; set; }
+
+        /// <summary>
+        /// 导航属性
+        /// </summary>
+        [ForeignKey("CartId")]
+        public virtual Mall_Cart Cart { get; set; }
+
+        /// <summary>
+        /// 购物车总金额
+        /// </summary>
+        [Required]
+        public decimal AllPrice { get; set; }
+
+
+        [Required]
+        [StringLength(200)]
+        public string AddressInfo { get; set; }
+
+
+        [Required]
+        public OrderStatus OrderStatus { get; set; }
+
+        public Mall_Order()
+        {
+            OrderStatus = OrderStatus.Init;
+            AllPrice = 0;
+        }
+
+
+        /// <summary>
+        /// 通过串联创建人和修改人
+        /// </summary>
+        [ForeignKey("CreatorUserId")]
+        public virtual Mall_Account CreatorUser { get; set; }
+
+        [ForeignKey("LastModifierUserId")]
+        public virtual Mall_Account LastModifierUser { get; set; }
+    }
+
+
+    /// <summary>
+    /// 货物状态
+    /// </summary>
+    public enum OrderStatus
+    {
+        /// <summary>
+        /// 待接收
+        /// </summary>
+        Init = 0,
+        /// <summary>
+        /// 采购中
+        /// </summary>
+        Purchase,
+        /// <summary>
+        /// 到货
+        /// </summary>
+        Receive,
+        /// <summary>
+        /// 已收货
+        /// </summary>
+        Complete
+    }
+
+}

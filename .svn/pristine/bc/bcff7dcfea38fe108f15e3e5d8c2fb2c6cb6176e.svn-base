@@ -1,0 +1,209 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Abp;
+using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Abp.Notifications;
+using Abp.Runtime.Session;
+using Abp.Timing;
+using Mall.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace Mall.Order
+{
+    #region 1.0 接口 IOrderAppService
+    public interface IOrderAppService
+    {
+        /// <summary>
+        /// 获取订单信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        Task<PagedResultDto<OrderDto>> GetOrders(GetAllOrderInput input);
+
+        /// <summary>
+        /// 取消订单
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        Task CacelOrder(int orderId);
+
+
+        /// <summary>
+        /// 接单
+        /// </summary>
+        /// <param name="orderId">订单的id</param>
+        /// <param name="status">变更订单的状态</param>
+        /// <returns></returns>
+        Task AcceptOrder(ChangeOrderInput changeInput);
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="orderStatus"></param>
+        /// <returns></returns>
+
+        Task<int> GetMyOrderCount(OrderStatus orderStatus);
+
+        Task<int> GetOrderCount(OrderStatus orderStatus);
+
+
+
+    }
+    #endregion
+
+    #region 2.0 实现 OrderAppService
+    /// <summary>
+    /// 订单处理类
+    /// </summary>
+    public class OrderAppService : MallAppServiceBase, IOrderAppService
+    {
+        private IRepository<Mall_Order> _orderRepository;
+        private IRepository<Mall_Account, long> _accountRepository;
+        private IRepository<Mall_Integral> _integralRepository;
+        private IRepository<Mall_Product> _productService;
+        private IRepository<Mall_CartItem> _cartItemRepository;
+        private IRepository<Mall_OrderRecord> _orderRecordRepository;
+        private INotificationPublisher _notificationPublisher;
+
+        public OrderAppService(IRepository<Mall_Order> orderRepository,
+            IRepository<Mall_Account, long> accountRepository,
+            IRepository<Mall_Integral> integralRepository,
+            INotificationPublisher notificationPublisher,
+            IRepository<Mall_Product> productRepository,
+            IRepository<Mall_CartItem> cartItemRepository,
+            IRepository<Mall_OrderRecord> orderRecordRepository)
+        {
+            this._accountRepository = accountRepository;
+            this._orderRepository = orderRepository;
+            this._integralRepository = integralRepository;
+            this._notificationPublisher = notificationPublisher;
+            this._productService = productRepository;
+            this._cartItemRepository = cartItemRepository;
+            this._orderRecordRepository = orderRecordRepository;
+        }
+
+        /// <summary>
+        /// 通过状态获取订单
+        /// </summary>
+        /// <param name="orderStatus"></param>
+        /// <returns></returns>
+        private IQueryable<Mall_Order> GetOrders(OrderStatus orderStatus)
+        {
+            return _orderRepository.GetAll().Where(u => u.OrderStatus.Equals(orderStatus));
+        }
+
+
+
+        /// <summary>
+        /// 获取订单信息
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public async Task<PagedResultDto<OrderDto>> GetOrders(GetAllOrderInput input)
+        {
+
+            var orders = GetOrders(input.OrderStatus);
+            //获取我的订单
+            if (input.OrderType == OrderType.Me)
+            {
+                orders = orders.Where(u => u.CreatorUserId.Value.Equals(UserId));
+            }
+
+            var count = orders.Count();
+            //2:获取对数据进行排序和分页处理
+            orders = orders.Include("CreatorUser").Include("Address").OrderByDescending(u => u.CreationTime).Skip(input.SkipCount).Take(input.MaxResultCount);
+
+            return await Task.FromResult(new PagedResultDto<OrderDto>() { TotalCount = count, Items = orders.MapTo<List<OrderDto>>() });
+        }
+
+
+        public async Task<int> GetMyOrderCount(OrderStatus orderStatus)
+        {
+            return await GetOrders(orderStatus).Where(u => u.CreatorUserId.Value.Equals(UserId)).CountAsync();
+
+
+        }
+        public async Task<int> GetOrderCount(OrderStatus orderStatus)
+        {
+            return await GetOrders(orderStatus).CountAsync();
+        }
+
+        /// <summary>
+        /// 接受订单
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public async Task AcceptOrder(ChangeOrderInput changeInput)
+        {
+            //1.找到订单
+            var orders = await _orderRepository.GetAllListAsync(u => changeInput.OrderIds.Contains(u.Id));
+            orders.ForEach(u =>
+            {
+                //2.更新订单状态
+                u.OrderStatus = changeInput.OrderStatus;
+                //3.添加订单状态记录信息
+                _orderRecordRepository.Insert(new Mall_OrderRecord()
+                {
+                    OrderId = u.Id,
+                    OrderStatus = changeInput.OrderStatus
+                });
+            });
+
+
+            //3:订单的状态采购完成,才能进行对产品的销售数据加1
+            if (changeInput.OrderStatus == OrderStatus.Receive)
+            {
+                var cartIds = orders.Select(u => u.CartId).ToList();
+                var products = _cartItemRepository.GetAll().Where(u => cartIds.Contains(u.CartId)).ToList();
+                products.ForEach(u =>
+                {
+                    var product = _productService.FirstOrDefault(u.ProductId);
+                    product.SaleNums += u.ItemNum;
+                });
+            }
+
+            //4.给用户发送通知,代表人员接单
+            _notificationPublisher.Publish("订单审批完成通知", new MessageNotificationData("订单申请已审批通过"), null, NotificationSeverity.Info, new[] { AbpSession.ToUserIdentifier() });
+
+        }
+
+        /// <summary>
+        /// 取消订单
+        /// </summary>
+        /// <param name="orderId"></param>
+        /// <returns></returns>
+        public async Task CacelOrder(int orderId)
+        {
+            //1:获取订单
+            var order = await _orderRepository.GetAsync(orderId);
+            if (order.OrderStatus != OrderStatus.Init)
+            {
+                throw new AbpException("该订单状态不可作废,请刷新重试");
+            }
+            //2:先给人员的积分还原
+            var user = await _accountRepository.GetAsync(UserId);
+            user.Integral = user.Integral + order.AllPrice;
+            //3:还原积分
+            await _integralRepository.InsertAsync(new Mall_Integral()
+            {
+                TypeName = "人员",
+                CostType = CostType.Earn,
+                ActDate = Clock.Now,
+                DeptId = 0,
+                Describe = $"订单:{order.OrderNo} 退款",
+                Integral = order.AllPrice,
+                UserId = UserId,
+            });
+
+            //4:作废该订单
+            await _orderRepository.DeleteAsync(orderId);
+        }
+    }
+    #endregion
+
+}

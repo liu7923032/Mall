@@ -10,7 +10,7 @@
 <div class="layui-container layui-bg-white">
     <div class="row">
         <div class="layui-col-md12" style="padding:10px 0px;font-size:15px;">
-            <span class="layui-breadcrumb " lay-separator="/">
+            <span class="layui-breadcrumb " lay-separator=">">
                 <a href="/">首页</a>
                 <a><cite>订单审批</cite></a>
             </span>
@@ -23,9 +23,27 @@
         <div class="layui-col-md12">
             <div class="layui-tab layui-tab-brief" lay-filter="f_approve">
                 <ul class="layui-tab-title">
-                    <li class="layui-this">待处理</li>
-                    <li>采购中</li>
-                    <li>已到货</li>
+                    <li class="layui-this">
+                        待处理
+                        @if (ViewBag.WaitNum != 0)
+                        {
+                            <span class="layui-badge">@ViewBag.WaitNum</span>
+                        }
+                    </li>
+                    <li>
+                        采购中
+                        @if (ViewBag.PurchaseNum != 0)
+                        {
+                            <span class="layui-badge">@ViewBag.PurchaseNum</span>
+                        }
+                    </li>
+                    <li>
+                        已到货
+                        @if (ViewBag.ReceiveNum != 0)
+                        {
+                            <span class="layui-badge">@ViewBag.ReceiveNum</span>
+                        }
+                    </li>
                     <li>已完结</li>
                 </ul>
                 <div class="layui-tab-content">
@@ -110,7 +128,6 @@
                         "orderIds": orderIds,
                         "orderStatus": status
                     };
-                    console.log(params);
                     _orderService.acceptOrder(params, {
                         success: callBack
                     });
@@ -134,7 +151,8 @@
                         , cols: [[ //表头
                             { type: 'numbers' } //序号
                             , { type: 'checkbox' } //选择列
-                            , { field: 'orderNo', title: '订单编号', align: 'center' }
+                            , { field: 'orderNo', title: '订单编号', align: 'center', width: 150 }
+                            , { field: 'addressInfo', title: '地址信息', align: 'center' }
                             , { field: 'orderStatus', title: '订单状态', align: 'center', width: 120, templet: '#tpl_status' }
                             , { field: 'creatorName', title: '创建人', align: 'center', width: 120 }
                             , { field: 'creationTime', title: '创建时间', align: 'center', width: 160 }

@@ -1,0 +1,115 @@
+﻿using System;
+using System.Threading.Tasks;
+using Abp.Application.Navigation;
+using Abp.Authorization;
+using Abp.Dependency;
+using Abp.Localization;
+using Mall.Authorization;
+using Mall.Configuration;
+using Mall.UserApp;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+
+namespace Mall.Web.Startup
+{
+    /// <summary>
+    /// This class defines menus for the application.
+    /// </summary>
+    public class MallNavigationProvider : NavigationProvider
+    {
+        //private IPermissionDependency _permissionDependency;
+        //public MallNavigationProvider(IPermissionDependency permissionDependency)
+        //{
+        //    _permissionDependency = permissionDependency;
+        //}
+
+        public override void SetNavigation(INavigationProviderContext context)
+        {
+            context.Manager.MainMenu
+                .AddItem(
+                    new MenuItemDefinition(
+                            PageNames.Mall,
+                            L("Mall"),
+                            url: "/Home/Index",
+                            icon: "fa fa-home"
+                        )
+                ).AddItem(
+                    new MenuItemDefinition(
+                            PageNames.Cart,
+                            L("Cart"),
+                            url: "Cart/Index",
+                            icon: "fa fa-info"
+                        )
+                ).AddItem(
+                    new MenuItemDefinition(
+                            PageNames.Category,
+                            L("Order"),
+                            url: "/Order/Index",
+                            icon: ""
+                        )
+                ).AddItem(
+                    new MenuItemDefinition(
+                            PageNames.Manage,
+                            L("Manage"),
+                            url: "",
+                            requiredPermissionName: PermissionNames.Page_Admin
+                        )
+                        .AddItem(new MenuItemDefinition(
+                             PageNames.Category,
+                             L("Category"),
+                             url: "/Category/Index"
+                            ))
+                        .AddItem(new MenuItemDefinition(
+                             PageNames.Category,
+                             L("Product"),
+                             url: "/Category/Product"
+                        ))
+                        .AddItem(new MenuItemDefinition(
+                             PageNames.Approve,
+                             L("Approve"),
+                             url: "/Order/Approve"
+                        ))
+
+                );
+        }
+
+        private static ILocalizableString L(string name)
+        {
+            return new LocalizableString(name, MallConsts.LocalizationSourceName);
+        }
+    }
+
+
+    public class MallPermissionDependency : IPermissionDependency, ITransientDependency
+    {
+        private IConfiguration appConfiguration;
+        private IUserAppService _loginManager;
+        public MallPermissionDependency(IHostingEnvironment env, IUserAppService loginManager)
+        {
+            _loginManager = loginManager;
+            appConfiguration = AppConfigurations.Get(env.ContentRootPath, env.EnvironmentName);
+        }
+
+        public async Task<bool> IsSatisfiedAsync(IPermissionDependencyContext context)
+        {
+            //找到有管理员权限的用户
+            var administrators = appConfiguration.GetSection("Authorzation:Administators").Value;
+
+            if (string.IsNullOrEmpty(administrators))
+            {
+                return await Task.FromResult(false);
+            }
+            //检查当前人员是否有在里面
+            var userId = Convert.ToInt32(context.User.UserId);
+            //var user = await _loginManager.GetUserById(userId);
+            if (administrators=="M0679")
+            {
+                return await Task.FromResult(true);
+            }
+            else
+            {
+                return await Task.FromResult(false);
+            }
+        }
+    }
+}
