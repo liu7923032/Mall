@@ -11,8 +11,6 @@ using Microsoft.AspNetCore.Hosting;
 using Mall.Configuration;
 using Mall.Integral;
 using Mall.UserApp;
-using System.Net.Http;
-using Newtonsoft.Json;
 
 namespace Mall.Web.Controllers
 {
@@ -24,53 +22,39 @@ namespace Mall.Web.Controllers
 
         private readonly IConfigurationRoot _appConfiguration;
         private IIntegralAppService _integralService;
-        private IHostingEnvironment _env;
+
         public AccountController(IUserAppService userAppService, IIntegralAppService integralAppService, IHostingEnvironment env)
         {
             _userAppService = userAppService;
             _appConfiguration = AppConfigurations.Get(env.ContentRootPath, env.EnvironmentName);
             _integralService = integralAppService;
-            _env = env;
         }
 
         [AllowAnonymous]
         public async Task<ActionResult> Login()
         {
+            string gongHao = Request.Query["gongHao"];
             string returnUrl = Request.Query["returnUrl"];
-            string token = Request.Query["token"];
+
+
             string authServer = _appConfiguration.GetSection("Authorzation:Server").Value;
-            //检查一下请求
-            if (string.IsNullOrEmpty(token) && !_env.IsDevelopment())
+            if (string.IsNullOrEmpty(gongHao))
             {
+
                 return Redirect($"{authServer}?returnUrl={Request.Scheme}://{Request.Host}{Request.Path}");
             }
-            //如果token不存在,那么就让他先登陆系统
             else
             {
-                var gongHao = string.Empty;
-                if (!_env.IsDevelopment())
-                {
-                    //通过token来验证请求
-                    var webApiReq = _appConfiguration.GetSection("Authorzation:Authentication").Value;
-                    string authUrl = $"{authServer}{webApiReq}{token}";
-                    HttpClient client = new HttpClient();
-                    var result = (await client.GetAsync(authUrl)).Content.ReadAsStringAsync().Result;
-                    if (result == "null")
-                    {
-                        return Redirect($"{authServer}");
-                    }
-                    gongHao = JsonConvert.DeserializeObject<LoginModel>(result).Account;
-                }
-                else
-                {
-                    gongHao = "Admin";
-                }
-                await LoginAysnc(new LoginModel()
+                //授权地址
+                var authen = _appConfiguration.GetSection("Authorzation:Authentication").Value;
+                //异步加载获取远程服务
+                var loginModel = new LoginModel()
                 {
                     Account = gongHao,
                     Password = "111",
                     IsRemember = false
-                });
+                };
+                await LoginAysnc(loginModel);
                 return Redirect("/Home/Index");
             }
         }
@@ -89,19 +73,19 @@ namespace Mall.Web.Controllers
 
 
 
-        //[AllowAnonymous]
-        //[HttpPost]
-        //public async Task<JsonResult> LoginAsync([FromBody]LoginModel login)
-        //{
-        //    if (!ModelState.IsValid)
-        //    {
-        //        throw new AbpException("");
-        //    }
-        //    await LoginAysnc(login);
-        //    //跳转地址
-        //    //return RedirectToAction("Index", "Home");
-        //    return Json(new AjaxResponse() { TargetUrl = "/Home/Index" });
-        //}
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<JsonResult> LoginAsync([FromBody]LoginModel login)
+        {
+            if (!ModelState.IsValid)
+            {
+                throw new AbpException("");
+            }
+            await LoginAysnc(login);
+            //跳转地址
+            //return RedirectToAction("Index", "Home");
+            return Json(new AjaxResponse() { TargetUrl = "/Home/Index" });
+        }
 
         public async Task<ActionResult> SignOut()
         {
@@ -163,7 +147,7 @@ namespace Mall.Web.Controllers
         /// <returns></returns>
         public async Task<ActionResult> Integral()
         {
-            var user = await _userAppService.GetUserById(AbpSession.UserId.Value);
+            var user =await _userAppService.GetUserById(AbpSession.UserId.Value);
             ViewBag.Integral = user.Integral;
             //计算当前人员的积分
             return await Task.FromResult(View());

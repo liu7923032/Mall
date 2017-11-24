@@ -192,8 +192,6 @@ namespace Mall.Migrations
 
                     b.HasIndex("CartId");
 
-                    b.HasIndex("CreatorUserId");
-
                     b.HasIndex("ProductId");
 
                     b.ToTable("Mall_CartItem");
@@ -414,10 +412,6 @@ namespace Mall.Migrations
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Mall.Domain.Entities.Mall_Account", "CreatorUser")
-                        .WithMany()
-                        .HasForeignKey("CreatorUserId");
 
                     b.HasOne("Mall.Domain.Entities.Mall_Product", "Product")
                         .WithMany()

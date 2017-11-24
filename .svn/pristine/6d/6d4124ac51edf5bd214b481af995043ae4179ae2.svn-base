@@ -42,11 +42,6 @@ namespace Mall.Domain.Entities
         [ForeignKey("ProductId")]
         public virtual Mall_Product Product { get; set; }
 
-        /// <summary>
-        /// 对应的申请人
-        /// </summary>
-        [ForeignKey("CreatorUserId")]
-        public virtual Mall_Account CreatorUser { get; set; }
 
     }
 }

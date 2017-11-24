@@ -12,9 +12,10 @@ using System;
 namespace Mall.Migrations
 {
     [DbContext(typeof(MallDbContext))]
-    partial class MallDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171124104738_Add_CartItem_CreatorUser")]
+    partial class Add_CartItem_CreatorUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

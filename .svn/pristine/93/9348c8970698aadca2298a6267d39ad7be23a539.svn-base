@@ -12,9 +12,10 @@ using System;
 namespace Mall.Migrations
 {
     [DbContext(typeof(MallDbContext))]
-    partial class MallDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171123090057_Add_CartItem_Describe")]
+    partial class Add_CartItem_Describe
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,8 +192,6 @@ namespace Mall.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CartId");
-
-                    b.HasIndex("CreatorUserId");
 
                     b.HasIndex("ProductId");
 
@@ -414,10 +413,6 @@ namespace Mall.Migrations
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("Mall.Domain.Entities.Mall_Account", "CreatorUser")
-                        .WithMany()
-                        .HasForeignKey("CreatorUserId");
 
                     b.HasOne("Mall.Domain.Entities.Mall_Product", "Product")
                         .WithMany()

@@ -67,7 +67,7 @@ namespace Mall.Cart
         /// 通过购物车的唯一标识来获取购物车详细信息
         /// </summary>
         /// <returns></returns>
-        Task<PagedResultDto<CartItemDto>> GetCartByIds(GetItemsInput input);
+        Task<List<CartItemDto>> GetCartById(int cartId);
     }
     #endregion
 
@@ -118,7 +118,7 @@ namespace Mall.Cart
         {
             int curYear = Clock.Now.Year, curMonth = Clock.Now.Month;
 
-
+            
             var counts = _orderRepository.Count(u => u.CreationTime.Year.Equals(curYear) && u.CreationTime.Month.Equals(curMonth));
             //1：通过日期来
             return $"MO{DateTime.Now.ToString("yyyyMM")}{(counts + 1).ToString().PadLeft(4, '0')}";
@@ -223,10 +223,7 @@ namespace Mall.Cart
             //6：插入订单
             await _orderRepository.InsertAsync(order);
 
-            //7：保存订单
-            await CurrentUnitOfWork.SaveChangesAsync();
-
-            //8:插入积分变更记录
+            //7:插入积分变更记录
             await _integralAppService.Create(new CreateIntegralInput()
             {
                 ValidationCode = MallConsts.SecurityCode,
@@ -236,12 +233,13 @@ namespace Mall.Cart
                 CostType = CostType.Cost,
                 DeptId = 0,
                 ActDate = Clock.Now,
-                Describe = $"订单:{order.Id}_{order.OrderNo} 付款",
+                Describe = $"订单:{order.OrderNo} 付款",
                 TypeName = "人员"
             });
 
-
-            //9:添加订单流水
+            //9：保存订单
+            await CurrentUnitOfWork.SaveChangesAsync();
+            //10:添加订单流水
             await _orderRecordRepository.InsertAsync(new Mall_OrderRecord()
             {
                 OrderStatus = OrderStatus.Init,
@@ -277,13 +275,11 @@ namespace Mall.Cart
             return new PagedResultDto<CartItemDto>() { Items = cartItems.MapTo<List<CartItemDto>>(), TotalCount = cartItems.Count() };
         }
 
-        public async Task<PagedResultDto<CartItemDto>> GetCartByIds(GetItemsInput input)
+        public async Task<List<CartItemDto>> GetCartById(int cartId)
         {
-            var carts = _cartItemRepository.GetAll().Where(u => input.CartIds.Contains(u.CartId))
-                                .Include("CreatorUser")
-                                .Include("Product").ToList();
+            var carts = _cartItemRepository.GetAll().Where(u => u.CartId.Equals(cartId)).Include("Product").ToList();
             //返回结果集
-            return await Task.FromResult(new PagedResultDto<CartItemDto>() { TotalCount = carts.Count(), Items = carts.MapTo<List<CartItemDto>>() });
+            return await Task.FromResult(carts.MapTo<List<CartItemDto>>());
         }
     }
     #endregion

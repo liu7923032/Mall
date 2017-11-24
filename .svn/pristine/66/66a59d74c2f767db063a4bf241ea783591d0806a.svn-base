@@ -12,7 +12,6 @@ using Abp.Notifications;
 using Abp.Runtime.Session;
 using Abp.Timing;
 using Abp.UI;
-using Mall.Cart;
 using Mall.Domain.Entities;
 using Mall.Integral;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +27,7 @@ namespace Mall.Order
         /// <param name="input"></param>
         /// <returns></returns>
         Task<PagedResultDto<OrderDto>> GetOrders(GetAllOrderInput input);
+
         /// <summary>
         /// 取消订单
         /// </summary>
@@ -44,25 +44,15 @@ namespace Mall.Order
         /// <returns></returns>
         Task AcceptOrder(ChangeOrderInput changeInput);
         /// <summary>
-        ///  获取我的订单的数量统计
+        /// 
         /// </summary>
         /// <param name="orderStatus"></param>
         /// <returns></returns>
+
         Task<int> GetMyOrderCount(OrderStatus orderStatus);
 
-        /// <summary>
-        /// 获取所有订单的数量统计
-        /// </summary>
-        /// <param name="orderStatus"></param>
-        /// <returns></returns>
         Task<int> GetOrderCount(OrderStatus orderStatus);
 
-        /// <summary>
-        /// 通过订单查询所有采购明细
-        /// </summary>
-        /// <param name="orderIds"></param>
-        /// <returns></returns>
-        Task<PagedResultDto<CartItemDto>> GetAllCartItems(List<int> orderIds);
 
 
     }
@@ -207,29 +197,13 @@ namespace Mall.Order
                 CostType = CostType.Earn,
                 ActDate = Clock.Now,
                 DeptId = 0,
-                Describe = $"订单:{order.Id}_{order.OrderNo} 退款",
+                Describe = $"订单:{order.OrderNo} 退款",
                 Integral = order.AllPrice,
                 UserId = UserId,
             });
-
+          
             //3:作废该订单
             await _orderRepository.DeleteAsync(orderId);
-        }
-
-        /// <summary>
-        /// 通过订单来获取所有明细数据
-        /// </summary>
-        /// <param name="orderIds"></param>
-        /// <returns></returns>
-        public async Task<PagedResultDto<CartItemDto>> GetAllCartItems(List<int> orderIds)
-        {
-
-            var items = _orderRepository.GetAll()
-                            .Include("Cart")
-                            .Include("CreatorUser")
-                            .Include("CartItems");
-
-            return await Task.FromResult(new PagedResultDto<CartItemDto>() { TotalCount = items.Count(), Items = items.MapTo<List<CartItemDto>>() });
         }
     }
     #endregion

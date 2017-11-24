@@ -6,7 +6,6 @@ using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Runtime.Validation;
 using Mall.Domain.Entities;
-using Newtonsoft.Json;
 
 namespace Mall.Cart
 {
@@ -42,7 +41,6 @@ namespace Mall.Cart
 
 
         public string ItemSpecs { get; set; }
-
         /// <summary>
         /// 产品价格
         /// </summary>
@@ -53,26 +51,8 @@ namespace Mall.Cart
         /// </summary>
         public decimal AllPrice { get; set; }
 
-        /// <summary>
-        /// 请购人
-        /// </summary>
-        public string CreatorUserName { get; set; }
-
-        /// <summary>
-        /// 请购时间
-        /// </summary>
-        [JsonConverter(typeof(MallDateFormat))]
-        public DateTime ApplyDate { get; set; }
-
     }
 
-    public class GetItemsInput : PagedAndSortedResultRequestDto
-    {
-        public List<int> CartIds { get; set; }
 
-
-        public string StrCartIds { get; set; }
-
-    }
 
 }

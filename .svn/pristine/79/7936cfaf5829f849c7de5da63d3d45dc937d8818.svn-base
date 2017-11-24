@@ -5,7 +5,7 @@
     ViewBag.ActiveMenu = PageNames.Cart;
 }
 
-<div class="layui-container layui-bg-white" style="padding-bottom:10px;">
+<div class="layui-container layui-bg-white">
     <div class="row">
         <div class="layui-col-md12" style="padding:10px 0px;font-size:15px;">
             <span class="layui-breadcrumb " lay-separator=">">
@@ -42,13 +42,10 @@
 
     </div>
     <div class="layui-row" style="padding-bottom:10px;">
-        <div class="layui-col-md3" style="padding-left:10px;font-size:15px;color:blue;padding:5px;">
+        <div class="layui-col-md5" style="padding-left:10px;font-size:15px;color:blue;">
             收货地址:<span style="color:red;font-weight:700;" id="txtRecAddr"></span>
         </div>
-        <div class="layui-col-md7" style="padding-left:10px;color:blue;padding:5px;">
-            积分总计:<span style="color:red;font-weight:900;margin-left:10px;" id="txtItem"></span>
-        </div>
-        <div class=" layui-col-md2" style="padding-right:10px;text-align:right;">
+        <div class="layui-col-md-offset5 layui-col-md2" style="padding-right:10px;text-align:right;">
             <a class="layui-btn layui-btn-danger" id="btnCartPay"><i class="layui-icon">&#xe609;</i> 去结账</a>
         </div>
     </div>
@@ -69,8 +66,7 @@
               , addressData = []
               , _cartService = abp.services.app.cart
               , _addrService = abp.services.app.address
-              , layIndex = -1
-              , cartTb;
+              , layIndex = -1;
 
             var methods = {
 
@@ -93,6 +89,7 @@
                         form.verify({
 
                         });
+
                         form.on('submit(btn_address)', function (data) {
                             data.field.isDefault = data.field.isDefault === "on";
                             if (data.field.id == "") {
@@ -120,7 +117,7 @@
                     });
 
                     //初始化表格
-                    cartTb = table.render({
+                    table.render({
                         elem: '#tb_cart'
                         , url: '/api/services/app/cart/getMyCart' //数据接口
                         , page: false //开启分页
@@ -130,42 +127,30 @@
                         , { field: 'itemName', title: '物品名称', width: 180 }
                         , { field: 'itemSpecs', title: '物品规格', width: 250 }
                         , { field: 'describe', title: '特殊说明<span style="color:red;">(可编辑)</span>', edit: 'text' }
-                        , { field: 'itemNum', title: '数量', width: 80, align: 'right', edit: 'text'}
+                        , { field: 'itemNum', title: '数量', width: 80, align: 'right', edit: 'text' }
                         , { field: 'itemPrice', title: '积分', width: 80, align: 'right', sort: true }
-                        , { field: 'allPrice', title: '小计', width: 80, align: 'right', sort: true }
-                        , { field: 'action', title: '操作', width: 120, align: 'center', toolbar: '#tool_cart' }
+                        , { field: 'action', title: '操作', width: 100, align: 'center', toolbar: '#tool_cart' }
                         ]]
-                        , done: function (res, curr, count) {
-                            console.log(res.result.items)
-                            //添加记录
-                            var totals = 0;
-                            res.result.items.forEach(function (item) {
-                                totals += parseFloat(item.itemPrice) * parseInt(item.itemNum);
-                            });
-                            $('#txtItem').text(totals);
-                        }
                     });
 
-
+                  
                     //监听按钮事件
                     table.on('tool(f_cart)', function (obj) {
                         var data = obj.data;
                         if (obj.event === 'del') {
-                            layer.confirm('确定要删除<span style="color:red;">[' + data.itemName + ']</span>?', function (index) {
+                            layer.confirm('确定要删除?', function (index) {
                                 layer.close(index);
                                 //向服务端发送删除指令
-                                _cartService.delProduct(data.id, {
+                                _cartService.delProduct(id, {
                                     success: function (data) {
                                         obj.del();
                                     }
                                 });
                             });
                         } else if (obj.event === 'detail') {
-                            location.href = "/Home/Details/" + data.productId
-                            ;
+                            location.href = "/Order/Details/" + data.cartId;
                         } else if (obj.event == "coment") {
-                            location.href = "/Home/Details/" + data.productId
-                            ;
+                            location.href = "/Order/Details/" + data.cartId;
                         }
                     });
 
@@ -174,15 +159,7 @@
                         var value = obj.value //得到修改后的值
                         , data = obj.data //得到所在行所有键值
                         , field = obj.field; //得到字段
-                        if (field == "itemNum") {
-                            methods.updateItemNum(data.productId, value,"", function () {
-                                //更新小计
-                                cartTb.reload();
-                            });
-                        } else if (field == "describe") {
-                            methods.updateItemNum(data.productId, data.itemNum, value, function () {
-                            });
-                        }
+                        layer.msg('[ID: ' + data.id + '] ' + field + ' 字段更改为：' + value);
                     });
                     //加载个人地址信息
                     methods.initAddress();
@@ -190,21 +167,20 @@
                 //付款
                 pay: function () {
                     //1.获取选中行的数据
-                    var length = table.cache["tb_cart"];
-                    if (length == 0) {
+                    var lenth = $('#tbody_cart').find('tr[cartItemId]').length;
+
+                    if (lenth == 0) {
                         layer.msg("购物车中没有要买的商品");
                         return
                     }
-
                     //2.积分检查
                     var myIntegral = parseInt($('#my_integral').text())
-                        , needIntegral = parseFloat($('#txtItem').text());
+                        , needIntegral = parseFloat($('#tdAllPrice').text());
 
                     if (myIntegral < needIntegral) {
                         layer.msg("当前拥有的积分不够");
                         return;
                     }
-
                     //3.是否有地址信息
                     var addr = $('#txtRecAddr').text();
                     if ($.trim(addr) == "") {
@@ -227,31 +203,30 @@
                             }
                         });
                     });
+
                 },
 
                 //更新产品数量
-                updateItemNum: function (productId, itemNum,desc, upSuccess) {
+                updateItemNum: function (productId, itemNum, upSuccess) {
+
 
                     if (isNaN(itemNum)) {
-                        layer.msg("物品数量必须是数字");
-
+                        layer.msg("数量必须有数字");
                         return;
                     }
+
                     var value = parseInt(itemNum);
+
                     var params = {
                         "productId": productId,
-                        "itemNum": value,
-                        "describe": desc
-                    };
+                        "itemNum": value
+                    }
                     _cartService.updateProductNums(params, {
                         success: function (res) {
                             //跟新合计信息
                             if (typeof (upSuccess) == "function") {
                                 upSuccess();
                             }
-                        },
-                        error: function () {
-                            cartTb.reload();
                         }
                     });
                 },
@@ -526,18 +501,9 @@
 
     <!--------这个是购物车模板信息---------->
     <script type="text/html" id="tool_cart">
-        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">取消</a>
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail">详情</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">作废</a>
     </script>
 
-
-    <script type="text/html" id="tpl_number">
-        <div class="layui-inline">
-            <i class="layui-icon"></i>
-            <input type="text" class="layui-input" readonly="readonly" />
-            <i class="layui-icon"></i>
-        </div>
-    </script>
 
     <script type="text/html" id="tpl_dlg_addr">
         <form class="layui-form" style="padding:15px 15px;" id="frm_address">

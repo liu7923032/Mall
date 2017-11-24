@@ -52,7 +52,7 @@
                         , { field: 'integral', title: '积分', align: 'center', width: 100, templet: "#tpl_integral" }
                         , { field: 'current', title: '最后积分', align: 'center', width: 100 }
                         , { field: 'describe', title: '积分描述', align: 'left' }
-                        , { field: 'actDate', title: '时间', align: 'center', width: 160 }
+                        , { field: 'actDate', title: '时间', align: 'center', width: 180 }
                       ]]
                     });
                 }
