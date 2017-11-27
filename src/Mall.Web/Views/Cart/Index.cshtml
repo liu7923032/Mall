@@ -127,13 +127,13 @@
                         , title: "购物车"
                         , cols: [[ //表头
                           { type: 'numbers' }
-                        , { field: 'itemName', title: '物品名称', width: 180 }
+                        , { field: 'itemName', title: '物品名称', width: 180, templet: '#tmp_item' }
                         , { field: 'itemSpecs', title: '物品规格', width: 250 }
                         , { field: 'describe', title: '特殊说明<span style="color:red;">(可编辑)</span>', edit: 'text' }
                         , { field: 'itemNum', title: '数量', width: 80, align: 'right', edit: 'text'}
                         , { field: 'itemPrice', title: '积分', width: 80, align: 'right', sort: true }
                         , { field: 'allPrice', title: '小计', width: 80, align: 'right', sort: true }
-                        , { field: 'action', title: '操作', width: 120, align: 'center', toolbar: '#tool_cart' }
+                        , { field: 'action', title: '操作', width: 100, align: 'center', toolbar: '#tool_cart' }
                         ]]
                         , done: function (res, curr, count) {
                             console.log(res.result.items)
@@ -527,7 +527,6 @@
     <!--------这个是购物车模板信息---------->
     <script type="text/html" id="tool_cart">
         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">取消</a>
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="detail">详情</a>
     </script>
 
 
@@ -589,5 +588,10 @@
             </div>
         </form>
     </script>
+
+
+<script type="text/html" id="tmp_item">
+    <a href="/Home/Details/{{d.productId}}" class="layui-table-link" target="_blank">{{ d.itemName }}</a>
+</script>
 
 }
