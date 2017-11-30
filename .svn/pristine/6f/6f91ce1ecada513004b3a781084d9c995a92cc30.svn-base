@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Net.Mail;
+using System.Text;
+using Abp.Extensions;
+using Abp.MailKit;
+using Abp.Net.Mail.Smtp;
+using MailKit.Net.Smtp;
+
+namespace Mall.Email
+{
+    public class MallMailKitSmtpBuilder: DefaultMailKitSmtpBuilder
+    {
+        private ISmtpEmailSenderConfiguration _smtpEmailSenderConfiguration;
+        public MallMailKitSmtpBuilder(ISmtpEmailSenderConfiguration smtpEmailSenderConfiguration):base(smtpEmailSenderConfiguration)
+        {
+            _smtpEmailSenderConfiguration = smtpEmailSenderConfiguration;
+        }
+
+        protected override void ConfigureClient(MailKit.Net.Smtp.SmtpClient client)
+        {
+            client.ServerCertificateValidationCallback = (sender, certificate, chain, errors) => true;
+
+            base.ConfigureClient(client);
+        }
+
+      
+    }
+}

@@ -1,0 +1,83 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Runtime.Caching;
+using Abp.Web.Models;
+using Dark.Common.Crawler;
+using Dark.Common.Utils;
+using Mall.Category;
+using Mall.Product;
+using Mall.Web.Models.Home;
+using Mall.Web.Startup;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Mall.Web.Controllers
+{
+    public class CategoryController : MallControllerBase
+    {
+        private ICategoryAppService _categoryService;
+        private IProductAppService _productService;
+
+        public CategoryController(ICategoryAppService categoryAppService, IProductAppService productAppService)
+        {
+            _categoryService = categoryAppService;
+            _productService = productAppService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            return await Task.FromResult(View());
+        }
+
+        public async Task<ActionResult> Product()
+        {
+            var categories = await _categoryService.GetAllListAsync();
+            var model = new CategoryListViewModel
+            {
+                Categories = categories
+            };
+
+            return await Task.FromResult(View(model));
+        }
+
+        public async Task<AjaxResponse> GetInfoByUrl()
+        {
+            string url = Request.Query["url"];
+
+            var content = await HttpTools.GetAsyncByUrl(url);
+
+            CrawlerResult titleResult = await CrawlerTool.GetResultAsync(new CrawlerOptions()
+            {
+                Content = content,
+                CssSelector = "body > div:nth-child(7) > div > div.itemInfo-wrap > div.sku-name"
+            });
+
+            var desc = await CrawlerTool.GetResultAsync(new CrawlerOptions()
+            {
+                Content = content,
+                CssSelector = "#detail > div.tab-con > div:nth-child(1) > div.p-parameter > ul.parameter2.p-parameter-list"
+            });
+
+            return await Task.FromResult(new AjaxResponse() { Result = new { Title = titleResult.Text.Trim(), Desc = desc.OutHtml } });
+        }
+
+        [DontWrapResult]
+        public async Task<JsonResult> GetProducts(GetAllProductInput input)
+        {
+            var result = await _productService.GetAll(input);
+
+            return Json(new { Count = result.TotalCount, Data = result.Items });
+        }
+
+
+        public async Task<AjaxResponse> Upload(IFormFile file)
+        {
+
+            return await Task.FromResult(new AjaxResponse());
+        }
+
+
+    }
+}

@@ -1,0 +1,30 @@
+﻿{
+  "ConnectionStrings": {
+    "Default": "Server=localhost\\sqlexpress; Database=MallDb; Trusted_Connection = True;MultipleActiveResultSets=true;"
+    //"Default": "Server=192.168.0.60; Database=PmisDb;User Id=sa;Password=hellomdsd1234;MultipleActiveResultSets=true;"
+  },
+  "Authorzation": {
+    "Server": "http://e.mdsd.cn:9000/",
+    "Authentication": "/api/sso/",
+    "Administators": "10685,10174,20285"
+  },
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Debug",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  },
+  "Mail": {
+    "DefaultFromDisplayName": "support@medicalsystem.cn",
+    "DefaultFromAddress": "support@medicalsystem.cn",
+    "Smtp.Host": "220.181.97.135",
+    "Smtp.Port": 25,
+    "Smtp.UserName": "support@medicalsystem.cn",
+    "Smtp.Password": "Liuzixin2008",
+    "Smtp.Domain": "medicalsystem.cn",
+    "Smtp.EnableSsl": false,
+    "Smtp.UseDefaultCredentials": false
+  }
+}

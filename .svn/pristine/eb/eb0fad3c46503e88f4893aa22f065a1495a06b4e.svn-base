@@ -1,0 +1,87 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using AngleSharp.Dom;
+using AngleSharp.Dom.Html;
+using AngleSharp.Parser.Html;
+using Dark.Common.Utils;
+
+namespace Dark.Common.Crawler
+{
+    /// <summary>
+    /// 通过
+    /// </summary>
+    public class CrawlerTool
+    {
+        private CrawlerOptions cOption;
+        public CrawlerTool()
+        {
+        }
+
+
+        private static async Task<IHtmlDocument> CreateDocumnet(CrawlerOptions opts)
+        {
+            var source = string.Empty;
+            if (!string.IsNullOrEmpty(opts.Url))
+            {
+                source = await HttpTools.GetAsyncByUrl(opts.Url);
+            }
+            if (!string.IsNullOrEmpty(opts.Content))
+            {
+                source = opts.Content;
+            }
+
+            //1.创建一个html解析器
+            var parser = new HtmlParser();
+            //2.解析数据源
+            var document = parser.Parse(source);
+            //3.返回document
+            return document;
+        }
+
+        /// <summary>
+        /// 获取独立的结果
+        /// </summary>
+        /// <param name="opts"></param>
+        /// <returns></returns>
+        public static async Task<CrawlerResult> GetResultAsync(CrawlerOptions opts)
+        {
+            var document = await CreateDocumnet(opts);
+            // 获取html 元素
+            var element = document.QuerySelector(opts.CssSelector);
+            return await Task.FromResult(CreateCResult(element));
+        }
+
+        private static CrawlerResult CreateCResult(IElement element)
+        {
+            CrawlerResult crawlerResult = new CrawlerResult();
+            crawlerResult.Text = element.TextContent;
+            crawlerResult.OutHtml = element.OuterHtml;
+            crawlerResult.Attributes = new Dictionary<string, string>();
+            foreach (var attribute in element.Attributes)
+            {
+                crawlerResult.Attributes[attribute.Name] = attribute.Value;
+            }
+            return crawlerResult;
+        }
+
+        public static async Task<List<CrawlerResult>> GetResultsAsync(CrawlerOptions opts)
+        {
+            //获取document
+            var document = await CreateDocumnet(opts);
+            // 获取html 元素
+            var docElement = document.QuerySelectorAll(opts.CssSelector);
+
+            List<CrawlerResult> results = new List<CrawlerResult>();
+
+            foreach (var element in docElement)
+            {
+                results.Add(CreateCResult(element));
+            }
+
+            return await Task.FromResult(results);
+        }
+
+    }
+}

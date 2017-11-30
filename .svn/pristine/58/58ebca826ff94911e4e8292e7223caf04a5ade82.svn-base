@@ -1,0 +1,109 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Abp.Runtime.Caching;
+using Abp.Web.Models;
+using Dark.Common.Crawler;
+using Dark.Common.Utils;
+using Mall.Category;
+using Mall.Product;
+using Mall.Web.Models.Home;
+using Mall.Web.Startup;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Mall.Web.Controllers
+{
+    public class CategoryController : MallControllerBase
+    {
+        private ICategoryAppService _categoryService;
+        private IProductAppService _productService;
+
+        public CategoryController(ICategoryAppService categoryAppService, IProductAppService productAppService)
+        {
+            _categoryService = categoryAppService;
+            _productService = productAppService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            return await Task.FromResult(View());
+        }
+
+        public async Task<ActionResult> Product()
+        {
+            var categories = await _categoryService.GetAllListAsync();
+            var model = new CategoryListViewModel
+            {
+                Categories = categories
+            };
+
+            return await Task.FromResult(View(model));
+        }
+
+        public async Task<AjaxResponse> GetInfoByUrl()
+        {
+            string url = Request.Query["url"];
+
+            var content = await HttpTools.GetAsyncByUrl(url);
+
+            CrawlerResult titleResult = await CrawlerTool.GetResultAsync(new CrawlerOptions()
+            {
+                Content = content,
+                CssSelector = "body > div:nth-child(7) > div > div.itemInfo-wrap > div.sku-name"
+            });
+
+            var desc = await CrawlerTool.GetResultAsync(new CrawlerOptions()
+            {
+                Content = content,
+                CssSelector = "#detail > div.tab-con > div:nth-child(1) > div.p-parameter > ul.parameter2.p-parameter-list"
+            });
+
+            //下载image
+            var imgs = await CrawlerTool.GetResultsAsync(new CrawlerOptions()
+            {
+                Content = content,
+                CssSelector = "#spec-list > ul > li > img"
+            });
+
+            List<string> imgList = new List<string>();
+            if (imgs.Count > 0)
+            {
+                
+                imgs.ForEach(u =>
+                {
+                    //1.得到小图片
+                    var imgSrc = u.Attributes["src"];
+                    //2.得到大图片
+                    var bigImg = "https:" + imgSrc.Replace("n5/s54x54_jfs", "n1/s450x450_jfs");
+                    //3.下载图片
+                    imgList.Add(bigImg);
+                });
+
+                //将图片上传到商城中,接着返回fileIds,放到前端
+
+
+            }
+
+            return await Task.FromResult(new AjaxResponse() { Result = new { Title = titleResult.Text.Trim(), Desc = desc.OutHtml,Imgs= imgList } });
+        }
+
+        [DontWrapResult]
+        public async Task<JsonResult> GetProducts(GetAllProductInput input)
+        {
+            var result = await _productService.GetAll(input);
+
+            return Json(new { Count = result.TotalCount, Data = result.Items });
+        }
+
+
+        public async Task<AjaxResponse> Upload(IFormFile file)
+        {
+
+            return await Task.FromResult(new AjaxResponse());
+        }
+
+
+    }
+}

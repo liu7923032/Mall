@@ -127,16 +127,15 @@
                         , title: "购物车"
                         , cols: [[ //表头
                           { type: 'numbers' }
-                        , { field: 'itemName', title: '物品名称', width: 180, templet: '#tmp_item' }
-                        , { field: 'itemSpecs', title: '物品规格', width: 250 }
-                        , { field: 'describe', title: '特殊说明<span style="color:red;">(可编辑)</span>', edit: 'text' }
-                        , { field: 'itemNum', title: '数量', width: 80, align: 'right', edit: 'text'}
+                        , { field: 'itemName', title: '物品名称', width: 350, templet: '#tmp_item' }
+                        //, { field: 'itemSpecs', title: '物品规格', width: 250 }
+                        , { field: 'describe', title: '特殊说明<span style="color:red;">(可编辑)</span>', edit: 'text', style: 'background-color: #CAEBF0;color:blue;' }
+                        , { field: 'itemNum', title: '数量', width: 80, align: 'right', edit: 'text', style: 'background-color: #CAEBF0;color:blue;' }
                         , { field: 'itemPrice', title: '积分', width: 80, align: 'right', sort: true }
                         , { field: 'allPrice', title: '小计', width: 80, align: 'right', sort: true }
                         , { field: 'action', title: '操作', width: 100, align: 'center', toolbar: '#tool_cart' }
                         ]]
                         , done: function (res, curr, count) {
-                            console.log(res.result.items)
                             //添加记录
                             var totals = 0;
                             res.result.items.forEach(function (item) {
@@ -151,21 +150,36 @@
                     table.on('tool(f_cart)', function (obj) {
                         var data = obj.data;
                         if (obj.event === 'del') {
+                           
                             layer.confirm('确定要删除<span style="color:red;">[' + data.itemName + ']</span>?', function (index) {
                                 layer.close(index);
                                 //向服务端发送删除指令
                                 _cartService.delProduct(data.id, {
                                     success: function (data) {
                                         obj.del();
+                                        //检查当前表是否还有数据,如果没有数据,那么就清理合计积分
+                                        var length = table.cache["tb_cart"].length;
+                                        if (length == 0) {
+                                            $('#txtItem').text(0);
+                                        } else {
+                                            //重新计算金额
+                                            var allIntegral = 0;
+                                            table.cache["tb_cart"].forEach(function (item) {
+                                                if (item.allPrice) {
+                                                    allIntegral += parseFloat(item.allPrice)
+                                                }
+                                            });
+                                            $('#txtItem').text(allIntegral);
+                                        }
+                                       
                                     }
                                 });
                             });
                         } else if (obj.event === 'detail') {
                             location.href = "/Home/Details/" + data.productId
                             ;
-                        } else if (obj.event == "coment") {
-                            location.href = "/Home/Details/" + data.productId
-                            ;
+                        } else if (obj.event == "edit") {
+
                         }
                     });
 
@@ -175,7 +189,7 @@
                         , data = obj.data //得到所在行所有键值
                         , field = obj.field; //得到字段
                         if (field == "itemNum") {
-                            methods.updateItemNum(data.productId, value,"", function () {
+                            methods.updateItemNum(data.productId, value, "", function () {
                                 //更新小计
                                 cartTb.reload();
                             });
@@ -190,7 +204,7 @@
                 //付款
                 pay: function () {
                     //1.获取选中行的数据
-                    var length = table.cache["tb_cart"];
+                    var length = table.cache["tb_cart"].length;
                     if (length == 0) {
                         layer.msg("购物车中没有要买的商品");
                         return
@@ -230,7 +244,7 @@
                 },
 
                 //更新产品数量
-                updateItemNum: function (productId, itemNum,desc, upSuccess) {
+                updateItemNum: function (productId, itemNum, desc, upSuccess) {
 
                     if (isNaN(itemNum)) {
                         layer.msg("物品数量必须是数字");
@@ -486,7 +500,6 @@
                         //这个是直辖市
                         $('#select_city').html(strHead + strBody);
                         if (defaultValue) {
-                            console.log("defaultvalue:" + defaultValue)
                             $('#select_city').val(defaultValue);
                         }
                         form.render('select');
@@ -590,8 +603,8 @@
     </script>
 
 
-<script type="text/html" id="tmp_item">
-    <a href="/Home/Details/{{d.productId}}" class="layui-table-link" target="_blank">{{ d.itemName }}</a>
-</script>
+    <script type="text/html" id="tmp_item">
+        <a href="/Home/Details/{{d.productId}}" class="layui-table-link" target="_blank">{{ d.itemName }}</a>
+    </script>
 
 }
