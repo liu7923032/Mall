@@ -23,7 +23,7 @@ namespace Mall.Category
         Task<List<CategoryDto>> GetAllListAsync();
     }
 
-   
+    [AbpAuthorize]
     public class CategoryAppService : AsyncCrudAppService<Mall_Category, CategoryDto, int, GetAllCategoryInput, CreateCategoryInput, UpdateCategoryInput>, ICategoryAppService
     {
         private ICategoryCache _categoryCache;

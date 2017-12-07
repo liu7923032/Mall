@@ -63,7 +63,6 @@ namespace Mall.EntityFrameworkCore
         public MallDbContext(DbContextOptions<MallDbContext> options) 
             : base(options)
         {
-          
         }
     }
 }

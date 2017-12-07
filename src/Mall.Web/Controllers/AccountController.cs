@@ -34,12 +34,18 @@ namespace Mall.Web.Controllers
             _env = env;
         }
 
+        //[AllowAnonymous]
+        //public async Task<ActionResult> Login()
+        //{
+        //    return View();
+        //}
+
         [AllowAnonymous]
         public async Task<ActionResult> Login()
         {
             string returnUrl = Request.Query["returnUrl"];
             string token = Request.Query["token"];
-            string authServer = _appConfiguration.GetSection("Authorzation:Server").Value;
+            string authServer = _appConfiguration["Authorzation:Server"];
             //检查一下请求
             if (string.IsNullOrEmpty(token) && !_env.IsDevelopment())
             {
@@ -52,7 +58,7 @@ namespace Mall.Web.Controllers
                 if (!_env.IsDevelopment())
                 {
                     //通过token来验证请求
-                    var webApiReq = _appConfiguration.GetSection("Authorzation:Authentication").Value;
+                    var webApiReq = _appConfiguration["Authorzation:Authentication"];
                     string authUrl = $"{authServer}{webApiReq}{token}";
                     var result =await HttpTools.GetStringAsync(authUrl);
                     if (result == "null")
@@ -86,6 +92,8 @@ namespace Mall.Web.Controllers
             await HttpContext.SignInAsync(CookieScheme, claimPrincipal, new AuthenticationProperties() { IsPersistent = login.IsRemember });
 
         }
+
+
 
 
 

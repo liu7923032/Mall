@@ -41,6 +41,9 @@ namespace Mall.Category
         public int Id { get; set; }
     }
 
+    /// <summary>
+    /// 显示
+    /// </summary>
     [AutoMap(typeof(Mall_Category))]
     public class CategoryDto: UpdateCategoryInput
     {
@@ -50,6 +53,10 @@ namespace Mall.Category
         public string CreateName { get; set; }
     }
 
+
+    /// <summary>
+    /// 查询
+    /// </summary>
     public class GetAllCategoryInput : PagedAndSortedResultRequestDto
     {
         public string Name { get; set; }

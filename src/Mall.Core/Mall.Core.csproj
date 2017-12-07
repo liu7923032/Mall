@@ -1,8 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk"><PropertyGroup><Version>1.0.0.0</Version><TargetFramework>netcoreapp2.0</TargetFramework><AssetTargetFallback>$(AssetTargetFallback);portable-net45+win8+wp8+wpa81;</AssetTargetFallback><AssemblyName>Mall.Core</AssemblyName><PackageId>Mall.Core</PackageId><GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute><GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute><GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute><RootNamespace>Mall</RootNamespace></PropertyGroup><ItemGroup>
-  <Compile Remove="Domain\新文件夹\**" />
-  <EmbeddedResource Remove="Domain\新文件夹\**" />
-  <None Remove="Domain\新文件夹\**" />
-</ItemGroup><ItemGroup>
   <None Remove="Localization\AbpWeb\AbpWeb-zh-CN.xml" />
   <None Remove="Localization\AbpWeb\AbpWeb.xml" />
   <None Remove="Localization\SourceFiles\Mall-zh-CN.json" />

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Application.Services;
+using Abp.Authorization;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
 using Mall.Domain.Entities;
@@ -19,6 +20,7 @@ namespace Mall.Address
     #endregion
 
     #region 2.0 具体实现
+    [AbpAuthorize]
     public class AddressAppService : AsyncCrudAppService<Mall_Address, AddressDto, int, GetAllAddressInput, CreateAddressInput, UpdateAddressInput>, IAddressAppService
     {
         private IRepository<Mall_Address> _addressRepository;

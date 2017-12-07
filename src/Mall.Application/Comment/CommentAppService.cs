@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
+using Abp.Authorization;
 using Abp.Collections.Extensions;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -21,6 +22,7 @@ namespace Mall.Comment
     #endregion
 
     #region 2.0 具体实现
+    [AbpAuthorize]
     public class CommentAppService : AsyncCrudAppService<Mall_Comment, CommentDto, int, GetCommentsInput, CreateCommentInput, UpdateCommentInput>, ICommentAppService
     {
 

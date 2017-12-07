@@ -13,7 +13,7 @@ namespace Mall.EntityFrameworkCore
             dbContextOptions.UseSqlServer(connectionString,(a)=>
             {
                 a.UseRowNumberForPaging(true);
-
+               
             });
 
         }

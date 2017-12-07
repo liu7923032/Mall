@@ -16,6 +16,7 @@ using Mall.UserApp;
 using Abp;
 using Abp.UI;
 using Abp.Domain.Uow;
+using Abp.Authorization;
 
 namespace Mall.Cart
 {
@@ -76,6 +77,7 @@ namespace Mall.Cart
     /// <summary>
     /// 购物车
     /// </summary>
+    [AbpAuthorize]
     public class CartAppService : MallAppServiceBase, ICartAppService
     {
 

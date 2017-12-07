@@ -21,6 +21,7 @@ using Microsoft.EntityFrameworkCore;
 using Dark.Common.Extension;
 using Mall.UserApp;
 using Mall.Domain.Events;
+using Mall.Domain.Service;
 
 namespace Mall.Order
 {
@@ -84,10 +85,9 @@ namespace Mall.Order
         private IRepository<Mall_Product> _productService;
         private IRepository<Mall_CartItem> _cartItemRepository;
         private IRepository<Mall_OrderRecord> _orderRecordRepository;
-        private INotificationPublisher _notificationPublisher;
+        
         private IIntegralAppService _integralAppService;
-        private IEmailSender _emailSender;
-        private IUserAppService _userAppService;
+        private IOrderManager _orderManager;
 
         public OrderAppService(IRepository<Mall_Order> orderRepository,
             IRepository<Mall_Integral> integralRepository,
@@ -97,17 +97,15 @@ namespace Mall.Order
             IRepository<Mall_OrderRecord> orderRecordRepository,
             IIntegralAppService integralAppService,
             IEmailSender emailSender,
-            IUserAppService userAppService)
+            IUserAppService userAppService, IOrderManager orderManager)
         {
             _orderRepository = orderRepository;
             _integralRepository = integralRepository;
-            _notificationPublisher = notificationPublisher;
             _productService = productRepository;
             _cartItemRepository = cartItemRepository;
             _orderRecordRepository = orderRecordRepository;
             _integralAppService = integralAppService;
-            _emailSender = emailSender;
-            _userAppService = userAppService;
+            _orderManager = orderManager;
 
         }
 
@@ -169,41 +167,24 @@ namespace Mall.Order
             Dictionary<string, string> emails = new Dictionary<string, string>();
             foreach (var order in orders)
             {
-                var initStatus = order.OrderStatus;
-                //2.更新订单状态
-                order.OrderStatus = changeInput.OrderStatus;
-                //3.添加订单状态记录信息
-                _orderRecordRepository.Insert(new Mall_OrderRecord()
-                {
-                    OrderId = order.Id,
-                    OrderStatus = changeInput.OrderStatus
-                });
-
-                //只有在商品发货后,才进行通知
-                var userDto = await _userAppService.GetUserById(order.CreatorUserId.Value);
-                if (!string.IsNullOrEmpty(userDto.Email) && changeInput.OrderStatus == OrderStatus.Receive)
-                {
-                    EventBus.Default.Trigger(new OrderEventData() { ToEmail = userDto.Email, OldStatus = initStatus, OrderId = order.Id });
-                }
-
+                await _orderManager.UpdateOrder(order, changeInput.OrderStatus);
             }
 
 
             //3:订单的状态采购完成,才能进行对产品的销售数据加1
-            if (changeInput.OrderStatus == OrderStatus.Receive)
-            {
-                var cartIds = orders.Select(u => u.CartId).ToList();
-                var products = _cartItemRepository.GetAll().Where(u => cartIds.Contains(u.CartId)).ToList();
-                products.ForEach(u =>
-                {
-                    var product = _productService.FirstOrDefault(u.ProductId);
-                    product.SaleNums += u.ItemNum;
-                });
-            }
+            //if (changeInput.OrderStatus == OrderStatus.Receive)
+            //{
+            //    var cartIds = orders.Select(u => u.CartId).ToList();
+            //    var products = _cartItemRepository.GetAll().Where(u => cartIds.Contains(u.CartId)).ToList();
+            //    products.ForEach(u =>
+            //    {
+            //        var product = _productService.FirstOrDefault(u.ProductId);
+            //        product.SaleNums += u.ItemNum;
+            //    });
+            //}
 
 
-            //4.给用户发送邮件通知,提示人员已经接单
-            //_notificationPublisher.Publish("订单审批完成通知", new MessageNotificationData("订单申请已审批通过"), null, NotificationSeverity.Info, new[] { AbpSession.ToUserIdentifier() });
+            
 
         }
 

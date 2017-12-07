@@ -31,6 +31,7 @@ namespace Mall.Product
     #endregion
 
     #region 2.0 具体实现类
+    [AbpAuthorize]
     public class ProductAppService : AsyncCrudAppService<Mall_Product, ProductDto, int, GetAllProductInput, CreateProductInput, UpdateProductInput>, IProductAppService
     {
         private IProductCache _productCache;

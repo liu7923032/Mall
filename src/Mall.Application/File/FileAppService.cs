@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Abp.Application.Services;
+using Abp.Authorization;
 using Abp.AutoMapper;
 using Abp.Domain.Repositories;
 using Abp.Linq.Extensions;
@@ -23,6 +24,7 @@ namespace Mall.File
         Task<List<FileDto>> GetFilesById(int pId);
     }
 
+    [AbpAuthorize]
     public class FileAppService : AsyncCrudAppService<Mall_AttachFile, FileDto, int, GetFilesInput, CreateFileInput, UpdateFileInput>, IFileAppService
     {
         private IRepository<Mall_AttachFile> _fileRepository;
