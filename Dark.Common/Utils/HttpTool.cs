@@ -58,7 +58,7 @@ namespace Dark.Common.Utils
         /// <typeparam name="T"></typeparam>
         /// <param name="func"></param>
         /// <returns></returns>
-        private static async Task<T> HttpFunc<T>(Func<HttpClient, Task<T>> func)
+        public static async Task<T> HttpFunc<T>(Func<HttpClient, Task<T>> func)
         {
             using (HttpClient client = new HttpClient())
             {
@@ -66,7 +66,7 @@ namespace Dark.Common.Utils
             }
         }
 
-        private static async Task HttpAction(Func<HttpClient, Task> action)
+        public static async Task HttpAction(Func<HttpClient, Task> action)
         {
             using (HttpClient client = new HttpClient())
             {

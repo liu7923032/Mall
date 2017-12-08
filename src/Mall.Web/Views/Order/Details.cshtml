@@ -21,6 +21,12 @@
     </div>
     <hr class="layui-bg-gray" />
 
+    <div class="layui-row">
+        <div class="layui-col-md12">
+            <a class="layui-btn" id="btnDownload">下载</a>
+        </div>
+    </div>
+
     <!--------表格数据--------->
     <div class="layui-row">
         <div class="layui-col-md12">
@@ -123,6 +129,12 @@
                             });
                         }
                     })
+
+                    $('#btnDownload').click(function (data) {
+
+                        $.fileDownload("/Cart/DownExcel/" + strParams)
+                       
+                    });
                 },
             }
 

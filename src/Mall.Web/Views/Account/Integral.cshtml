@@ -71,6 +71,12 @@
 
                     form.on('submit(btnSubmit)', function (data) {
 
+                        if (data.field && data.field.describe) {
+                            //对script进行转义处理
+
+
+                        }
+
                         _integralService.giveIntegral(data.field, {
                             success: function () {
                                 

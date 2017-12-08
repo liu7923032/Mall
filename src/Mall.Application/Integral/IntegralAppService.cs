@@ -52,6 +52,9 @@ namespace Mall.Integral
             {
                 throw new UserFriendlyException("请不要捣乱了");
             }
+
+            input.Describe = CheckJsAndProcess(input.Describe);
+
             //找到用户的Id
             var user = await _accountRepository.GetAsync(input.UserId);
             //设置积分
@@ -89,7 +92,7 @@ namespace Mall.Integral
             //1.找到朋友
             var friend = await _accountRepository.GetAsync(input.UserId);
 
-            
+
             var owner = await _accountRepository.GetAsync(UserId);
 
             //3.积分不可为负

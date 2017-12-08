@@ -7,6 +7,11 @@ using Mall.Cache;
 using Mall.UserApp;
 using Mall.Runtime;
 using Microsoft.AspNetCore.Mvc;
+using Mall.Cart;
+using Dark.Common.Utils;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Abp.Timing;
 
 namespace Mall.Web.Controllers
 {
@@ -16,9 +21,13 @@ namespace Mall.Web.Controllers
     public class CartController : MallControllerBase
     {
         private IUserAppService _loginManager;
-        public CartController(IUserAppService loginManager)
+        private ICartAppService _cartAppService;
+        private IHostingEnvironment _env;
+        public CartController(IUserAppService loginManager, ICartAppService cartAppService, IHostingEnvironment env)
         {
             _loginManager = loginManager;
+            _cartAppService = cartAppService;
+            _env = env;
         }
         public async Task<IActionResult> Index()
         {
@@ -27,6 +36,22 @@ namespace Mall.Web.Controllers
             ViewBag.Integral = user.Integral;
 
             return View();
+        }
+
+        /// <summary>
+        /// 下载Excel
+        /// </summary>
+        /// <returns></returns>
+        public async Task<FileResult> DownExcel(GetItemsInput input)
+        {
+            MemoryStream msData = new MemoryStream(10);
+
+            var result = await _cartAppService.GetCartByIds(input);
+            //创建一个临时文件
+            string filePath = $"{_env.WebRootPath }\\TempFile\\";
+            Stream stream = new ExcelTool<CartItemDto>().WriteToExcel(filePath, result.Items);
+            return ToExcel(stream);
+
         }
     }
 }

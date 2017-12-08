@@ -191,9 +191,11 @@ namespace Mall.Cart
             {
                 cartItem.ItemNum = input.ItemNum;
             }
+
             if (!string.IsNullOrEmpty(input.Describe))
             {
-                cartItem.Describe = input.Describe;
+
+                cartItem.Describe = CheckJsAndProcess(input.Describe);
             }
             //3：计算小计
             cartItem.AllPrice = cartItem.ItemNum * cartItem.ItemPrice;

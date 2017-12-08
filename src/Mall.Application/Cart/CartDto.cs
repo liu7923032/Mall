@@ -5,6 +5,8 @@ using System.Text;
 using Abp.Application.Services.Dto;
 using Abp.AutoMapper;
 using Abp.Runtime.Validation;
+using Dark.Common.Attributes;
+using Dark.Common.Utils;
 using Mall.Domain.Entities;
 using Newtonsoft.Json;
 
@@ -31,40 +33,51 @@ namespace Mall.Cart
 
 
     [AutoMap(typeof(Mall_CartItem))]
-    public class CartItemDto : CartItemInput, IEntityDto<int>
+    public class CartItemDto : IEntityDto<int>
     {
+
         [Required]
         public int Id { get; set; }
+
+        public int ProductId { get; set; }
         /// <summary>
         /// 产品名称
         /// </summary>
+        [ExcelData("物品名称")]
         [Required]
         public string ItemName { get; set; }
 
-
+        [ExcelData("物品规格")]
         public string ItemSpecs { get; set; }
 
+
+        [ExcelData("物品数量")]
+        public int ItemNum { get; set; }
         /// <summary>
         /// 产品价格
         /// </summary>
         [Range(1, Int32.MaxValue, ErrorMessage = "物品金额要大于0")]
+        [ExcelData("物品价格")]
         public decimal ItemPrice { get; set; }
 
         /// <summary>
         /// 小计
         /// </summary>
         //[Range(0, Int32.MaxValue, ErrorMessage = "数量要大于0")]
+        [ExcelData("合计")]
         public decimal AllPrice { get; set; }
 
         /// <summary>
         /// 请购人
         /// </summary>
+        [ExcelData("申请人")]
         public string CreatorUserName { get; set; }
 
         /// <summary>
         /// 请购时间
         /// </summary>
         [JsonConverter(typeof(MallDateFormat))]
+        [ExcelData("申请日期")]
         public DateTime ApplyDate { get; set; }
 
         public string LinkAddr { get; set; }
@@ -73,6 +86,7 @@ namespace Mall.Cart
 
     public class GetItemsInput : PagedAndSortedResultRequestDto
     {
+
         public List<int> CartIds { get; set; }
 
 

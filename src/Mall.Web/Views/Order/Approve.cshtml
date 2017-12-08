@@ -38,7 +38,7 @@
                         }
                         else
                         {
-                            <span  id="pnum_2"></span>
+                            <span id="pnum_2"></span>
                         }
                     </li>
                     <li>
@@ -56,7 +56,8 @@
                 </ul>
                 <div class="layui-tab-content">
                     <a class="layui-btn layui-btn-danger" id="btnBatch" status="1">批量采购</a>
-                    <a class="layui-btn" id="btn_showDetails" >所有明细</a>
+                    <a class="layui-btn" id="btn_showDetails">所有明细</a>
+                    <a class="layui-btn" id="btn_download">下载清单</a>
                     <table id="tb_init" lay-filter="f_init"></table>
                 </div>
             </div>
@@ -136,6 +137,11 @@
                         //查看清单详情
                         methods.showDetails();
                     });
+
+                    $('#btn_download').click(function () {
+                        methods.download();
+
+                    })
                 },
                 //变更状态
                 //orderIds orderid 的集合
@@ -172,7 +178,7 @@
                         , cols: [[ //表头
                             { type: 'numbers' } //序号
                             , { type: 'checkbox' } //选择列
-                            , { field: 'orderNo', title: '订单编号', align: 'center', width: 150,templet:'#tpl_orderNo' }
+                            , { field: 'orderNo', title: '订单编号', align: 'center', width: 150, templet: '#tpl_orderNo' }
                             , { field: 'addressInfo', title: '地址信息', align: 'center' }
                             , { field: 'orderStatus', title: '订单状态', align: 'center', width: 120, templet: '#tpl_status' }
                             , { field: 'creatorName', title: '创建人', align: 'center', width: 120 }
@@ -182,7 +188,7 @@
                         ]]
                     });
                 },
-                showDetails:function(){
+                showDetails: function () {
                     //1.校验清单
                     var checkRows = table.checkStatus('tb_init').data;
                     if (checkRows.length == 0) {
@@ -196,7 +202,23 @@
                     }).join('_');
                     //3.
                     window.open("/Order/Details/" + cartIds);
-                
+
+                },
+                download: function () {
+                    //1.校验清单
+                    var checkRows = table.checkStatus('tb_init').data;
+                    if (checkRows.length == 0) {
+                        layer.msg("请选择要显示的订单");
+                        return;
+                    }
+
+                    //2.查看明细
+                    var cartIds = checkRows.map(function (item) {
+                        return item.cartId;
+                    });
+                    var strParams = abp.utils.buildQueryString([{ name: 'cartIds', value: cartIds }]);
+
+                    $.fileDownload("/Cart/DownExcel/" + strParams)
                 },
                 batchData: function (status) {
 
@@ -271,8 +293,8 @@
     </script>
 
 
-<script type="text/html" id="tpl_orderNo">
-    <a href="/Order/Details/{{d.cartId}}" class="layui-table-link" target="_blank">{{ d.orderNo }}</a>
-</script>
+    <script type="text/html" id="tpl_orderNo">
+        <a href="/Order/Details/{{d.cartId}}" class="layui-table-link" target="_blank">{{ d.orderNo }}</a>
+    </script>
 
 }
