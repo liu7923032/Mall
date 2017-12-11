@@ -14,11 +14,9 @@ namespace Dark.Common.Crawler
     /// </summary>
     public class CrawlerTool
     {
-        private CrawlerOptions cOption;
         public CrawlerTool()
         {
         }
-
         /// <summary>
         /// 创建HtmlDocument
         /// </summary>

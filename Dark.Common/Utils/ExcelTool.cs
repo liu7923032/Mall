@@ -17,22 +17,27 @@ namespace Dark.Common.Utils
     /// <summary>
     /// 操作Excel的通用类库
     /// </summary>
-    public class ExcelTool<T> where T : class
+    public class ExcelTool<T> where T : class, new()
     {
-
+        //0.工作簿
         private IWorkbook workbook;
+        //1.日期的样式
         private ICellStyle _dateStyle;
 
         private PropertyInfo[] properties;
 
         /// <summary>
-        /// 
+        /// 设置列的最大矿都
         /// </summary>
         public int MaxColumnLength { get; set; }
 
+        /// <summary>
+        /// 构造函数初始化
+        /// </summary>
+        /// <param name="dateFormate"></param>
         public ExcelTool(string dateFormate = "yyyy-mm-dd")
         {
-            workbook = new XSSFWorkbook();
+
 
             //1:设置日期样式
             _dateStyle = workbook.CreateCellStyle();
@@ -46,7 +51,11 @@ namespace Dark.Common.Utils
         }
 
 
-
+        #region 1.0 私有的公共方法 
+        /// <summary>
+        /// 构建有ExcelDataAttribute特性的字典数据
+        /// </summary>
+        /// <returns></returns>
         private Dictionary<string, ExcelDataAttribute> GetTitles()
         {
             Dictionary<string, ExcelDataAttribute> dictionary = new Dictionary<string, ExcelDataAttribute>();
@@ -58,43 +67,14 @@ namespace Dark.Common.Utils
                 if (attributes.Length > 0)
                 {
                     dictionary[item.Name] = attributes[0] as ExcelDataAttribute;
+
                     dictionary[item.Name].Property = item;
                 }
             }
             return dictionary;
         }
 
-        private ISheet FillData(IReadOnlyList<T> list, string sheetName = "sheet1")
-        {
-            //1:构建sheet 
-            ISheet sheet = workbook.CreateSheet(sheetName);
-            //2:创建标题
-            var titleRow = sheet.CreateRow(0);
-            var dictTitles = GetTitles();
-            var titles = dictTitles.GetKeys();
-            for (int i = 0; i < titles.Count; i++)
-            {
-                CreateAndSetCell(titleRow, i, typeof(string), dictTitles[titles[i]].Name);
-            }
 
-            //3:创建body体
-            var rowLen = list.Count;
-            for (int i = 1; i <= rowLen; i++)
-            {
-                //3.1 创建行
-                var row = sheet.CreateRow(i);
-                //3.2 创建列
-                for (int j = 0; j < titles.Count; j++)
-                {
-                    string title = titles[j];
-                    ExcelDataAttribute excelData = dictTitles[title];
-                    var property = excelData.Property;
-                    CreateAndSetCell(row, j, property.PropertyType, property.GetValue(list[i - 1]));
-                }
-            }
-
-            return sheet;
-        }
         /// <summary>
         /// 给Cell 赋值
         /// </summary>
@@ -103,7 +83,7 @@ namespace Dark.Common.Utils
         /// <param name="type"></param>
         /// <param name="entity"></param>
         /// <returns></returns>
-        private ICell CreateAndSetCell(IRow row, int col, Type type, object entity)
+        private ICell CreateAndSetCell(IRow row, int col, Type type, object entity, ICellStyle cellStyle = null)
         {
             //1.创建cell
             var cell = row.CreateCell(col);
@@ -117,11 +97,17 @@ namespace Dark.Common.Utils
             {
                 typeName = type.FullName;
             }
+
+
             switch (typeName)
             {
                 case "System.String":
                     {
                         cell.SetCellValue(entity.ToString());
+                        if (cellStyle != null)
+                        {
+                            cell.CellStyle = cellStyle;
+                        }
                         break;
                     }
                 case "System.Int16":
@@ -147,6 +133,8 @@ namespace Dark.Common.Utils
 
                     break;
             }
+
+
             return cell;
         }
 
@@ -195,11 +183,9 @@ namespace Dark.Common.Utils
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="list"></param>
-        public Stream GetStream(string filePath, IReadOnlyList<T> list, string sheetName = "sheet")
+        private Stream GetStream(string filePath, ISheet sheet)
         {
-            //1:构建body
-            var sheet = FillData(list, sheetName);
-            //2:整理行
+            //1:自动设置行
             AutoSizeWidth(sheet);
             //3:检查是否有文件夹,不存在那么就创建
             if (!Directory.Exists(filePath))
@@ -207,8 +193,8 @@ namespace Dark.Common.Utils
                 Directory.CreateDirectory(filePath);
             }
 
-            var _fName = $"{Guid.NewGuid().ToString()}.xlsx";
-            var fileName = $"{filePath}.{_fName}";
+            var fName = $"temp_{Guid.NewGuid().ToString()}.xlsx";
+            var fileName = $"{filePath}{fName}";
             //3:创建文件
             if (File.Exists(fileName))
             {
@@ -224,15 +210,157 @@ namespace Dark.Common.Utils
             return File.OpenRead(fileName);
         }
 
+
+        #endregion
+
+
+        #region 2.0 Excel 下载
+        private ISheet FillData(IReadOnlyList<T> list, string sheetName = "sheet1")
+        {
+            //0:创建excel 表
+            workbook = new XSSFWorkbook();
+            //1:构建sheet 
+            ISheet sheet = workbook.CreateSheet(sheetName);
+            //2:创建标题
+            var titleRow = sheet.CreateRow(0);
+            var dictTitles = GetTitles();
+            var titles = dictTitles.GetKeys();
+            for (int i = 0; i < titles.Count; i++)
+            {
+                CreateAndSetCell(titleRow, i, typeof(string), dictTitles[titles[i]].Name);
+            }
+
+            //3:创建body体
+            var rowLen = list.Count;
+            for (int i = 1; i <= rowLen; i++)
+            {
+                //3.1 创建行
+                var row = sheet.CreateRow(i);
+                //3.2 创建列
+                for (int j = 0; j < titles.Count; j++)
+                {
+                    string title = titles[j];
+                    ExcelDataAttribute excelData = dictTitles[title];
+                    var property = excelData.Property;
+                    CreateAndSetCell(row, j, property.PropertyType, property.GetValue(list[i - 1]));
+                }
+            }
+
+            return sheet;
+        }
+
+        /// <summary>
+        /// 通过list集合来获取
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="list"></param>
+        /// <param name="sheetName"></param>
+        /// <returns></returns>
+        public Stream GetExcelByList(string filePath, IReadOnlyList<T> list, string sheetName = "sheet")
+        {
+            ISheet sheet = FillData(list, sheetName);
+            return GetStream(filePath, sheet);
+        }
+        #endregion
+
+
+        #region 3.0 读取Excel数据
+
+
+        /// <summary>
+        /// 获取标题样式
+        /// </summary>
+        /// <returns></returns>
+        private ICellStyle GetTitleStyle()
+        {
+            ICellStyle titleStyle = workbook.CreateCellStyle();
+            titleStyle.Alignment = HorizontalAlignment.Left;
+            titleStyle.FillBackgroundColor = HSSFColor.Yellow.Index;
+            IFont font = workbook.CreateFont();
+            font.Color = HSSFColor.Blue.Index;
+            titleStyle.SetFont(font);
+            return titleStyle;
+        }
+
+
+        /// <summary>
+        /// 下载Excel模板
+        /// </summary>
+        /// <returns></returns>
+        public Stream GetExcelTpl(string filePath)
+        {
+            //初始化表格
+            workbook = new XSSFWorkbook();
+            //
+            ISheet sheet = workbook.CreateSheet("Excel模板");
+
+            IRow titleRow = sheet.CreateRow(0);
+
+            var propTitles = GetTitles();
+            //设置标题的样式 背景色是黄色,字体是蓝色
+            var titleStyle = GetTitleStyle();
+            // 赋值
+            for (int i = 0; i < propTitles.Count(); i++)
+            {
+                var excelData = propTitles.ElementAt(i).Value;
+                CreateAndSetCell(titleRow, i, excelData.Property.PropertyType, excelData.Name, titleStyle);
+            }
+            // 另存,接着读取返回
+            return GetStream(filePath, sheet);
+        }
         /// <summary>
         /// 通过excel来读取数据
         /// </summary>
-        /// <param name="file"></param>
+        /// <param name="filePath"></param>
         /// <returns></returns>
-        public List<T> FromExcel(string file)
+        public List<T> GetDataByExcel(string filePath)
         {
-            return new List<T>();
+            List<T> dataList = new List<T>();
+            //读取文件
+            using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read))
+            {
+                //1:获取workbook
+                workbook = new XSSFWorkbook(fs);
+
+                //2:获取sheet
+                ISheet sheet = workbook.GetSheetAt(0);
+
+                //3:找到第一行
+                var firstRow = sheet.GetRow(0);
+                //4:找到类型的所有值
+                var props = GetTitles();
+                Dictionary<int, ExcelDataAttribute> propertyDict = new Dictionary<int, ExcelDataAttribute>();
+                //4:获取第一行的所有列
+                var cells = firstRow.Cells;
+                for (int i = 0; i < cells.Count; i++)
+                {
+                    string title = cells[0].StringCellValue.Trim();
+                    //通过title来找对应的属性
+                    var excelData = props.FirstOrDefault(u => u.Value.Name.Equals(title)).Value;
+                    propertyDict.Add(i, excelData);
+                }
+
+                //5:循环读取数据
+                var rowLen = sheet.LastRowNum;
+                for (int i = 1; i < rowLen + 1; i++)
+                {
+                    IRow row = sheet.GetRow(i);
+
+                    T obj = new T();
+                    for (int j = 0; j < cells.Count; j++)
+                    {
+                        var colValue = row.GetCell(j, MissingCellPolicy.CREATE_NULL_AS_BLANK);
+                        var excelData = propertyDict[j];
+                        excelData.Property.SetValue(obj, colValue);
+                    }
+                    dataList.Add(obj);
+                }
+            }
+            return dataList;
         }
+
+        #endregion
+
     }
 
 

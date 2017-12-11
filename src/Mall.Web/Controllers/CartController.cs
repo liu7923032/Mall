@@ -49,7 +49,7 @@ namespace Mall.Web.Controllers
             var result = await _cartAppService.GetCartByIds(input);
             //创建一个临时文件
             string filePath = $"{_env.WebRootPath }\\TempFile\\";
-            Stream stream = new ExcelTool<CartItemDto>().WriteToExcel(filePath, result.Items);
+            Stream stream = new ExcelTool<CartItemDto>().GetExcelByList(filePath, result.Items);
             return ToExcel(stream);
 
         }

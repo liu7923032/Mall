@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mall.Application", "src\Mal
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mall.EntityFrameworkCore", "src\Mall.EntityFrameworkCore\Mall.EntityFrameworkCore.csproj", "{DC780BC4-4EAC-4C63-9052-6F3169A59FA4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dark.Common", "Dark.Common\Dark.Common.csproj", "{0F4141B4-4843-426E-9EBF-22A0A979CF3B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dark.Common", "Dark.Common\Dark.Common.csproj", "{0F4141B4-4843-426E-9EBF-22A0A979CF3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -53,7 +53,7 @@ Global
 		{0F4141B4-4843-426E-9EBF-22A0A979CF3B} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {F62B37D1-A228-445D-B8CB-D0C58D4DCAD7}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 EndGlobal
