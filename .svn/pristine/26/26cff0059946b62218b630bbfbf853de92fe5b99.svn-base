@@ -7,7 +7,6 @@ using Abp.AutoMapper;
 using Abp.Runtime.Validation;
 using Dark.Common.Attributes;
 using Dark.Common.Utils;
-using Dark.Common.Utils.Excel;
 using Mall.Domain.Entities;
 using Newtonsoft.Json;
 
@@ -36,8 +35,6 @@ namespace Mall.Cart
     [AutoMap(typeof(Mall_CartItem))]
     public class CartItemDto : IEntityDto<int>
     {
-
-
 
         [Required]
         public int Id { get; set; }

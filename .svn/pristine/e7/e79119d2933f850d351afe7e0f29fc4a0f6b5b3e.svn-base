@@ -60,7 +60,7 @@ namespace Mall.Web.Controllers
                     //通过token来验证请求
                     var webApiReq = _appConfiguration["Authorzation:Authentication"];
                     string authUrl = $"{authServer}{webApiReq}{token}";
-                    var result = await HttpTools.GetStringAsync(authUrl);
+                    var result =await HttpTools.GetStringAsync(authUrl);
                     if (result == "null")
                     {
                         return Redirect($"{authServer}");
@@ -79,7 +79,6 @@ namespace Mall.Web.Controllers
                 });
                 return Redirect("/Home/Index");
             }
-            //return await Task.FromResult(View());
         }
 
         private async Task LoginAysnc(LoginModel login)

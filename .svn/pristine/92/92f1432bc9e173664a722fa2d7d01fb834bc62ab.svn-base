@@ -1,0 +1,300 @@
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
+using System.Text;
+using System.Threading.Tasks;
+using Abp.Domain.Repositories;
+using Abp.Runtime.Session;
+
+using Mall.Domain.Entities;
+using Abp.Application.Services.Dto;
+using Abp.AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Abp.Timing;
+using Mall.Integral;
+using Mall.UserApp;
+using Abp;
+using Abp.UI;
+using Abp.Domain.Uow;
+using Abp.Authorization;
+
+namespace Mall.Cart
+{
+
+    #region 1.0 抽象接口 ICartAppService
+    /// <summary>
+    /// 购物车信息
+    /// </summary>
+    public interface ICartAppService
+    {
+        /// <summary>
+        /// 获取购物车中的未完结产品的数量
+        /// </summary>
+        /// <returns></returns>
+        Task<int> GetCartProjectNum();
+        /// <summary>
+        /// 1:向购物车中添加商品
+        /// 2:返回当前购物车中的商品数量
+        /// </summary>
+        /// <param name="itemDto"></param>
+        /// <returns></returns>
+        Task<int> AddProductToCart(CartItemInput itemDto);
+        /// <summary>
+        /// 2:删除购物车中的东西
+        /// </summary>
+        /// <param name="cartItemId"></param>
+        /// <returns></returns>
+        Task DelProduct(int cartItemId);
+        /// <summary>
+        /// 3:更新商品
+        /// </summary>
+        /// <param name="itemDto"></param>
+        /// <returns></returns>
+        Task UpdateProductNums(CartItemInput input);
+
+        /// <summary>
+        /// 付款结账
+        /// </summary>
+        /// <param name="cartId"></param>
+        /// <returns></returns>
+        Task CheckOut(int addressId);
+
+        /// <summary>
+        /// 获取当前人员的购物车信息
+        /// </summary>
+        /// <returns></returns>
+        Task<PagedResultDto<CartItemDto>> GetMyCart();
+
+        /// <summary>
+        /// 通过购物车的唯一标识来获取购物车详细信息
+        /// </summary>
+        /// <returns></returns>
+        Task<PagedResultDto<CartItemDto>> GetCartByIds(GetItemsInput input);
+    }
+    #endregion
+
+    #region 2.0 具体实现 CartAppService
+    /// <summary>
+    /// 购物车
+    /// </summary>
+    [AbpAuthorize]
+    public class CartAppService : MallAppServiceBase, ICartAppService
+    {
+
+        private IRepository<Mall_Cart> _cartRepository;
+        private IRepository<Mall_CartItem> _cartItemRepository;
+        private IRepository<Mall_Product> _productRepository;
+        private IRepository<Mall_Order> _orderRepository;
+        private IRepository<Mall_Account, long> _accountRepository;
+        private IRepository<Mall_OrderRecord> _orderRecordRepository;
+
+        private IIntegralAppService _integralAppService;
+
+        public CartAppService(IRepository<Mall_Cart> cartRepository,
+                            IRepository<Mall_CartItem> cartItemRepository,
+                            IRepository<Mall_Product> productRepository,
+                            IRepository<Mall_Order> orderRepository,
+                            IRepository<Mall_Account, long> accountRepository,
+                            IIntegralAppService integralAppService,
+                            IRepository<Mall_OrderRecord> orderRecordRepository)
+        {
+            _cartRepository = cartRepository;
+            _cartItemRepository = cartItemRepository;
+            _productRepository = productRepository;
+            _orderRepository = orderRepository;
+            _accountRepository = accountRepository;
+            _integralAppService = integralAppService;
+            _orderRecordRepository = orderRecordRepository;
+
+        }
+
+        private async Task<Mall_Cart> GetCurrentCart()
+        {
+            return await _cartRepository.FirstOrDefaultAsync(u => u.ItemStatus == CartStatus.Init && u.CreatorUserId.Value.Equals(UserId));
+        }
+
+        /// <summary>
+        /// 自动生成订单编号
+        /// </summary>
+        /// <returns></returns>
+        private string GenerateOrderNo()
+        {
+            int curYear = Clock.Now.Year, curMonth = Clock.Now.Month;
+
+            //取消
+            using (CurrentUnitOfWork.DisableFilter(AbpDataFilters.SoftDelete))
+            {
+                var counts = _orderRepository.Count(u => u.CreationTime.Year.Equals(curYear) && u.CreationTime.Month.Equals(curMonth));
+                //1：通过日期来
+                return $"MO{DateTime.Now.ToString("yyyyMM")}{(counts + 1).ToString().PadLeft(4, '0')}";
+            }
+
+        }
+
+
+        public async Task<int> AddProductToCart(CartItemInput itemDto)
+        {
+            //1:找到产品
+            var product = await _productRepository.FirstOrDefaultAsync(u => u.Id.Equals(itemDto.ProductId));
+
+            //2:找到购物车
+            var cart = await GetCurrentCart();
+            if (cart == null)
+            {
+                cart = new Mall_Cart();
+                await _cartRepository.InsertAsync(cart);
+                //为了获取最新购物车的id
+                await CurrentUnitOfWork.SaveChangesAsync();
+            }
+
+            //3:检查购物车中是否已经存在该物品,如果存在,那么给该物品的数量添加1
+            var cartItem = await _cartItemRepository.FirstOrDefaultAsync(u => u.ProductId.Equals(itemDto.ProductId) && u.CartId.Equals(cart.Id));
+            if (cartItem != null)
+            {
+                cartItem.ItemNum++;
+                cartItem.AllPrice = cartItem.ItemNum * product.Price;
+            }
+            else
+            {
+                cartItem = itemDto.MapTo<Mall_CartItem>();
+                cartItem.CartId = cart.Id;
+                cartItem.ItemPrice = product.Price;
+                cartItem.AllPrice = cartItem.ItemNum * product.Price;
+                await _cartItemRepository.InsertAsync(cartItem);
+                await CurrentUnitOfWork.SaveChangesAsync();
+            }
+
+            //4:获取购物中产品的数量
+            var productNum = _cartItemRepository.GetAll().Where(u => u.CartId.Equals(cart.Id)).Count();
+            return await Task.FromResult(productNum);
+        }
+
+        public async Task DelProduct(int cartItemId)
+        {
+            //1：找到购物车
+            var cart = await GetCurrentCart();
+            //2：找到商品
+            var cartItem = await _cartItemRepository.FirstOrDefaultAsync(u => u.Id.Equals(cartItemId));
+            //3：删除商品
+            await _cartItemRepository.DeleteAsync(cartItem);
+        }
+
+        public async Task UpdateProductNums(CartItemInput input)
+        {
+            //1：找到购物车
+            var cart = await GetCurrentCart();
+            //2：找到商品
+            var cartItem = await _cartItemRepository.FirstOrDefaultAsync(u => u.CartId.Equals(cart.Id) && u.ProductId.Equals(input.ProductId));
+           
+            //3：更新数量
+            if (cartItem.ItemNum != input.ItemNum)
+            {
+                cartItem.ItemNum = input.ItemNum;
+            }
+
+            if (!string.IsNullOrEmpty(input.Describe))
+            {
+
+                cartItem.Describe = CheckJsAndProcess(input.Describe);
+            }
+            //3：计算小计
+            cartItem.AllPrice = cartItem.ItemNum * cartItem.ItemPrice;
+            //3：更新商品
+            await _cartItemRepository.UpdateAsync(cartItem);
+        }
+
+        public async Task CheckOut(int addressId)
+        {
+            //1:获取购物车
+            var cart = await GetCurrentCart();
+            //2：设置状态
+            cart.ItemStatus = CartStatus.Pay;
+            //3：生成订单
+            Mall_Order order = new Mall_Order();
+            order.CartId = cart.Id;
+            order.AddressId = addressId;
+            //4:订单编号,自动生成
+            order.OrderNo = GenerateOrderNo();
+            //5:计算该订单的总金额
+            decimal allIntegral = _cartItemRepository.GetAll().Where(u => u.CartId.Equals(cart.Id)).Sum(u => u.ItemNum * u.ItemPrice);
+            order.AllPrice = allIntegral;
+            if (allIntegral == 0)
+            {
+                throw new UserFriendlyException("购物车物品为0,请添加物品...");
+            }
+            //6: 检查一下积分是否充足
+            //6:获取人员当前积分
+            var user = await _accountRepository.GetAsync(UserId);
+            if (user.Integral < allIntegral)
+            {
+                throw new UserFriendlyException("个人积分不够,请努力赚取积分...");
+            }
+
+            //6：插入订单
+            await _orderRepository.InsertAsync(order);
+
+            //7：保存订单
+            await CurrentUnitOfWork.SaveChangesAsync();
+
+            //8:插入积分变更记录
+            await _integralAppService.Create(new CreateIntegralInput()
+            {
+                ValidationCode = MallConsts.SecurityCode,
+                Current = user.Integral.Value,
+                Integral = allIntegral,
+                UserId = UserId,
+                CostType = CostType.Cost,
+                DeptId = 0,
+                ActDate = Clock.Now,
+                Describe = $"订单:{order.Id}_{order.OrderNo} 付款",
+                TypeName = "人员"
+            });
+
+
+            //9:添加订单流水
+            await _orderRecordRepository.InsertAsync(new Mall_OrderRecord()
+            {
+                OrderStatus = OrderStatus.Init,
+                OrderId = order.Id
+            });
+        }
+
+
+        public async Task<int> GetCartProjectNum()
+        {
+            //1:获取购物车
+            var cart = await GetCurrentCart();
+            if (cart == null)
+            {
+                return await Task.FromResult(0);
+            }
+            var cartId = cart.Id;
+            //2:通过购物车来找到产品数量
+            var productNum = _cartItemRepository.GetAll().Where(u => u.CartId.Equals(cartId)).Count();
+            //3:返回当前购物车中的产品数量
+            return await Task.FromResult(productNum);
+        }
+
+        public async Task<PagedResultDto<CartItemDto>> GetMyCart()
+        {
+            var cart = await GetCurrentCart();
+            int cartId = cart == null ? 0 : cart.Id;
+            //获取数据集
+            var cartItems = _cartItemRepository.GetAll().Where(u => u.CartId.Equals(cartId)).Include("Product");
+            //.Skip(input.SkipCount).Take(input.Limit);
+            //返回结果集
+
+            return new PagedResultDto<CartItemDto>() { Items = cartItems.MapTo<List<CartItemDto>>(), TotalCount = cartItems.Count() };
+        }
+
+        public async Task<PagedResultDto<CartItemDto>> GetCartByIds(GetItemsInput input)
+        {
+            var carts = _cartItemRepository.GetAll().Where(u => input.CartIds.Contains(u.CartId))
+                                .Include("CreatorUser")
+                                .Include("Product").ToList();
+            //返回结果集
+            return await Task.FromResult(new PagedResultDto<CartItemDto>() { TotalCount = carts.Count(), Items = carts.MapTo<List<CartItemDto>>() });
+        }
+    }
+    #endregion
+}

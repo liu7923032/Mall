@@ -1,0 +1,185 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Abp.Application.Services;
+using Abp.Application.Services.Dto;
+using Abp.Authorization;
+using Abp.AutoMapper;
+using Abp.Domain.Repositories;
+using Abp.Linq.Extensions;
+using Mall.Authorization;
+using Mall.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+
+namespace Mall.Product
+{
+    #region 1.0 接口
+    public interface IProductAppService : IAsyncCrudAppService<ProductDto, int, GetAllProductInput, CreateProductInput, UpdateProductInput>
+    {
+        //1:添加产品
+        //2:作废产品
+        //3:展示商品
+        //PagedResultDto<ProudctListDto> GetProducts(GetAllProductInput input);
+        Task<ProductDto> GetProductById(int id);
+
+        //4：商品下架
+        Task<ProductDto> UpOrDown(int productId);
+    }
+
+    #endregion
+
+    #region 2.0 具体实现类
+    [AbpAuthorize]
+    public class ProductAppService : AsyncCrudAppService<Mall_Product, ProductDto, int, GetAllProductInput, CreateProductInput, UpdateProductInput>, IProductAppService
+    {
+        private IProductCache _productCache;
+        private IRepository<Mall_Product> _productRepository;
+        private IRepository<Mall_AttachFile> _fileRepository;
+        private IRepository<Mall_Category> _categoryRepository;
+        public ProductAppService(IRepository<Mall_Product> productRepository
+                                , IRepository<Mall_AttachFile> fileRepository
+                                , IRepository<Mall_Category> categoryRepository
+                                , IProductCache productCache) : base(productRepository)
+        {
+            _productRepository = productRepository;
+            _fileRepository = fileRepository;
+            _categoryRepository = categoryRepository;
+            _productCache = productCache;
+        }
+
+        [AbpAuthorize(PermissionNames.Page_Admin)]
+        public async override Task<ProductDto> Create(CreateProductInput input)
+        {
+            //1:对fileIds进行处理,
+            var fileData = GetFilesByIds(input.FileIds);
+            //2:取得第一张图片
+            input.ImgPic = fileData.FirstOrDefault().FilePath;
+            //3:设置商品的itemNo
+            input.ItemNo = GetItemNo(input.CategoryId);
+            var product = await base.Create(input);
+            await CurrentUnitOfWork.SaveChangesAsync();
+            //3:接着更新
+            fileData.ForEach(u =>
+            {
+                u.ParentId = product.Id.ToString();
+            });
+            //await CurrentUnitOfWork.SaveChangesAsync();
+            return await Task.FromResult(product.MapTo<ProductDto>());
+        }
+
+        private List<Mall_AttachFile> GetFilesByIds(string fileIds)
+        {
+            var fileList = new List<string>(fileIds.Split(','));
+            List<int> fileData = new List<int>();
+            fileList.ForEach(u =>
+            {
+                fileData.Add(Convert.ToInt32(u));
+            });
+            return _fileRepository.GetAll().Where(u => fileData.Contains(u.Id)).ToList();
+        }
+
+        [AbpAuthorize(PermissionNames.Page_Admin)]
+        public async override Task<ProductDto> Update(UpdateProductInput input)
+        {
+            //1.获取已经存在的数据
+            var fileData = GetFilesByIds(input.FileIds);
+            //2.更新第一张图片
+            input.ImgPic = fileData.FirstOrDefault().FilePath;
+            //3.更新文件
+            fileData.ForEach(u =>
+            {
+                u.ParentId = input.Id.ToString();
+            });
+
+            return await base.Update(input);
+        }
+
+        [AbpAuthorize(PermissionNames.Page_Admin)]
+        public override Task Delete(EntityDto<int> input)
+        {
+            return base.Delete(input);
+        }
+
+        public async Task<ProductDto> GetProductById(int id)
+        {
+            return await _productCache.GetAsync(id);
+        }
+
+        private string GetItemNo(int categoryId)
+        {
+            //1:获取分类
+            var category = _categoryRepository.Get(categoryId);
+            //2:获取当前分类下产品的数量
+            var productCount = _productRepository.Count(u => u.CategoryId.Equals(categoryId));
+            //3:生成编号 01001
+            return $"{category.CategoryNo}{(productCount + 1).ToString().PadLeft(4, '0')}";
+        }
+
+
+
+        /// <summary>
+        /// 实现查询条件
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        protected override IQueryable<Mall_Product> CreateFilteredQuery(GetAllProductInput input)
+        {
+            return base.CreateFilteredQuery(input)
+                .WhereIf(input.CategoryId.HasValue && input.CategoryId.Value != 0, u => u.CategoryId.Equals(input.CategoryId.Value))
+                .WhereIf(!string.IsNullOrEmpty(input.Name), u => u.Name.Contains(input.Name)).Include("Category");
+        }
+
+        public async override Task<PagedResultDto<ProductDto>> GetAll(GetAllProductInput input)
+        {
+            var products = await _productCache.GetProudcts();
+            //1：筛选条件
+            if (!string.IsNullOrEmpty(input.Name))
+            {
+                products = products.Where(u => u.Name.Contains(input.Name)).ToList();
+            }
+            if (input.CategoryId.HasValue && input.CategoryId != 0)
+            {
+                products = products.Where(u => u.CategoryId.Equals(input.CategoryId.Value)).ToList();
+            }
+
+            //3：显示上架的商品
+            if (input.PStatus != null)
+            {
+                products = products.Where(u => u.PStatus == input.PStatus).ToList();
+            }
+            //2：排序
+            products = products.OrderByDescending(u => u.SaleNums).ToList();
+            //if (!string.IsNullOrEmpty(input.Sorting))
+            //{
+            //    //products.OrderBy(input.Sorting);
+            //}
+            //else
+            //{
+            //    products = products.OrderBy(u => u.Id).ToList();
+            //}
+            var result = products.Skip(input.SkipCount).Take(input.MaxResultCount).ToList();
+            //3：分页
+            return new PagedResultDto<ProductDto>() { TotalCount = products.Count, Items = result };
+        }
+
+        public async Task<ProductDto> UpOrDown(int productId)
+        {
+            //获取商品
+            var product = await _productRepository.GetAsync(productId);
+            //检查商品的状态,如果是上架,那么就下架
+            if (product.PStatus == ProductStatus.Up)
+            {
+                product.PStatus = ProductStatus.Down;
+            }
+            else
+            {
+                product.PStatus = ProductStatus.Up;
+            }
+
+            return await Task.FromResult(product.MapTo<ProductDto>());
+        }
+    }
+    #endregion
+}

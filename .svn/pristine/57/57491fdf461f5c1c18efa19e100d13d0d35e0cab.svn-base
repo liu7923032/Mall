@@ -136,7 +136,6 @@
     <script src="~/AbpScripts/GetScripts?v=@(Clock.Now.Ticks)" type="text/javascript"></script>
 
     <!-- View specific scripts -->
-    @*@if(SignalRFeature.)*@
 
     @RenderSection("scripts", required: false)
 

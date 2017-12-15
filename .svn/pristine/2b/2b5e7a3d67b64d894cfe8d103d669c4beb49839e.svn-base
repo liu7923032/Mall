@@ -43,7 +43,7 @@ namespace Mall.Web.Startup
                 authOpts.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
             }).AddCookie(cookieOpts =>
             {
-                //cookieOpts.LoginPath = "/Account/Login/";
+                cookieOpts.LoginPath = "/Account/Login/";
             });
 
 
