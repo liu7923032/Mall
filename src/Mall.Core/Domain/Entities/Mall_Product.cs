@@ -32,6 +32,10 @@ namespace Mall.Domain.Entities
         [Required]
         public string ImgPic { get; set; }
 
+        /// <summary>
+        /// 商品的编号
+        /// </summary>
+        public string Skuid { get; set; }
 
         /// <summary>
         /// 链接地址

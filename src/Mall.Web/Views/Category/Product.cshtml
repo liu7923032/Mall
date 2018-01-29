@@ -48,7 +48,7 @@
 
 
 @section Scripts{
-<script src="~/lib/filedownload/jquery.filedownload.js"></script>
+    <script src="~/lib/filedownload/jquery.filedownload.js"></script>
     <script type="text/javascript">
 
         layui.use(['laytpl', 'element', 'layer', 'jquery', 'form', 'layedit', 'upload', 'laypage', 'abptable'], function () {
@@ -315,7 +315,6 @@
                 },
                 registerOnInput: function () {
                     $('input[name=linkAddr]').bind('input propertychange', function (e) {
-                        console.log(e);
                         var value = $(this).val();
                         if (value.length == 0) {
                             return false;
@@ -324,8 +323,10 @@
                             url: "/category/GetInfoByUrl?url=" + encodeURIComponent(value),
                             method: "Get",
                             success: function (res) {
+                                console.log(res)
                                 //设置标题
                                 $('#frm_product').find('input[name=name]').val(res.title);
+                                $('#frm_product').find('input[name=skuid]').val(res.skuid);
                                 //设置描述
                                 $(window.frames["LAY_layedit_1"].document).find("body").html(res.desc)
 
@@ -387,6 +388,7 @@
             <input type="hidden" name="fileIds" />
             <input type="hidden" name="itemNo" />
             <input type="hidden" name="pStatus" />
+            <input type="hidden" name="skuid" />
             <div class="layui-form-item">
                 <label class="layui-form-label">源地址</label>
                 <div class="layui-input-block">
@@ -406,7 +408,7 @@
                         <option value="">请选择类别</option>
                         @foreach (var categoryItem in Model.Categories)
                         {
-                            <option value="@categoryItem.Id">@categoryItem.Name</option>
+                        <option value="@categoryItem.Id">@categoryItem.Name</option>
                         }
                     </select>
                 </div>

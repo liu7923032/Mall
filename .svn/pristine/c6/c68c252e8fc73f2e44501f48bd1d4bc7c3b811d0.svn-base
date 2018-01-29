@@ -1,0 +1,144 @@
+﻿@using System.Globalization
+@using System.Threading
+@using System.Threading.Tasks
+@using Abp.Timing
+@using Mall.Web.Views.Shared.Components.LanguageSelection
+@using Mall.Web.Views.Shared.Components.TopMenu
+@using Mall.Web.Views.Shared.Components.User
+@using Abp.Web.Security.AntiForgery
+@inject IAbpAntiForgeryManager AbpAntiForgeryManager
+@{
+    AbpAntiForgeryManager.SetCookie(Context);
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="dark.liu">
+
+    <link rel="shortcut icon" href="~/favicon.ico">
+
+    <title>麦迪商城</title>
+
+    <!-- Global styles -->
+
+    <environment names="Development">
+        <link rel="stylesheet" href="~/lib/layui/css/layui.css" />
+        <link rel="stylesheet" href="~/lib/layui-extend/layui.css" />
+        <link rel="stylesheet" href="~/css/main.css" />
+    </environment>
+
+    <environment names="Staging,Production">
+        <link rel="stylesheet" href="~/view-resources/Views/_Bundles/layout-libs.min.css" asp-append-version="true" />
+    </environment>
+
+    <!-- View specific styles -->
+    @RenderSection("styles", required: false)
+
+</head>
+<body class="mall-main">
+    <!---------header--------->
+    <div class="mall-header">
+        <div class="layui-container">
+            <div class="layui-logo ">
+                <i class="layui-icon " style="font-size:20px;">&#xe657;</i>
+
+                <div class="layui-inline" style="margin-left:10px;">
+                    <a href="/" style="color:white;">@L("logo")</a>
+                </div>
+            </div>
+            <ul class="layui-nav layui-layout-left">
+                @await Component.InvokeAsync(typeof(TopMenuViewComponent), new { activeMenu = ViewBag.ActiveMenu })
+            </ul>
+            <ul class="layui-nav layui-layout-right">
+                @await Component.InvokeAsync(typeof(UserViewComponent))
+
+                @*@await Component.InvokeAsync(typeof(LanguageSelectionViewComponent))*@
+            </ul>
+        </div>
+    </div>
+    <div class="layui-clear"></div>
+    <!---------华丽的分割线--------->
+    <hr class="layui-bg-gray" style="margin-top:50px;" />
+    <!---------加载子页面明细--------->
+
+    @RenderBody()
+
+
+    <!-- Global scripts -->
+    <environment names="Development">
+        <script src="~/lib/jquery/dist/jquery.js"></script>
+        <script src="~/lib/filedownload/jquery.filedownload.js"></script>
+        <script src="~/lib/layui/layui.js"></script>
+        <!-- abp js文件 -->
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/abp.js"></script>
+        <script src="~/lib/abp-web-resources/Abp/Framework/scripts/libs/abp.jquery.js"></script>
+        <script src="~/lib/layui-extend/abp/abp.layui.js"></script>
+
+    </environment>
+
+    <environment names="Staging,Production">
+        <script src="~/view-resources/Views/_Bundles/layout-libs.min.js" asp-append-version="true"></script>
+    </environment>
+
+
+    <script type="text/javascript">
+
+        layui.config({
+            base: '/lib/layui-extend/js/' //设定扩展的Layui模块的所在目录，一般用于外部模块扩展
+        }).extend({ //设定模块别名
+            abptable: 'abptable' //如果 mymod.js 是在根目录，也可以不用设定别名
+        });
+        //初始化layui
+        layui.use(["util", "element"], function () {
+            var util = layui.util;
+
+            var methods = {
+                getCartNum: function () {
+                    abp.ajax({
+                        url: "/api/services/app/Cart/GetCartProjectNum",
+                        method: 'get',
+                        success: function (data) {
+                            var pNum = parseInt(data);
+                            if (pNum !== 0) {
+                                abp.log.debug(pNum);
+                                //设置购物车数量
+                                $('#cart_pNum').text(pNum);
+                            }
+                        }
+                    });
+                },
+            }
+
+            util.fixbar({
+                bar1: '<span class="layui-badge" id="cart_pNum" style="position:absolute;top:0;right:0;">0</span>&#xe657;',
+                bgcolor: '#009688',
+                click: function (type) {
+                    if (type === 'bar1') {
+                        location.href = "/Cart/Index";
+                    }
+                }
+            });
+            //购物车数据加载
+            methods.getCartNum();
+
+        });
+        abp.localization.defaultSourceName = '@LocalizationSourceName';
+
+    </script>
+
+    <!-- Dynamic scripts of ABP system (They are created on runtime and can not be bundled) -->
+    <script src="~/AbpServiceProxies/GetAll?v=@(Clock.Now.Ticks)" type="text/javascript"></script>
+    <script src="~/AbpScripts/GetScripts?v=@(Clock.Now.Ticks)" type="text/javascript"></script>
+
+    <!-- View specific scripts -->
+    @*@if(SignalRFeature.)*@
+
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>

@@ -9,6 +9,13 @@ namespace Dark.Common.Crawler
     /// </summary>
     public class SelectorOptions
     {
+        public SelectorOptions(string name,string cssSelector)
+        {
+            this.Name = name;
+            this.Selector = cssSelector;
+            this.IsArray = false;
+        }
+
         public SelectorOptions(string name, string cssSelector, bool isArray = false)
         {
             this.Name = name;
@@ -24,6 +31,9 @@ namespace Dark.Common.Crawler
         /// </summary>
         public string Selector { get; set; }
 
+        /// <summary>
+        /// 是否是数组
+        /// </summary>
         public bool IsArray { get; set; }
     }
 }

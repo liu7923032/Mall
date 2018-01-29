@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Abp" Version="3.3.0" />
+    <PackageReference Include="Abp.QuartzCore" Version="3.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Dark.Common\Dark.Common.csproj" />
+    <ProjectReference Include="..\Mall.Application\Mall.Application.csproj" />
+    <ProjectReference Include="..\Mall.Core\Mall.Core.csproj" />
+  </ItemGroup>
+
+</Project>

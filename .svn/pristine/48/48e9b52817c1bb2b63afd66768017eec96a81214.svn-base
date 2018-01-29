@@ -75,7 +75,7 @@
                           , { field: 'itemNum', title: '数量', align: 'right', width: 80 }
                           , { field: 'itemPrice', title: '单价', align: 'right', width: 80 }
                           //最新单价
-                          , { field: 'newPrice', title: '最新单价', align: 'right', width: 90,templet:'#tpl_newP' }
+                          , { field: 'itemPrice', title: '最新单价', align: 'right', width: 80 }
                           , { field: 'allPrice', title: '小计', align: 'right', width: 80 }
                           , { field: 'creatorUserName', title: '申请人', align: 'center', width: 110 }
                           , { field: 'applyDate', title: '时间', align: 'center', width: 140 }
@@ -83,6 +83,7 @@
                           , {
                               fixed: 'right', title: "操作", width: 90, align: 'center', toolbar: '#tool_comment'
                           }
+                          
                     ]];
 
                     table.render({
@@ -134,7 +135,7 @@
                     $('#btnDownload').click(function (data) {
 
                         $.fileDownload("/Cart/DownExcel/" + strParams)
-
+                       
                     });
                 },
             }
@@ -174,23 +175,14 @@
 
     <!--------------自定义物品明细显示--------------->
     <script type="text/html" id="tpl_name">
-        <a href="/Home/Details/{{d.productId}}" class="layui-table-link" target="_blank">{{ d.itemName }}</a>
+        <a href="/Home/Details/{{d.productId}}" class="layui-table-link" target="_blank" >{{ d.itemName }}</a>
     </script>
 
     <!--------------自定义物品明细显示--------------->
     <script type="text/html" id="tpl_link">
         {{# if(d.linkAddr&&d.linkAddr.length>0){}}
-        <a href="{{d.linkAddr}}" class="layui-table-link" target="_blank">网址</a>
+         <a href="{{d.linkAddr}}" class="layui-table-link" target="_blank">网址</a>
         {{# } }}
     </script>
-
-    <!--------------物品最新单价,如果价格不一致,就显示红色--------------->
-    <script type="text/html" id="tpl_newP">
-        {{# if(d.newPrice!=d.itemPrice){}}
-            <span style="color:red;">{{d.newPrice}}</span>
-        {{# } }}
-    </script>
-
-
 
 }

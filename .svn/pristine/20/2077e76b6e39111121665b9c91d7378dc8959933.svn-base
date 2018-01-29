@@ -4,25 +4,21 @@ using Abp.AspNetCore.Configuration;
 using Abp.Authorization;
 using Abp.MailKit;
 using Abp.Modules;
-using Abp.Quartz;
 using Abp.Reflection.Extensions;
 using Abp.Threading.BackgroundWorkers;
 using Abp.Timing;
+using Mall.BackgroundJobs;
 using Mall.Configuration;
 using Mall.EntityFrameworkCore;
-using Mall.QuartzJob;
-using Mall.QuartzJob.Jobs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
-using Quartz;
 
 namespace Mall.Web.Startup
 {
     [DependsOn(
-        typeof(MallApplicationModule),
-        typeof(MallEntityFrameworkCoreModule),
-        typeof(AbpAspNetCoreModule),
-        typeof(MallQuartzJobModule)
+        typeof(MallApplicationModule), 
+        typeof(MallEntityFrameworkCoreModule), 
+        typeof(AbpAspNetCoreModule)
        )]
     public class MallWebModule : AbpModule
     {
@@ -35,7 +31,7 @@ namespace Mall.Web.Startup
 
         public override void PreInitialize()
         {
-
+            
             //1.0 配置连接字符串
             Configuration.DefaultNameOrConnectionString = _appConfiguration.GetConnectionString(MallConsts.ConnectionStringName);
 
@@ -64,7 +60,12 @@ namespace Mall.Web.Startup
             IocManager.RegisterAssemblyByConvention(typeof(MallWebModule).GetAssembly());
         }
 
-        
 
+        public override void PostInitialize()
+        {
+            //将后台工作着注册到服务中
+            var workManager = IocManager.Resolve<IBackgroundWorkerManager>();
+            workManager.Add(IocManager.Resolve<SyncUserWorker>());
+        }
     }
 }

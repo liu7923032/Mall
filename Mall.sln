@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27004.2006
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}"
 EndProject
@@ -14,6 +14,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mall.EntityFrameworkCore", "src\Mall.EntityFrameworkCore\Mall.EntityFrameworkCore.csproj", "{DC780BC4-4EAC-4C63-9052-6F3169A59FA4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dark.Common", "Dark.Common\Dark.Common.csproj", "{0F4141B4-4843-426E-9EBF-22A0A979CF3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mall.QuartzJob", "src\Mall.QuartzJob\Mall.QuartzJob.csproj", "{E981CE1C-EB55-4DA3-9E9B-5805660C42B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{0F4141B4-4843-426E-9EBF-22A0A979CF3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0F4141B4-4843-426E-9EBF-22A0A979CF3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0F4141B4-4843-426E-9EBF-22A0A979CF3B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E981CE1C-EB55-4DA3-9E9B-5805660C42B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E981CE1C-EB55-4DA3-9E9B-5805660C42B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E981CE1C-EB55-4DA3-9E9B-5805660C42B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E981CE1C-EB55-4DA3-9E9B-5805660C42B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,9 +57,10 @@ Global
 		{3870C648-4AEA-4B85-BA3F-F2F63B96136A} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 		{DC780BC4-4EAC-4C63-9052-6F3169A59FA4} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 		{0F4141B4-4843-426E-9EBF-22A0A979CF3B} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
+		{E981CE1C-EB55-4DA3-9E9B-5805660C42B5} = {AFAA0841-BD93-466F-B8F4-FB4EEC86F1FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {F62B37D1-A228-445D-B8CB-D0C58D4DCAD7}
 		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {F62B37D1-A228-445D-B8CB-D0C58D4DCAD7}
 	EndGlobalSection
 EndGlobal

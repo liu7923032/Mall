@@ -62,6 +62,7 @@ namespace Mall.Web.Controllers
                 {
                     new SelectorOptions("title","body > div:nth-child(7) > div > div.itemInfo-wrap > div.sku-name"),
                     new SelectorOptions("desc","#detail > div.tab-con > div:nth-child(1) > div.p-parameter > ul.parameter2.p-parameter-list"),
+                     new SelectorOptions("skuid","#detail > div.tab-con > div:nth-child(1) > div.p-parameter > ul.parameter2.p-parameter-list > li:nth-child(2)"),
                     new SelectorOptions("imgs","#spec-list > ul > li > img"),
                 }
             };
@@ -70,6 +71,8 @@ namespace Mall.Web.Controllers
 
             var title = result["title"].FirstOrDefault().Text.Trim();
             var desc = result["desc"].FirstOrDefault().OutHtml;
+            //商品编号
+            var skuid = result["skuid"].FirstOrDefault()?.Attributes["title"];
 
             //下载image
             var imgs = result["imgs"];
@@ -85,14 +88,12 @@ namespace Mall.Web.Controllers
                     var bigImg = "https:" + imgSrc.Replace("n5/s54x54_jfs", "n1/s450x450_jfs");
                     //3.下载图片
                     imgList.Add(bigImg);
-
-
                 });
-              
+
 
             }
 
-            return await Task.FromResult(new AjaxResponse() { Result = new { Title = title, Desc = desc, Imgs = imgList } });
+            return await Task.FromResult(new AjaxResponse() { Result = new { Title = title, Desc = desc, Imgs = imgList, Skuid = skuid } });
         }
 
         [DontWrapResult]

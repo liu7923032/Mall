@@ -44,6 +44,11 @@ namespace Mall.Product
         /// 链接地址
         /// </summary>
         public string LinkAddr { get; set; }
+
+        /// <summary>
+        /// 商品编码
+        /// </summary>
+        public string Skuid { get; set; }
       
     }
 
@@ -93,6 +98,8 @@ namespace Mall.Product
         public int Page { get; set; }
 
         public ProductStatus? PStatus { get; set; }
+
+        
 
         public GetAllProductInput()
         {
